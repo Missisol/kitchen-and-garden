@@ -1,0 +1,2 @@
+FLASK_APP=recipe.py
+FLASK_DEBUG=1
