@@ -57,6 +57,7 @@ onBeforeMount(async () => {
 .list {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .item {

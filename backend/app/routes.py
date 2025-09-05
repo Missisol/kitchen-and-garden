@@ -2,6 +2,8 @@ from flask import jsonify, request
 from app import app, db
 from app.models import Category, Recipe
 
+fields = ['title', 'ingredients', 'instructions', 'image', 'links', 'comment', 'category_id']
+
 @app.route('/')
 def index():
     return "Hello, recipes!"
@@ -59,13 +61,14 @@ def get_recipes():
 @app.route('/recipes', methods=['POST'])
 def create_recipe():
     data = request.json
-    recipe = Recipe(
-        title=data['title'],
-        ingredients=data['ingredients'],
-        instructions=data['instructions']
-    )
-    db.session.add(recipe)
-    db.session.commit()
+    recipe_data = {}
+    if data.get('title'):
+        for field in fields:
+            recipe_data[field] = data.get(field)
+
+        recipe = Recipe(**recipe_data)
+        db.session.add(recipe)
+        db.session.commit()
     return jsonify({'id': recipe.id}), 201
 
 @app.route('/recipes/<int:id>', methods=['PUT'])
