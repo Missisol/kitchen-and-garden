@@ -1,5 +1,4 @@
 <script setup>
-import { onBeforeMount } from 'vue'
 import RecipesList from '@/components/RecipesList.vue'
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
@@ -16,21 +15,23 @@ const getParams = async(category) => {
   recipesStore.params = category?.id ? {id: category.id, name: category.name} : { id: '', name: '' }
 }
 
-onBeforeMount(async () => {
-  await getCategories()
-})
+getCategories()
+console.log('categories', categories.value)
 </script>
 
 <template>
   <div class="parent">
     <aside class="aside">
       <h2>Categories</h2>
-      <div @click=getParams()>Все</div>
+      <div 
+        @click=getParams() 
+        class="category">Все</div>
       <div 
         v-for="category in categories" :key="category.id"
+        class="category"
         @click=getParams(category)
         >
-        {{ category.name }}
+          {{ category?.name ||'Без категории' }}
       </div>
     </aside>
     <RecipesList />
@@ -41,5 +42,9 @@ onBeforeMount(async () => {
 .parent {
   display: grid;
   grid-template-columns: 1fr 3fr;
+}
+
+.category {
+  cursor: pointer;
 }
 </style>

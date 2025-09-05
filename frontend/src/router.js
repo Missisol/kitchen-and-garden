@@ -1,11 +1,12 @@
 import HomeView from '@/views/HomeView.vue'
 import PageView from '@/views/PageView.vue'
+import CreateRecipeView from '@/views/CreateRecipeView.vue'
 
 export const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
   },
   {
     path: '/recipes',
@@ -15,6 +16,6 @@ export const routes = [
   {
     path: '/create-recipe',
     name: 'create-recipe',
-    component: () => import('@/views/CreateRecipeView.vue')
+    component: CreateRecipeView,
   },
 ]

@@ -11,7 +11,7 @@ class Category(db.Model):
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     name: so.Mapped[Optional[str]] = so.mapped_column(
-        String(100), index=True, unique=True)
+        String(100), index=True, unique=True, default='')
 
     recipes: so.WriteOnlyMapped['Recipe'] = so.relationship(back_populates='recipe_name')
 
@@ -34,7 +34,7 @@ class Recipe(db.Model):
         index=True, default=lambda: datetime.now())
     version: so.Mapped[int] = so.mapped_column(Integer, default=0)
     category_id: so.Mapped[int] = so.mapped_column(
-        ForeignKey(Category.id), index=True)
+        ForeignKey(Category.id), index=True, default=1)
 
     recipe_name: so.Mapped[Category] = so.relationship(back_populates='recipes')
 

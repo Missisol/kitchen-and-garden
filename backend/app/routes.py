@@ -51,7 +51,7 @@ def get_recipes():
             'instructions': r.instructions,
             'image': r.image if r.image else None, 
             'category_id': r.category_id,
-            'category_name': r.recipe_name.name,
+            'category_name': r.recipe_name.name if r.recipe_name else None,
             'links': r.links,
         } for r in recipes])
 
