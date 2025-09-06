@@ -5,7 +5,7 @@ const route = useRoute()
 const router = useRouter()
 
 const createRecipe = () => {
-  router.push({ path: '/create-recipe' })
+  router.push({ path: '/recipe-form' })
 }
 
 </script>
