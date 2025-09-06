@@ -43,6 +43,7 @@ def get_recipes():
             'category_id': r.category_id,
             'category_name': r.recipe_name.name,
             'links': r.links,
+            'comment': r.comment,
         } for r in recipes])
     else:
         recipes = Recipe.query.all()
@@ -55,6 +56,7 @@ def get_recipes():
             'category_id': r.category_id,
             'category_name': r.recipe_name.name if r.recipe_name else None,
             'links': r.links,
+            'comment': r.comment,
         } for r in recipes])
 
 
@@ -73,6 +75,7 @@ def create_or_get_recipe():
                 'category_id': recipe.category_id,
                 'category_name': recipe.recipe_name.name,
                 'links': recipe.links,
+                'comment': recipe.comment,
             })
         else:
             return jsonify({'error': 'Recipe not found'}), 404
