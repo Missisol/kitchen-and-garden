@@ -1,6 +1,7 @@
 import HomeView from '@/views/HomeView.vue'
 import PageView from '@/views/PageView.vue'
 import CreateRecipeView from '@/views/CreateRecipeView.vue'
+import RecipeComponent from '@/views/RecipeView.vue'
 
 export const routes = [
   {
@@ -17,5 +18,10 @@ export const routes = [
     path: '/create-recipe',
     name: 'create-recipe',
     component: CreateRecipeView,
+  },
+  {
+    path: '/recipes/:id',
+    name: 'recipe',
+    component: RecipeComponent,
   },
 ]

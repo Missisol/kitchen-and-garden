@@ -59,17 +59,36 @@ def get_recipes():
 
 
 @app.route('/recipes', methods=['POST'])
-def create_recipe():
+def create_or_get_recipe():
     data = request.json
-    recipe_data = {}
-    if data.get('title'):
-        for field in fields:
-            recipe_data[field] = data.get(field)
+    if 'id' in data:
+        recipe = Recipe.query.get(data['id'])
+        if recipe:
+            return jsonify({
+                'id': recipe.id,
+                'title': recipe.title,
+                'ingredients': recipe.ingredients,
+                'instructions': recipe.instructions,
+                'image': recipe.image if recipe.image else None, 
+                'category_id': recipe.category_id,
+                'category_name': recipe.recipe_name.name,
+                'links': recipe.links,
+            })
+        else:
+            return jsonify({'error': 'Recipe not found'}), 404
+    else:
+        recipe_data = {}
+        if data.get('title'):
+            for field in fields:
+                recipe_data[field] = data.get(field)
 
-        recipe = Recipe(**recipe_data)
-        db.session.add(recipe)
-        db.session.commit()
-    return jsonify({'id': recipe.id}), 201
+            recipe = Recipe(**recipe_data)
+            db.session.add(recipe)
+            db.session.commit()
+            return jsonify({'id': recipe.id}), 201
+        else:
+            return jsonify({'error': 'Title is required'}), 400
+        
 
 @app.route('/recipes/<int:id>', methods=['PUT'])
 def update_recipe(id):

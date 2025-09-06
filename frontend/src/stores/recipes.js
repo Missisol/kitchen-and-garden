@@ -7,6 +7,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
     name: '',
   })
   const recipes = ref([])
+  const recipe = ref({})
 
   async function getRecipes(id) {
     const params = id ? `?category_id=${id}` : ''
@@ -18,9 +19,29 @@ export const useRecipesStore = defineStore('recipes', () =>{
     }
   }
 
+  async function getRecipeById(id){
+    try {
+      const res = await fetch(`http://localhost:5002/recipes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id })
+      })
+      recipe.value = await res.json()
+      return recipe.value
+
+    } catch (error) {
+      console.log('error', error)
+      
+    }
+  }
+
   return {
     category_params,
     recipes,
+    recipe,
     getRecipes,
+    getRecipeById,
   }
 })
