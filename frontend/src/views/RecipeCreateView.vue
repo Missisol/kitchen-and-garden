@@ -2,7 +2,10 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
+
 import { useCategoriesStore } from '@/stores/categories'
+
+import RecipeForm from '@/components/RecipeForm.vue'
 
 const router = useRouter()
 const categoriesStore = useCategoriesStore()
@@ -55,34 +58,12 @@ async function createRecipe(body) {
 
 <template>
   <h1>Добавление рецепта</h1>
-  <form class="form" @submit="getFormBody">
-    <label for="title">title</label>
-    <input v-model="data.title" id="title" type="text">
-    <label for="ingredients">ingredients</label>
-    <input v-model="data.ingredients" id="ingredients" type="text">
-    <label for="instructions">instructions</label>
-    <input v-model="data.instructions" id="instructions" type="text">
-    <label for="image">image</label>
-    <input v-model="data.image" id="image" type="text">
-    <label for="links">links</label>
-    <input v-model="data.links" id="links" type="text">
-    <label for="comment">comment</label>
-    <textarea v-model="data.comment" name="comment" id="comment"></textarea>
-    <label for="category">category</label>
-    <select v-model="data.category_id" id="category">
-      <option 
-        v-for="category in categories" 
-        :key="category.id" 
-        :value="category.id">{{ category?.name || 'Без категории' }}</option>
-    </select>
-    <button type="submit">Добавить</button>
-  </form>
+  <RecipeForm
+    v-model="data"
+    :categories="categories"
+    @getFormBody="getFormBody"
+  />
 </template>
 
 <style scoped>
-.form {
-  display: grid;
-  gap: 1rem;
-  width: 400px;
-}
 </style>

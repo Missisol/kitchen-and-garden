@@ -1,0 +1,42 @@
+<script setup>
+const { categories } = defineProps({
+  categories: Array
+})
+
+const emit = defineEmits(['getFormBody'])
+
+const model = defineModel()
+</script>
+
+<template>
+    <form class="form" @submit="emit('getFormBody', $event)">
+    <label for="title">title</label>
+    <input v-model="model.title" id="title" type="text">
+    <label for="ingredients">ingredients</label>
+    <input v-model="model.ingredients" id="ingredients" type="text">
+    <label for="instructions">instructions</label>
+    <input v-model="model.instructions" id="instructions" type="text">
+    <label for="image">image</label>
+    <input v-model="model.image" id="image" type="text">
+    <label for="links">links</label>
+    <input v-model="model.links" id="links" type="text">
+    <label for="comment">comment</label>
+    <textarea v-model="model.comment" name="comment" id="comment"></textarea>
+    <label for="category">category</label>
+    <select v-model="model.category_id" id="category">
+      <option 
+        v-for="category in categories" 
+        :key="category.id" 
+        :value="category.id">{{ category?.name || 'Без категории' }}</option>
+    </select>
+    <button type="submit">Добавить</button>
+  </form>
+</template>
+
+<style scoped>
+.form {
+  display: grid;
+  gap: 1rem;
+  width: 400px;
+}
+</style>
