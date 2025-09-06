@@ -29,11 +29,11 @@ def create_category():
 
 @app.route('/recipes', methods=['GET'])
 def get_recipes():
-    id = request.args.get('id')
-    print(f'id: {id}')
+    category_id = request.args.get('category_id')
+    print(f'id: {category_id}')
 
-    if id:
-        recipes = Recipe.query.filter_by(category_id=id).all()
+    if category_id:
+        recipes = Recipe.query.filter_by(category_id=category_id).all()
         return jsonify([{
             'id': r.id,
             'title': r.title,
@@ -77,18 +77,18 @@ def update_recipe(id):
     data = request.json
     
     # Проверка версии
-    if 'version' not in data or recipe.version != data['version']:
-        return jsonify({
-            'error': 'Conflict',
-            'message': 'Рецепт был изменен другим пользователем',
-            'server_version': recipe.version,
-            'server_data': {
-                'title': recipe.title,
-                'ingredients': recipe.ingredients,
-                'instructions': recipe.instructions,
-                'image': recipe.image,
-            }
-        }), 409
+    # if 'version' not in data or recipe.version != data['version']:
+    #     return jsonify({
+    #         'error': 'Conflict',
+    #         'message': 'Рецепт был изменен другим пользователем',
+    #         'server_version': recipe.version,
+    #         'server_data': {
+    #             'title': recipe.title,
+    #             'ingredients': recipe.ingredients,
+    #             'instructions': recipe.instructions,
+    #             'image': recipe.image,
+    #         }
+    #     }), 409
     
     # Обновление данных
     recipe.title = data.get('title', recipe.title)

@@ -16,6 +16,7 @@
 
 body {
   line-height: 1.5;
+  scroll-behavior: smooth;
 }
 
 img, picture, video, canvas, svg {
@@ -29,4 +30,8 @@ input, button, textarea, select {
 
 h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
+}
+
+ul, ol {
+  list-style: none;
 }

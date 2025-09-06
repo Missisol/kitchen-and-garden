@@ -9,10 +9,11 @@ const { categories } = storeToRefs(categoriesStore)
 const { getCategories } = categoriesStore
 
 const recipesStore = useRecipesStore()
+const { category_params } = storeToRefs(recipesStore)
 
 const getParams = async(category) => {
   console.log('category', category?.id)
-  recipesStore.params = category?.id ? {id: category.id, name: category.name} : { id: '', name: '' }
+  category_params.value = category?.id ? {id: category.id, name: category.name} : { id: '', name: '' }
 }
 
 getCategories()

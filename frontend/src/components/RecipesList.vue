@@ -1,48 +1,39 @@
 <script setup>
-import { ref, onBeforeMount, watch } from 'vue'
+import { watch } from 'vue'
+import { RouterLink } from 'vue-router'
 import { useRecipesStore } from '@/stores/recipes'
 import { storeToRefs } from 'pinia'
 
 
-const data = ref([])
-const store =  useRecipesStore()
-const { params } = storeToRefs(store)
+const recipesStore =  useRecipesStore()
+const { category_params, recipes } = storeToRefs(recipesStore)
+const { getRecipes } = recipesStore
 
-console.log('log store', store.params)
+console.log('log store', recipesStore.params)
 
-watch(() => params.value, async (n, o) => {
-  console.log('store', `params:${params.value.id}` , `n:${n.id}`, `o:${o.id}`)
+getRecipes()
+
+watch(() => category_params.value, async (n, o) => {
+  console.log('store', `params:${category_params.value.id}` , `n:${n.id}`, `o:${o.id}`)
   if (n.id !== o.id) {
-    const res = await fetch(`http://localhost:5002/recipes?id=${params.value.id}`)
-    data.value = await res.json()
-    console.log('data_value', data.value)
-    
+    getRecipes(n.id)
   }
-})
-
-
-
-onBeforeMount(async () => {
-  
-  const res = await fetch(`http://localhost:5002/recipes?`)
-  data.value = await res.json()
-
-  console.log('data', data.value)
-  
 })
 </script>
 
 <template>
   <section class="categories">
-    <h1 class="title">Категория: {{ params?.name || 'Все' }}</h1>
-    <div class="list">
-        <div v-for="item in data" :key="item.id" class="item">
-        <div>title: {{ item.title }}</div>
-        <div>ingredients: {{ item.ingredients }}</div>
-        <div>instructions: {{ item.instructions }}</div>
-        <div>links: {{ item.links }}</div>
-      </div>
-    </div>
+    <h1 class="title">Категория: {{ category_params?.name || 'Все' }}</h1>
+    <ul class="list">
+      <li v-for="item in recipes" :key="item.id" class="item">
+        <RouterLink :to="`/recipes/${item.id}`">
+          <div>title: {{ item.title }}</div>
+          <div>ingredients: {{ item.ingredients }}</div>
+          <div>instructions: {{ item.instructions }}</div>
+          <div>links: {{ item.links }}</div>
+        </RouterLink>
+      </li>
+    </ul>
   </section>
 </template>
 
@@ -63,5 +54,11 @@ onBeforeMount(async () => {
 .item {
   border: 1px solid var(--color-border);
   padding: 1rem;
+  color: var(--color-text);
+
+  & a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 </style>
