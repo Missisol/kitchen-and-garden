@@ -13,7 +13,11 @@ class Category(db.Model):
     name: so.Mapped[Optional[str]] = so.mapped_column(
         String(100), index=True, unique=True, default='')
 
-    recipes: so.WriteOnlyMapped['Recipe'] = so.relationship(back_populates='recipe_name')
+    # Удаляет только категорию. Поэтому перед удалением категории необходимо явно удалить все связанные рецепты 
+    # recipes: so.WriteOnlyMapped['Recipe'] = so.relationship(back_populates='recipe_name', passive_deletes=True)
+
+    # Удаляет все рецепты категории и саму категорию
+    recipes: so.Mapped['Recipe'] = so.relationship(back_populates='recipe_name', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Category {self.name}>'

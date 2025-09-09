@@ -21,12 +21,12 @@ export const useRecipesStore = defineStore('recipes', () =>{
 
   async function getRecipeById(id){
     try {
-      const res = await fetch(`http://localhost:5002/recipe`, {
+      const res = await fetch(`http://localhost:5002/recipes/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ id })
+        // body: JSON.stringify({ id })
       })
       recipe.value = await res.json()
       return recipe.value
@@ -44,7 +44,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ id })
+        // body: JSON.stringify({ id })
       })
     } catch (error) {
       console.log('error', error)

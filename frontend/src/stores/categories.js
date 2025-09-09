@@ -24,9 +24,25 @@ async function createCategory(category) {
   }
 }
 
+async function deleteCategoryById(id) {
+  try {
+    const res =await fetch(`http://localhost:5002/categories`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id })
+    })
+    return res.status
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
   return {
     categories,
     getCategories,
     createCategory,
+    deleteCategoryById,
   }
 })

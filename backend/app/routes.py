@@ -27,6 +27,24 @@ def create_category():
     return jsonify({'id': category.id}), 201
 
 
+@app.route('/categories', methods=['DELETE'])
+def delete_category():
+    data = request.get_json(silent=True)
+    # или
+    # data = request.json
+
+    if 'id' not in data:
+        return jsonify({'error': 'Missing id parameter'}), 400
+
+    try:
+        category = Category.query.get_or_404(data['id'])
+        db.session.delete(category)
+        db.session.commit()
+        return '', 204
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+
 @app.route('/recipes', methods=['GET'])
 def get_recipes():
     category_id = request.args.get('category_id')
@@ -60,6 +78,7 @@ def get_recipes():
 
 @app.route('/recipes/<int:id>', methods=['POST'])
 def get_recipe(id):
+    print(f'id: {id}')
     recipe = Recipe.query.get_or_404(id)
     return jsonify({
         'id': recipe.id,
@@ -67,7 +86,7 @@ def get_recipe(id):
         'ingredients': recipe.ingredients,
         'instructions': recipe.instructions,
         'category_id': recipe.category_id,
-        'category_name': recipe.recipe_name.name,
+        'category_name': recipe.recipe_name.name if recipe.recipe_name else None,
         'links': recipe.links,
         'comment': recipe.comment,
     })
