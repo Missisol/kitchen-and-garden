@@ -1,8 +1,10 @@
 <script setup>
-import RecipesList from '@/components/RecipesList.vue'
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
 import { storeToRefs } from 'pinia'
+
+import RecipesList from '@/components/RecipesList.vue'
+import CategoryCreate from '@/components/category/CategoryCreate.vue'
 
 const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
@@ -34,6 +36,7 @@ console.log('categories', categories.value)
         >
           {{ category?.name ||'Без категории' }}
       </div>
+      <CategoryCreate />
     </aside>
     <RecipesList />
   </div>
