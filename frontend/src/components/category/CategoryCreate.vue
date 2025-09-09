@@ -16,6 +16,7 @@ async function saveCategory(e) {
   }
   const res = await createCategory(params.value)
   if (res?.id) {
+    params.value = {}
     getCategories()
   }
 }
