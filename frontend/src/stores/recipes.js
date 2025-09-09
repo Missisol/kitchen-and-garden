@@ -39,7 +39,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
 
     async function deleteRecipeById(id) {
     try {
-      await fetch(`http://localhost:5002/recipes/${id}`, {
+      await fetch(`http://localhost:5002/recipe/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
