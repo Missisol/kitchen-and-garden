@@ -21,7 +21,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
 
   async function getRecipeById(id){
     try {
-      const res = await fetch(`http://localhost:5002/recipes`, {
+      const res = await fetch(`http://localhost:5002/recipe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -37,11 +37,27 @@ export const useRecipesStore = defineStore('recipes', () =>{
     }
   }
 
+    async function deleteRecipeById(id) {
+    try {
+      await fetch(`http://localhost:5002/recipes/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id })
+      })
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+
   return {
     category_params,
     recipes,
     recipe,
     getRecipes,
     getRecipeById,
+    deleteRecipeById,
   }
 })

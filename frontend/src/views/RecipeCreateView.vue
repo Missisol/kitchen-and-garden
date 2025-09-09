@@ -16,7 +16,6 @@ const data = ref({
   title: '',
   ingredients: '',
   instructions: '',
-  image: '',
   links: '',
   comment: '',
   category_id: '',
@@ -37,7 +36,7 @@ async function getFormBody(e) {
 
 async function createRecipe(body) {
   try {
-  const res = await fetch('http://localhost:5002/recipes', {
+  const res = await fetch('http://localhost:5002/recipe', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
