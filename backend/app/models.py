@@ -27,7 +27,6 @@ class Recipe(db.Model):
         String(100), index=True, unique=True)
     ingredients: so.Mapped[str] = so.mapped_column(Text, index=True)
     instructions: so.Mapped[str] = so.mapped_column(Text)
-    image: so.Mapped[Optional[str]] = so.mapped_column(String(100))
     links: so.Mapped[Optional[str]] = so.mapped_column(Text)
     comment: so.Mapped[Optional[str]] = so.mapped_column(Text)
     timestamp: so.Mapped[datetime] = so.mapped_column(

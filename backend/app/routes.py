@@ -2,7 +2,7 @@ from flask import jsonify, request
 from app import app, db
 from app.models import Category, Recipe
 
-fields = ['title', 'ingredients', 'instructions', 'image', 'links', 'comment', 'category_id']
+fields = ['title', 'ingredients', 'instructions', 'links', 'comment', 'category_id']
 
 @app.route('/')
 def index():
@@ -39,7 +39,6 @@ def get_recipes():
             'title': r.title,
             'ingredients': r.ingredients,
             'instructions': r.instructions,
-            'image': r.image if r.image else None, 
             'category_id': r.category_id,
             'category_name': r.recipe_name.name,
             'links': r.links,
@@ -52,7 +51,6 @@ def get_recipes():
             'title': r.title,
             'ingredients': r.ingredients,
             'instructions': r.instructions,
-            'image': r.image if r.image else None, 
             'category_id': r.category_id,
             'category_name': r.recipe_name.name if r.recipe_name else None,
             'links': r.links,
@@ -60,7 +58,21 @@ def get_recipes():
         } for r in recipes])
 
 
-@app.route('/recipes', methods=['POST'])
+@app.route('/recipes/<int:id>', methods=['POST'])
+def get_recipe(id):
+    recipe = Recipe.query.get_or_404(id)
+    return jsonify({
+        'id': recipe.id,
+        'title': recipe.title,
+        'ingredients': recipe.ingredients,
+        'instructions': recipe.instructions,
+        'category_id': recipe.category_id,
+        'category_name': recipe.recipe_name.name,
+        'links': recipe.links,
+        'comment': recipe.comment,
+    })
+
+@app.route('/recipe', methods=['POST'])
 def create_or_get_recipe():
     data = request.json
     if 'id' in data:
@@ -71,7 +83,6 @@ def create_or_get_recipe():
                 'title': recipe.title,
                 'ingredients': recipe.ingredients,
                 'instructions': recipe.instructions,
-                'image': recipe.image if recipe.image else None, 
                 'category_id': recipe.category_id,
                 'category_name': recipe.recipe_name.name,
                 'links': recipe.links,
@@ -93,7 +104,7 @@ def create_or_get_recipe():
             return jsonify({'error': 'Title is required'}), 400
         
 
-@app.route('/recipes/<int:id>', methods=['PUT'])
+@app.route('/recipe/<int:id>', methods=['PUT'])
 def update_recipe(id):
     recipe = Recipe.query.get_or_404(id)
     data = request.json
@@ -116,14 +127,14 @@ def update_recipe(id):
     recipe.title = data.get('title', recipe.title)
     recipe.ingredients = data.get('ingredients', recipe.ingredients)
     recipe.instructions = data.get('instructions', recipe.instructions)
-    recipe.version += 1
+    # recipe.version += 1
     db.session.commit()
     return jsonify({
         'message': 'Recipe updated',
-        'version': recipe.version
+        # 'version': recipe.version
     })
 
-@app.route('/recipes/<int:id>', methods=['DELETE'])
+@app.route('/recipe/<int:id>', methods=['DELETE'])
 def delete_recipe(id):
     recipe = Recipe.query.get_or_404(id)
     db.session.delete(recipe)

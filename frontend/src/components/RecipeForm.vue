@@ -16,8 +16,6 @@ const model = defineModel()
     <input v-model="model.ingredients" id="ingredients" type="text">
     <label for="instructions">instructions</label>
     <input v-model="model.instructions" id="instructions" type="text">
-    <label for="image">image</label>
-    <input v-model="model.image" id="image" type="text">
     <label for="links">links</label>
     <input v-model="model.links" id="links" type="text">
     <label for="comment">comment</label>
