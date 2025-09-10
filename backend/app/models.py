@@ -13,6 +13,9 @@ class Category(db.Model):
     name: so.Mapped[Optional[str]] = so.mapped_column(
         String(100), index=True, unique=True, default='')
 
+    # Вернет ошибку удаления 
+    # recipes: so.WriteOnlyMapped['Recipe'] = so.relationship(back_populates='recipe_name')
+
     # Удаляет только категорию. Поэтому перед удалением категории необходимо явно удалить все связанные рецепты 
     # recipes: so.WriteOnlyMapped['Recipe'] = so.relationship(back_populates='recipe_name', passive_deletes=True)
 
@@ -38,6 +41,7 @@ class Recipe(db.Model):
     version: so.Mapped[int] = so.mapped_column(Integer, default=0)
     category_id: so.Mapped[int] = so.mapped_column(
         ForeignKey(Category.id), index=True, default=1)
+    file: so.Mapped[Optional[str]] = so.mapped_column(String(255))
 
     recipe_name: so.Mapped[Category] = so.relationship(back_populates='recipes')
 

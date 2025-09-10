@@ -18,8 +18,8 @@ const data = ref({
   instructions: '',
   links: '',
   comment: '',
-  category_id: '',
 })
+const fileModel = ref({})
 
 if (!categories.value.length) {
   getCategories()
@@ -29,8 +29,31 @@ async function getFormBody(e) {
   e.preventDefault()
   console.log('data', data.value)
 
-  if (data.value.title) {
-    createRecipe(data.value)
+  if (!data.value.title) {
+    return
+  }
+  if (fileModel.value.file) {
+  const formData = new FormData()
+  formData.append('file', fileModel.value.file)
+
+  const res = await fetch('http://localhost:5002/recipe/file', {
+    method: 'POST',
+    body: formData,
+  })
+  const result = await res.json()
+  console.log('result', result)
+  data.value.file = result.filename  // Сохраняем только имя файла
+}
+
+  console.log('data', data.value)
+    
+  await createRecipe(data.value)
+  data.value = {
+    title: '',
+    ingredients: '',
+    instructions: '',
+    links: '',
+    comment: '',
   }
 }
 
@@ -58,7 +81,8 @@ async function createRecipe(body) {
 <template>
   <h1>Добавление рецепта</h1>
   <RecipeForm
-    v-model="data"
+    v-model:model="data"
+    v-model:file-model="fileModel"
     :categories="categories"
     @getFormBody="getFormBody"
   />

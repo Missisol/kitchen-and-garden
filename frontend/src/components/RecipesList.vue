@@ -1,5 +1,5 @@
 <script setup>
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useRecipesStore } from '@/stores/recipes'
 import { storeToRefs } from 'pinia'
@@ -9,7 +9,13 @@ const recipesStore =  useRecipesStore()
 const { category_params, recipes } = storeToRefs(recipesStore)
 const { getRecipes } = recipesStore
 
-console.log('log store', recipesStore.params)
+const categoryTitle = computed(() => {
+  return (category_params.value.name && category_params.value.id) 
+    ? category_params.value.name 
+    : (category_params.value.id && !category_params.value.name) 
+    ? 'Без категории' 
+    : 'Все'
+})
 
 getRecipes()
 
@@ -23,7 +29,7 @@ watch(() => category_params.value, async (n, o) => {
 
 <template>
   <section class="categories">
-    <h1 class="title">Категория: {{ category_params?.name || 'Все' }}</h1>
+    <h1 class="title">Категория: {{ categoryTitle }}</h1>
     <ul class="list">
       <li v-for="item in recipes" :key="item.id" class="item">
         <RouterLink :to="`/recipes/${item.id}`">
@@ -31,6 +37,7 @@ watch(() => category_params.value, async (n, o) => {
           <div>ingredients: {{ item.ingredients }}</div>
           <div>instructions: {{ item.instructions }}</div>
           <div>links: {{ item.links }}</div>
+          <div>category: {{ item.category_name || 'Без категории' }}</div>
         </RouterLink>
       </li>
     </ul>

@@ -8,6 +8,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
   })
   const recipes = ref([])
   const recipe = ref({})
+  const filePath = ref('')
 
   async function getRecipes(id) {
     const params = id ? `?category_id=${id}` : ''
@@ -26,9 +27,21 @@ export const useRecipesStore = defineStore('recipes', () =>{
         headers: {
           'Content-Type': 'application/json'
         },
-        // body: JSON.stringify({ id })
       })
       recipe.value = await res.json()
+      console.log('recipe', recipe.value)
+      
+
+      if (recipe.value.file) {
+        try {
+          const res = await fetch(`http://localhost:5002/static/uploads/${recipe.value.file}`)
+          filePath.value = res.url
+        } catch (error) {
+          console.log('error', error)
+          
+        }
+      }
+
       return recipe.value
 
     } catch (error) {
@@ -44,18 +57,17 @@ export const useRecipesStore = defineStore('recipes', () =>{
         headers: {
           'Content-Type': 'application/json'
         },
-        // body: JSON.stringify({ id })
       })
     } catch (error) {
       console.log('error', error)
     }
   }
 
-
   return {
     category_params,
     recipes,
     recipe,
+    filePath,
     getRecipes,
     getRecipeById,
     deleteRecipeById,

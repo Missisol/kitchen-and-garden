@@ -1,12 +1,15 @@
-from flask import jsonify, request
+import os
+from flask import  flash, jsonify, request, redirect, current_app, url_for, send_from_directory
 from app import app, db
 from app.models import Category, Recipe
+# from werkzeug.utils import secure_filename
+from app.utils.secure_filename import secure_filename
 
-fields = ['title', 'ingredients', 'instructions', 'links', 'comment', 'category_id']
+fields = ['title', 'ingredients', 'instructions', 'links', 'comment', 'category_id', 'file']
 
-@app.route('/')
-def index():
-    return "Hello, recipes!"
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
 
 @app.route('/categories', methods=['GET'])
@@ -22,8 +25,11 @@ def get_categories():
 def create_category():
     data = request.json
     category = Category(name=data['name'])
-    db.session.add(category)
-    db.session.commit()
+    try:
+        db.session.add(category)
+        db.session.commit()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
     return jsonify({'id': category.id}), 201
 
 
@@ -48,8 +54,6 @@ def delete_category():
 @app.route('/recipes', methods=['GET'])
 def get_recipes():
     category_id = request.args.get('category_id')
-    print(f'id: {category_id}')
-
     if category_id:
         recipes = Recipe.query.filter_by(category_id=category_id).all()
         return jsonify([{
@@ -61,6 +65,7 @@ def get_recipes():
             'category_name': r.recipe_name.name,
             'links': r.links,
             'comment': r.comment,
+            'file': r.file,
         } for r in recipes])
     else:
         recipes = Recipe.query.all()
@@ -70,9 +75,10 @@ def get_recipes():
             'ingredients': r.ingredients,
             'instructions': r.instructions,
             'category_id': r.category_id,
-            'category_name': r.recipe_name.name if r.recipe_name else None,
+            'category_name': r.recipe_name.name,
             'links': r.links,
             'comment': r.comment,
+            'file': r.file,
         } for r in recipes])
 
 
@@ -86,42 +92,54 @@ def get_recipe(id):
         'ingredients': recipe.ingredients,
         'instructions': recipe.instructions,
         'category_id': recipe.category_id,
-        'category_name': recipe.recipe_name.name if recipe.recipe_name else None,
+        'category_name': recipe.recipe_name.name,
         'links': recipe.links,
         'comment': recipe.comment,
+        'file': recipe.file,
     })
 
-@app.route('/recipe', methods=['POST'])
-def create_or_get_recipe():
-    data = request.json
-    if 'id' in data:
-        recipe = Recipe.query.get(data['id'])
-        if recipe:
-            return jsonify({
-                'id': recipe.id,
-                'title': recipe.title,
-                'ingredients': recipe.ingredients,
-                'instructions': recipe.instructions,
-                'category_id': recipe.category_id,
-                'category_name': recipe.recipe_name.name,
-                'links': recipe.links,
-                'comment': recipe.comment,
-            })
-        else:
-            return jsonify({'error': 'Recipe not found'}), 404
-    else:
-        recipe_data = {}
-        if data.get('title'):
-            for field in fields:
-                recipe_data[field] = data.get(field)
 
+@app.route('/recipe/file', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        flash('No file part')
+        return jsonify({'error': 'No file part'}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        flash('No selected file')
+        return jsonify({'error': 'No selected file'}), 400
+
+    if file and allowed_file(file.filename):
+        print(f'filename: {file.filename}')
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+        return jsonify({'filename': filename}), 201
+
+
+@app.route('/static/uploads/<name>')
+def download_file(name):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], name)
+
+    
+@app.route('/recipe', methods=['POST'])
+def create_recipe():
+    data = request.json
+    recipe_data = {}
+    if data.get('title'):
+        for field in fields:
+            recipe_data[field] = data.get(field)
+
+        try:
             recipe = Recipe(**recipe_data)
             db.session.add(recipe)
             db.session.commit()
             return jsonify({'id': recipe.id}), 201
-        else:
-            return jsonify({'error': 'Title is required'}), 400
-        
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Title is required'}), 400
+
 
 @app.route('/recipe/<int:id>', methods=['PUT'])
 def update_recipe(id):
@@ -156,6 +174,9 @@ def update_recipe(id):
 @app.route('/recipe/<int:id>', methods=['DELETE'])
 def delete_recipe(id):
     recipe = Recipe.query.get_or_404(id)
-    db.session.delete(recipe)
-    db.session.commit()
+    try:
+        db.session.delete(recipe)
+        db.session.commit()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
     return '', 204
