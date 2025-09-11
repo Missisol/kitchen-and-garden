@@ -65,7 +65,7 @@ async function create() {
   <h1>Добавление рецепта</h1>
   <RecipeForm
     v-model:model="data"
-    v-model:file-model="fileModel"
+    v-model:fileModel="fileModel"
     :categories="categories"
     @getFormBody="getFormBody"
   />

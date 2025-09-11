@@ -15,21 +15,42 @@ function handleFileChange(event) {
 </script>
 
 <template>
-  <form class="form" @submit="emit('getFormBody', $event)">
+  <form 
+    class="form" 
+    @submit="emit('getFormBody', $event)"
+  >
     <label for="title">title</label>
-    <input v-model="model.title" id="title" type="text">
+    <input 
+      v-model="model.title" 
+      id="title" 
+      type="text"
+    >
     <label for="ingredients">ingredients</label>
-    <input v-model="model.ingredients" id="ingredients" type="text">
+    <input 
+      v-model="model.ingredients" 
+      id="ingredients" 
+      type="text"
+    >
     <label for="instructions">instructions</label>
-    <input v-model="model.instructions" id="instructions" type="text">
+    <input 
+      v-model="model.instructions" 
+      id="instructions" 
+      type="text"
+    >
     <label for="links">links</label>
-    <input v-model="model.links" id="links" type="text">
+    <input v-model="model.links"
+           id="links"
+           type="text"
+    >
     <label for="category">category</label>
-    <select v-model="model.category_id" id="category">
+    <select v-model="model.category_id"
+            id="category"
+    >
       <option 
         v-for="category in categories" 
         :key="category.id" 
-        :value="category.id">{{ category?.name || 'Без категории' }}</option>
+        :value="category.id"
+      >{{ category?.name || 'Без категории' }}</option>
     </select>
     <div v-if="filePath">
       <div>{{ model.file }}</div>
@@ -46,7 +67,10 @@ function handleFileChange(event) {
       >
     </div>
     <label for="comment">comment</label>
-    <textarea v-model="model.comment" name="comment" id="comment"></textarea>
+    <textarea v-model="model.comment"
+              name="comment"
+              id="comment"
+    ></textarea>
 
     <button type="submit">Сохранить</button>
   </form>

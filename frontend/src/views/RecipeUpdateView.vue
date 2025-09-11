@@ -62,7 +62,7 @@ watch(() => recipe.value, () => {
   <h1>Редактировать рецепт</h1>
   <RecipeForm
     v-model:model="data"
-    v-model:file-model="fileModel"
+    v-model:fileModel="fileModel"
     :categories="categories"
     :filePath="filePath"
     @getFormBody="getFormBody"
