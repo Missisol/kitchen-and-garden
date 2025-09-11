@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
 import { useCategoriesStore } from '@/stores/categories'
+import { useRecipesStore } from '@/stores/recipes'
 
 import RecipeForm from '@/components/RecipeForm.vue'
 
@@ -11,6 +12,8 @@ const router = useRouter()
 const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
 const { getCategories } = categoriesStore
+const recipesStore = useRecipesStore()
+const { createRecipe, uploadFile } = recipesStore
 
 const data = ref({
   title: '',
@@ -33,49 +36,29 @@ async function getFormBody(e) {
     return
   }
   if (fileModel.value.file) {
-  const formData = new FormData()
-  formData.append('file', fileModel.value.file)
-
-  const res = await fetch('http://localhost:5002/recipe/file', {
-    method: 'POST',
-    body: formData,
-  })
-  const result = await res.json()
-  console.log('result', result)
-  data.value.file = result.filename  // Сохраняем только имя файла
-}
-
+    const formData = new FormData()
+    formData.append('file', fileModel.value.file)
+    const result = await uploadFile(formData)
+    data.value.file = result.filename  // Сохраняем только имя файла
+  }
   console.log('data', data.value)
-    
-  await createRecipe(data.value)
-  data.value = {
-    title: '',
-    ingredients: '',
-    instructions: '',
-    links: '',
-    comment: '',
-  }
+  create()
 }
 
-async function createRecipe(body) {
-  try {
-  const res = await fetch('http://localhost:5002/recipe', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  })
-  const result = await res.json()
-  if (result.id) {
+async function create() {
+  const result = await createRecipe(data.value)
+    if (result.id) {
     router.push({ path: `/` })
-    // router.push({ path: `/recipes/${result.id}` })
-  }
-  } catch (error) {
-    console.log('error', error)
+
+      data.value = {
+      title: '',
+      ingredients: '',
+      instructions: '',
+      links: '',
+      comment: '',
+    }
   }
 }
-
 </script>
 
 <template>

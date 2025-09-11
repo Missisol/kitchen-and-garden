@@ -13,8 +13,8 @@ export const useRecipesStore = defineStore('recipes', () =>{
   async function getRecipes(id) {
     const params = id ? `?category_id=${id}` : ''
     try {
-    const res = await fetch(`http://localhost:5002/recipes${params}`)
-    recipes.value = await res.json()
+      const res = await fetch(`http://localhost:5002/recipes${params}`)
+      recipes.value = await res.json()
     } catch (error) {
       console.log('error', error)
     }
@@ -30,7 +30,6 @@ export const useRecipesStore = defineStore('recipes', () =>{
       })
       recipe.value = await res.json()
       console.log('recipe', recipe.value)
-      
 
       if (recipe.value.file) {
         try {
@@ -38,15 +37,11 @@ export const useRecipesStore = defineStore('recipes', () =>{
           filePath.value = res.url
         } catch (error) {
           console.log('error', error)
-          
         }
       }
-
       return recipe.value
-
     } catch (error) {
       console.log('error', error)
-      
     }
   }
 
@@ -63,6 +58,33 @@ export const useRecipesStore = defineStore('recipes', () =>{
     }
   }
 
+  async function createRecipe(body) {
+    try {
+    const res = await fetch('http://localhost:5002/recipe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+      return await res.json()
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  async function uploadFile(formData) {
+    try {
+      const res = await fetch(`http://localhost:5002/recipe/file`, {
+        method: 'POST',
+        body: formData
+      })
+      return await res.json()
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
   return {
     category_params,
     recipes,
@@ -71,5 +93,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
     getRecipes,
     getRecipeById,
     deleteRecipeById,
+    createRecipe,
+    uploadFile,
   }
 })
