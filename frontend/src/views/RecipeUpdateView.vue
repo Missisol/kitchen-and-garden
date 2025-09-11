@@ -14,7 +14,7 @@ const { categories } = storeToRefs(categoriesStore)
 const { getCategories } = categoriesStore
 
 const recipesStore =  useRecipesStore()
-const { recipe } = storeToRefs(recipesStore)
+const { recipe, filePath } = storeToRefs(recipesStore)
 const { getRecipeById } = recipesStore
 
 const id = router.currentRoute.value.params.id
@@ -28,6 +28,7 @@ const data = ref({
   comment: '',
   category_id: '',
 })
+const fileModel = ref({})
 
 getRecipeById(id)
 
@@ -52,6 +53,7 @@ watch(() => recipe.value, () => {
     links: recipe.value.links,
     comment: recipe.value.comment,
     category_id: recipe.value.category_id,
+    file: recipe.value?.file
   }
 })
 </script>
@@ -59,8 +61,10 @@ watch(() => recipe.value, () => {
 <template>
   <h1>Редактировать рецепт</h1>
   <RecipeForm
-    v-model="data"
+    v-model:model="data"
+    v-model:file-model="fileModel"
     :categories="categories"
+    :filePath="filePath"
     @getFormBody="getFormBody"
   />
 </template>

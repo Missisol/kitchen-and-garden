@@ -1,6 +1,7 @@
 <script setup>
-const { categories } = defineProps({
-  categories: Array
+const { categories, filePath } = defineProps({
+  categories: Array,
+  filePath: String
 })
 
 const emit = defineEmits(['getFormBody'])
@@ -30,18 +31,24 @@ function handleFileChange(event) {
         :key="category.id" 
         :value="category.id">{{ category?.name || 'Без категории' }}</option>
     </select>
-    <label for="file">Добавьте файл</label>
-    <input
-      type="file" 
-      name="file" 
-      id="file" 
-      accept=".doc, .docx, .pdf, .png, .jpg, .jpeg"
-      @change="handleFileChange"
-    >
+    <div v-if="filePath">
+      <div>{{ model.file }}</div>
+      <button type="button">Удалить файл</button>
+    </div>
+    <div v-else>
+      <label for="file">Добавьте файл</label>
+      <input
+        type="file" 
+        name="file" 
+        id="file" 
+        accept=".doc, .docx, .pdf, .png, .jpg, .jpeg"
+        @change="handleFileChange"
+      >
+    </div>
     <label for="comment">comment</label>
     <textarea v-model="model.comment" name="comment" id="comment"></textarea>
 
-    <button type="submit">Добавить</button>
+    <button type="submit">Сохранить</button>
   </form>
 </template>
 
