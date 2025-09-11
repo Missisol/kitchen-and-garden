@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { apiUrls } from '@/utils/apiUrls'
 
 export const useRecipesStore = defineStore('recipes', () =>{
   const category_params = ref({
@@ -13,7 +14,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
   async function getRecipes(id) {
     const params = id ? `?category_id=${id}` : ''
     try {
-      const res = await fetch(`http://localhost:5002/recipes${params}`)
+      const res = await fetch(`${apiUrls.recipes}${params}`)
       recipes.value = await res.json()
     } catch (error) {
       console.log('error', error)
@@ -22,7 +23,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
 
   async function getRecipeById(id){
     try {
-      const res = await fetch(`http://localhost:5002/recipes/${id}`, {
+      const res = await fetch(`${apiUrls.recipes}/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -33,7 +34,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
 
       if (recipe.value.file) {
         try {
-          const res = await fetch(`http://localhost:5002/static/uploads/${recipe.value.file}`)
+          const res = await fetch(`${apiUrls.filePath}/${recipe.value.file}`)
           filePath.value = res.url
         } catch (error) {
           console.log('error', error)
@@ -47,7 +48,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
 
     async function deleteRecipeById(id) {
     try {
-      await fetch(`http://localhost:5002/recipe/${id}`, {
+      await fetch(`${apiUrls.recipe}/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -60,7 +61,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
 
   async function createRecipe(body) {
     try {
-    const res = await fetch('http://localhost:5002/recipe', {
+    const res = await fetch(`${apiUrls.recipe}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -75,7 +76,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
 
   async function uploadFile(formData) {
     try {
-      const res = await fetch(`http://localhost:5002/recipe/file`, {
+      const res = await fetch(`${apiUrls.recipeFile}`, {
         method: 'POST',
         body: formData
       })
