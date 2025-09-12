@@ -50,13 +50,13 @@ async function create() {
     if (result.id) {
     router.push({ path: `/` })
 
-      data.value = {
-      title: '',
-      ingredients: '',
-      instructions: '',
-      links: '',
-      comment: '',
-    }
+    //   data.value = {
+    //   title: '',
+    //   ingredients: '',
+    //   instructions: '',
+    //   links: '',
+    //   comment: '',
+    // }
   }
 }
 </script>

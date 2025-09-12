@@ -129,7 +129,6 @@ def create_recipe():
     if data.get('title'):
         for field in fields:
             recipe_data[field] = data.get(field)
-
         try:
             recipe = Recipe(**recipe_data)
             db.session.add(recipe)
@@ -143,38 +142,23 @@ def create_recipe():
 
 @app.route('/recipe/<int:id>', methods=['PUT'])
 def update_recipe(id):
-    recipe = Recipe.query.get_or_404(id)
-    data = request.json
-    
-    # Проверка версии
-    # if 'version' not in data or recipe.version != data['version']:
-    #     return jsonify({
-    #         'error': 'Conflict',
-    #         'message': 'Рецепт был изменен другим пользователем',
-    #         'server_version': recipe.version,
-    #         'server_data': {
-    #             'title': recipe.title,
-    #             'ingredients': recipe.ingredients,
-    #             'instructions': recipe.instructions,
-    #             'image': recipe.image,
-    #         }
-    #     }), 409
-    
-    # Обновление данных
-    recipe.title = data.get('title', recipe.title)
-    recipe.ingredients = data.get('ingredients', recipe.ingredients)
-    recipe.instructions = data.get('instructions', recipe.instructions)
-    # recipe.version += 1
-    db.session.commit()
-    return jsonify({
-        'message': 'Recipe updated',
-        # 'version': recipe.version
-    })
+    try:
+        recipe = Recipe.query.get_or_404(id)
+        data = request.json
+        for field in fields:
+            if field in data:
+                setattr(recipe, field, data[field])
+        db.session.commit()
+        return jsonify({'id': recipe.id}), 200
+    except Exception as e:
+        # Обработка ошибок, связанных с базой данных
+        return jsonify({'error': str(e)}), 500
+
 
 @app.route('/recipe/<int:id>', methods=['DELETE'])
 def delete_recipe(id):
-    recipe = Recipe.query.get_or_404(id)
     try:
+        recipe = Recipe.query.get_or_404(id)
         db.session.delete(recipe)
         db.session.commit()
     except Exception as e:

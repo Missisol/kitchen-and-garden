@@ -15,7 +15,7 @@ const { getCategories } = categoriesStore
 
 const recipesStore =  useRecipesStore()
 const { recipe, filePath } = storeToRefs(recipesStore)
-const { getRecipeById } = recipesStore
+const { getRecipeById, updateRecipe, uploadFile } = recipesStore
 
 const id = router.currentRoute.value.params.id
 console.log('id', id)
@@ -29,6 +29,7 @@ const data = ref({
   category_id: '',
 })
 const fileModel = ref({})
+const body = ref({})
 
 getRecipeById(id)
 
@@ -40,8 +41,26 @@ async function getFormBody(e) {
   e.preventDefault()
   console.log('data', data.value)
 
-  if (data.value.title) {
-    // createRecipe(data.value)
+    if (fileModel.value.file) {
+      const formData = new FormData()
+      formData.append('file', fileModel.value.file)
+      const result = await uploadFile(formData)
+      data.value.file = result.filename
+    }
+
+    for ( const [key, value] of Object.entries(data.value)) {
+      if (value !== recipe.value[key]) {
+        body.value[key] = value
+      }
+    }
+    console.log('body', body.value)
+    update(id, body.value)
+}
+
+async function update(id, body) {
+  const result = await updateRecipe(id, body)
+  if (result.id) {
+    router.push({ path: `/` })
   }
 }
 

@@ -22,6 +22,8 @@ export const useRecipesStore = defineStore('recipes', () =>{
   }
 
   async function getRecipeById(id){
+  recipe.value = {}
+  filePath.value = ''
     try {
       const res = await fetch(`${apiUrls.recipes}/${id}`, {
         method: 'POST',
@@ -74,6 +76,21 @@ export const useRecipesStore = defineStore('recipes', () =>{
     }
   }
 
+  async function updateRecipe(id, body) {
+    try {
+    const res = await fetch(`${apiUrls.recipe}/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+      return await res.json()
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
   async function uploadFile(formData) {
     try {
       const res = await fetch(`${apiUrls.recipeFile}`, {
@@ -96,5 +113,6 @@ export const useRecipesStore = defineStore('recipes', () =>{
     deleteRecipeById,
     createRecipe,
     uploadFile,
+    updateRecipe,
   }
 })
