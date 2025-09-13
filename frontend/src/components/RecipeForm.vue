@@ -12,6 +12,10 @@ const fileModel = defineModel('fileModel')
 function handleFileChange(event) {
   fileModel.value.file = event.target.files[0]
 }
+
+function deleteFile() {
+  model.value.file = null
+}
 </script>
 
 <template>
@@ -54,7 +58,10 @@ function handleFileChange(event) {
     </select>
     <div v-if="filePath">
       <div>{{ model.file }}</div>
-      <button type="button">Удалить файл</button>
+      <button 
+        type="button" 
+        @click="deleteFile"
+      >Удалить файл</button>
     </div>
     <div v-else>
       <label for="file">Добавьте файл</label>

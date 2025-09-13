@@ -145,13 +145,25 @@ def update_recipe(id):
     try:
         recipe = Recipe.query.get_or_404(id)
         data = request.json
+        
+        # Проверяем, пришел ли file: null и есть ли текущий файл
+        if 'file' in data and data['file'] is None and recipe.file:
+            # Удаляем существующий файл
+            file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], recipe.file)
+            try:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            except OSError as e:
+                current_app.logger.error(f"Error deleting file {file_path}: {e}")
+        
+        # Обновляем поля рецепта
         for field in fields:
             if field in data:
                 setattr(recipe, field, data[field])
+        
         db.session.commit()
         return jsonify({'id': recipe.id}), 200
     except Exception as e:
-        # Обработка ошибок, связанных с базой данных
         return jsonify({'error': str(e)}), 500
 
 
@@ -159,8 +171,19 @@ def update_recipe(id):
 def delete_recipe(id):
     try:
         recipe = Recipe.query.get_or_404(id)
+        
+        # Удаляем прикреплённый файл, если он есть
+        if recipe.file:
+            file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], recipe.file)
+            try:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            except OSError as e:
+                current_app.logger.error(f"Error deleting file {file_path}: {e}")
+                # Продолжаем удаление рецепта даже если файл не удалён
+        
         db.session.delete(recipe)
         db.session.commit()
+        return '', 204
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    return '', 204
