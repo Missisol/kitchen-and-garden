@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { apiUrls } from '@/utils/apiUrls'
 
-export const useRecipesStore = defineStore('recipes', () =>{
+export const useRecipesStore = defineStore('recipes', () => {
   const category_params = ref({
     id: '',
     name: '',
@@ -10,20 +10,28 @@ export const useRecipesStore = defineStore('recipes', () =>{
   const recipes = ref([])
   const recipe = ref({})
   const filePath = ref('')
+  const searchQuery = ref('') // Добавлено состояние для поиска
 
-  async function getRecipes(id) {
-    const params = id ? `?category_id=${id}` : ''
+  async function getRecipes() {
+    const params = new URLSearchParams()
+    if (category_params.value.id) {
+      params.append('category_id', category_params.value.id)
+    }
+    if (searchQuery.value) {
+      params.append('search', searchQuery.value)
+    }
+
     try {
-      const res = await fetch(`${apiUrls.recipes}${params}`)
+      const res = await fetch(`${apiUrls.recipes}?${params.toString()}`)
       recipes.value = await res.json()
     } catch (error) {
       console.log('error', error)
     }
   }
 
-  async function getRecipeById(id){
-  recipe.value = {}
-  filePath.value = ''
+  async function getRecipeById(id) {
+    recipe.value = {}
+    filePath.value = ''
     try {
       const res = await fetch(`${apiUrls.recipes}/${id}`, {
         method: 'POST',
@@ -48,7 +56,7 @@ export const useRecipesStore = defineStore('recipes', () =>{
     }
   }
 
-    async function deleteRecipeById(id) {
+  async function deleteRecipeById(id) {
     try {
       await fetch(`${apiUrls.recipe}/${id}`, {
         method: 'DELETE',
@@ -63,13 +71,13 @@ export const useRecipesStore = defineStore('recipes', () =>{
 
   async function createRecipe(body) {
     try {
-    const res = await fetch(`${apiUrls.recipe}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
+      const res = await fetch(`${apiUrls.recipe}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
       return await res.json()
     } catch (error) {
       console.log('error', error)
@@ -78,13 +86,13 @@ export const useRecipesStore = defineStore('recipes', () =>{
 
   async function updateRecipe(id, body) {
     try {
-    const res = await fetch(`${apiUrls.recipe}/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
+      const res = await fetch(`${apiUrls.recipe}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
       return await res.json()
     } catch (error) {
       console.log('error', error)
@@ -108,11 +116,12 @@ export const useRecipesStore = defineStore('recipes', () =>{
     recipes,
     recipe,
     filePath,
+    searchQuery,
     getRecipes,
     getRecipeById,
     deleteRecipeById,
     createRecipe,
-    uploadFile,
     updateRecipe,
+    uploadFile
   }
 })

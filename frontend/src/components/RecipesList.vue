@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useRecipesStore } from '@/stores/recipes'
 import { storeToRefs } from 'pinia'
@@ -7,7 +7,6 @@ import { storeToRefs } from 'pinia'
 
 const recipesStore =  useRecipesStore()
 const { category_params, recipes } = storeToRefs(recipesStore)
-const { getRecipes } = recipesStore
 
 const categoryTitle = computed(() => {
   return (category_params.value.name && category_params.value.id) 
@@ -16,22 +15,16 @@ const categoryTitle = computed(() => {
     ? 'Без категории' 
     : 'Все'
 })
-
-getRecipes()
-
-watch(() => category_params.value, async (n, o) => {
-  console.log('store', `params:${category_params.value.id}` , `n:${n.id}`, `o:${o.id}`)
-  if (n.id !== o.id) {
-    getRecipes(n.id)
-  }
-})
 </script>
 
 <template>
   <section class="categories">
     <h1 class="title">Категория: {{ categoryTitle }}</h1>
     <ul class="list">
-      <li v-for="item in recipes" :key="item.id" class="item">
+      <li v-for="item in recipes"
+          :key="item.id"
+          class="item"
+      >
         <RouterLink :to="`/recipes/${item.id}`">
           <div>title: {{ item.title }}</div>
           <div>ingredients: {{ item.ingredients }}</div>

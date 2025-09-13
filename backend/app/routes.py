@@ -1,5 +1,6 @@
 import os
 from flask import  flash, jsonify, request, redirect, current_app, url_for, send_from_directory
+from sqlalchemy import or_
 from app import app, db
 from app.models import Category, Recipe
 # from werkzeug.utils import secure_filename
@@ -53,33 +54,36 @@ def delete_category():
 
 @app.route('/recipes', methods=['GET'])
 def get_recipes():
-    category_id = request.args.get('category_id')
-    if category_id:
-        recipes = Recipe.query.filter_by(category_id=category_id).all()
+    category_id = request.args.get('category_id', type=int)
+    search_query = request.args.get('search', '', type=str)
+
+    try:
+        query = Recipe.query
+        if category_id:
+            query = query.filter(Recipe.category_id == category_id)
+
+        if search_query:
+            query = query.filter(
+                or_(
+                    Recipe.title.ilike(f'%{search_query}%'),
+                    Recipe.ingredients.ilike(f'%{search_query}%')
+                )
+            )
+
+        recipes = query.all()
         return jsonify([{
             'id': r.id,
             'title': r.title,
             'ingredients': r.ingredients,
             'instructions': r.instructions,
             'category_id': r.category_id,
-            'category_name': r.recipe_name.name,
             'links': r.links,
             'comment': r.comment,
             'file': r.file,
         } for r in recipes])
-    else:
-        recipes = Recipe.query.all()
-        return jsonify([{
-            'id': r.id,
-            'title': r.title,
-            'ingredients': r.ingredients,
-            'instructions': r.instructions,
-            'category_id': r.category_id,
-            'category_name': r.recipe_name.name,
-            'links': r.links,
-            'comment': r.comment,
-            'file': r.file,
-        } for r in recipes])
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/recipes/<int:id>', methods=['POST'])
