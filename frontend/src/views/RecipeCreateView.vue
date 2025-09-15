@@ -35,6 +35,11 @@ async function getFormBody(e) {
   if (!data.value.title) {
     return
   }
+
+  if (data.value.ingredients) {
+    data.value.ingredients = data.value.ingredients.toLowerCase()
+  }
+
   if (fileModel.value.file) {
     const formData = new FormData()
     formData.append('file', fileModel.value.file)

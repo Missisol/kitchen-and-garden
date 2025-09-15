@@ -4,9 +4,15 @@ import { RouterLink } from 'vue-router'
 import { useRecipesStore } from '@/stores/recipes'
 import { storeToRefs } from 'pinia'
 
+const { filteredRecipes } = defineProps({
+  filteredRecipes: {
+    type: Array,
+    default: () => [],
+  }
+})
 
 const recipesStore =  useRecipesStore()
-const { category_params, recipes } = storeToRefs(recipesStore)
+const { category_params } = storeToRefs(recipesStore)
 
 const categoryTitle = computed(() => {
   return (category_params.value.name && category_params.value.id) 
@@ -21,7 +27,7 @@ const categoryTitle = computed(() => {
   <section class="categories">
     <h1 class="title">Категория: {{ categoryTitle }}</h1>
     <ul class="list">
-      <li v-for="item in recipes"
+      <li v-for="item in filteredRecipes"
           :key="item.id"
           class="item"
       >

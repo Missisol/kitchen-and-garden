@@ -1,6 +1,5 @@
 import os
 from flask import  flash, jsonify, request, redirect, current_app, url_for, send_from_directory
-from sqlalchemy import or_
 from app import app, db
 from app.models import Category, Recipe
 # from werkzeug.utils import secure_filename
@@ -55,7 +54,7 @@ def delete_category():
 @app.route('/recipes', methods=['GET'])
 def get_recipes():
     category_id = request.args.get('category_id', type=int)
-    search_query = request.args.get('search', '', type=str)
+    search_query = request.args.get('search', '', type=str).lower()
 
     try:
         query = Recipe.query
@@ -63,12 +62,7 @@ def get_recipes():
             query = query.filter(Recipe.category_id == category_id)
 
         if search_query:
-            query = query.filter(
-                or_(
-                    Recipe.title.ilike(f'%{search_query}%'),
-                    Recipe.ingredients.ilike(f'%{search_query}%')
-                )
-            )
+            query = query.filter(Recipe.ingredients.collate("NOCASE").like(f'%{search_query}%'))
 
         recipes = query.all()
         return jsonify([{

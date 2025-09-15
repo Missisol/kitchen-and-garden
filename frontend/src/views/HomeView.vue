@@ -1,5 +1,5 @@
 <script setup>
-import { watch } from 'vue'
+import { onBeforeUnmount, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { debounce } from 'perfect-debounce'
 
@@ -14,29 +14,49 @@ const { categories } = storeToRefs(categoriesStore)
 const { getCategories } = categoriesStore
 
 const recipesStore = useRecipesStore()
-const { category_params, searchQuery } = storeToRefs(recipesStore)
+const { category_params, searchQuery, recipes } = storeToRefs(recipesStore)
 const { getRecipes } = recipesStore
 
+const searchQueryTitle = ref('')
+const filteredRecipes = ref([])
+
 const debounced = debounce(async() => getRecipes(), 500)
+const debouncedTitle = debounce(async() => getRecipesByTitle(), 500)
 
 const getParams = async(category) => {
   category_params.value = category?.id ? {id: category.id, name: category.name} : { id: '', name: '' }
 }
 
+const getRecipesByTitle = () => {
+  filteredRecipes.value = searchQueryTitle.value ? recipes.value.filter(item => item.title.toLowerCase().includes(searchQueryTitle.value.toLowerCase())) : recipes.value
+}
+
 getCategories()
-getRecipes() // Первоначальная загрузка рецептов
+getRecipes()
+
+watch(recipes, () => {
+  filteredRecipes.value = recipes.value
+})
 
 watch(searchQuery, () => {
   debounced()
 })
 
+watch(searchQueryTitle, () => {
+  debouncedTitle()
+})
+
 watch(() => category_params.value, async (n, o) => {
-  console.log('store', `params:${category_params.value.id}` , `n:${n.id}`, `o:${o.id}`)
+  // console.log('store', `params:${category_params.value.id}` , `n:${n.id}`, `o:${o.id}`)
   if (n.id !== o.id) {
-    getRecipes() // Обновляем рецепты при изменении категории
+    getRecipes()
   }
 })
 
+onBeforeUnmount(() => {
+  searchQuery.value = ''
+  searchQueryTitle.value = ''
+})
 </script>
 
 <template>
@@ -62,12 +82,22 @@ watch(() => category_params.value, async (n, o) => {
       <div class="search-container">
         <input
           type="text"
-          v-model="searchQuery"
-          placeholder="Поиск по названию или ингредиентам"
+          v-model="searchQueryTitle"
+          placeholder="Поиск по названию"
           class="search-input"
+          @focusin="searchQuery = ''"
         >
       </div>
-      <RecipesList />
+      <div class="search-container">
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="Поиск по ингредиентам"
+          class="search-input"
+          @focusin="searchQueryTitle = ''"
+        >
+      </div>
+      <RecipesList :filteredRecipes="filteredRecipes" />
     </div>
   </div>
 </template>

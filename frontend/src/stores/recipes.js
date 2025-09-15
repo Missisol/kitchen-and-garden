@@ -10,7 +10,7 @@ export const useRecipesStore = defineStore('recipes', () => {
   const recipes = ref([])
   const recipe = ref({})
   const filePath = ref('')
-  const searchQuery = ref('') // Добавлено состояние для поиска
+  const searchQuery = ref('')
 
   async function getRecipes() {
     const params = new URLSearchParams()
