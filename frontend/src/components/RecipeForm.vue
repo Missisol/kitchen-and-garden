@@ -36,11 +36,11 @@ function deleteFile() {
       type="text"
     >
     <label for="instructions">instructions</label>
-    <input 
+    <textarea 
       v-model="model.instructions" 
       id="instructions" 
       type="text"
-    >
+    ></textarea>
     <label for="links">links</label>
     <input v-model="model.links"
            id="links"
