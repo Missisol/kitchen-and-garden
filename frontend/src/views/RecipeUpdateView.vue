@@ -41,20 +41,20 @@ async function getFormBody(e) {
   e.preventDefault()
   console.log('data', data.value)
 
-    if (fileModel.value.file) {
-      const formData = new FormData()
-      formData.append('file', fileModel.value.file)
-      const result = await uploadFile(formData)
-      data.value.file = result.filename
-    }
+  if (fileModel.value.file) {
+    const formData = new FormData()
+    formData.append('file', fileModel.value.file)
+    const result = await uploadFile(formData)
+    data.value.file = result.filename
+  }
 
-    for ( const [key, value] of Object.entries(data.value)) {
-      if (value !== recipe.value[key]) {
-        body.value[key] = value
-      }
+  for ( const [key, value] of Object.entries(data.value)) {
+    if (value !== recipe.value[key]) {
+      body.value[key] = key === 'ingredients' ? value.toLowerCase() : value
     }
-    console.log('body', body.value)
-    update(id, body.value)
+  }
+  console.log('body', body.value)
+  update(id, body.value)
 }
 
 async function update(id, body) {

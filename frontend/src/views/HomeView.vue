@@ -8,6 +8,7 @@ import { useRecipesStore } from '@/stores/recipes'
 import RecipesList from '@/components/RecipesList.vue'
 import CategoryCreate from '@/components/category/CategoryCreate.vue'
 import CategoryDelete from '@/components/category/CategoryDelete.vue'
+import IconClose from '@/components/icons/IconClose.vue'
 
 const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
@@ -31,12 +32,18 @@ const getRecipesByTitle = () => {
   filteredRecipes.value = searchQueryTitle.value ? recipes.value.filter(item => item.title.toLowerCase().includes(searchQueryTitle.value.toLowerCase())) : recipes.value
 }
 
+const init = async () => {
+
 getCategories()
-getRecipes()
+await getRecipes()
+  filteredRecipes.value = recipes.value
+}
 
 watch(recipes, () => {
   filteredRecipes.value = recipes.value
 })
+
+init()
 
 watch(searchQuery, () => {
   debounced()
@@ -87,6 +94,10 @@ onBeforeUnmount(() => {
           class="search-input"
           @focusin="searchQuery = ''"
         >
+        <div
+          class="search-close"
+          @click="searchQueryTitle = ''" 
+        ><IconClose /></div>
       </div>
       <div class="search-container">
         <input
@@ -96,6 +107,10 @@ onBeforeUnmount(() => {
           class="search-input"
           @focusin="searchQueryTitle = ''"
         >
+        <div
+          class="search-close"
+          @click="searchQuery = ''" 
+        ><IconClose /></div>
       </div>
       <RecipesList :filteredRecipes="filteredRecipes" />
     </div>
@@ -132,5 +147,29 @@ onBeforeUnmount(() => {
 
 .category:hover {
   background-color: #f0f0f0;
+}
+
+.search-container {
+  display: grid;
+  grid-template-columns: 1fr 40px;
+}
+
+.search-input {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+}
+
+.search-close {
+  cursor: pointer;
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  display: flex;
+  align-Items: center; 
+  justify-content: center;
+}
+
+.search-close > svg {
+  width: 24px;
+  height: 24px;
 }
 </style>

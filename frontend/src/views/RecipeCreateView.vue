@@ -54,14 +54,6 @@ async function create() {
   const result = await createRecipe(data.value)
     if (result.id) {
     router.push({ path: `/` })
-
-    //   data.value = {
-    //   title: '',
-    //   ingredients: '',
-    //   instructions: '',
-    //   links: '',
-    //   comment: '',
-    // }
   }
 }
 </script>
