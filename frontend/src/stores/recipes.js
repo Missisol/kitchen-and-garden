@@ -10,15 +10,15 @@ export const useRecipesStore = defineStore('recipes', () => {
   const recipes = ref([])
   const recipe = ref({})
   const filePath = ref('')
-  const searchQuery = ref('')
+  const ingredientsSearch = ref('')
 
-  async function getRecipes() {
+  async function getRecipes(category_id = '') {
     const params = new URLSearchParams()
-    if (category_params.value.id) {
-      params.append('category_id', category_params.value.id)
+    if (category_id) {
+      params.append('category_id', category_id)
     }
-    if (searchQuery.value) {
-      params.append('search', searchQuery.value)
+    if (ingredientsSearch.value) {
+      params.append('search', ingredientsSearch.value)
     }
 
     try {
@@ -111,17 +111,25 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
+  function clearCategoryParams() {
+    category_params.value = {
+      id: '',
+      name: '',
+    }
+  }
+
   return {
     category_params,
     recipes,
     recipe,
     filePath,
-    searchQuery,
+    ingredientsSearch,
     getRecipes,
     getRecipeById,
     deleteRecipeById,
     createRecipe,
     updateRecipe,
-    uploadFile
+    uploadFile,
+    clearCategoryParams,
   }
 })

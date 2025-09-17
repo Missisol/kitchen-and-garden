@@ -74,6 +74,7 @@ def get_recipes():
             'links': r.links,
             'comment': r.comment,
             'file': r.file,
+            'category_name': r.recipe_name.name,
         } for r in recipes])
 
     except Exception as e:

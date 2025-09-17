@@ -1,31 +1,26 @@
 <script setup>
-import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useRecipesStore } from '@/stores/recipes'
-import { storeToRefs } from 'pinia'
 
-const { filteredRecipes } = defineProps({
+const { filteredRecipes, titleSearch, ingredientsSearch } = defineProps({
   filteredRecipes: {
     type: Array,
     default: () => [],
+  }, 
+  titleSearch: {
+    type: String,
+    default: '',
+  }, 
+  ingredientsSearch: {
+    type: String,
+    default: '',
   }
-})
-
-const recipesStore =  useRecipesStore()
-const { category_params } = storeToRefs(recipesStore)
-
-const categoryTitle = computed(() => {
-  return (category_params.value.name && category_params.value.id) 
-    ? category_params.value.name 
-    : (category_params.value.id && !category_params.value.name) 
-    ? 'Без категории' 
-    : 'Все'
 })
 </script>
 
 <template>
   <section class="categories">
-    <h1 class="title">Категория: {{ categoryTitle }}</h1>
+    <h2 class="title">Рецепты: {{ titleSearch }}</h2>
+    <h2 class="title">Ингредиенты: {{ ingredientsSearch }}</h2>
     <ul class="list">
       <li v-for="item in filteredRecipes"
           :key="item.id"

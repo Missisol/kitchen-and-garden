@@ -1,7 +1,6 @@
 <script setup>
 import { onBeforeUnmount, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { debounce } from 'perfect-debounce'
 
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
@@ -9,60 +8,64 @@ import RecipesList from '@/components/RecipesList.vue'
 import CategoryCreate from '@/components/category/CategoryCreate.vue'
 import CategoryDelete from '@/components/category/CategoryDelete.vue'
 import IconClose from '@/components/icons/IconClose.vue'
+import IconSearch from '@/components/icons/IconSearch.vue'
 
 const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
 const { getCategories } = categoriesStore
 
 const recipesStore = useRecipesStore()
-const { category_params, searchQuery, recipes } = storeToRefs(recipesStore)
-const { getRecipes } = recipesStore
+const { category_params, ingredientsSearch, recipes } = storeToRefs(recipesStore)
+const { getRecipes, clearCategoryParams } = recipesStore
 
-const searchQueryTitle = ref('')
+const titleSearch = ref('')
 const filteredRecipes = ref([])
 
-const debounced = debounce(async() => getRecipes(), 500)
-const debouncedTitle = debounce(async() => getRecipesByTitle(), 500)
-
-const getParams = async(category) => {
+const getRecipesByCategory = async (category={id: '', name: ''}) => {
   category_params.value = category?.id ? {id: category.id, name: category.name} : { id: '', name: '' }
+  await getRecipes(category.id)
 }
 
 const getRecipesByTitle = () => {
-  filteredRecipes.value = searchQueryTitle.value ? recipes.value.filter(item => item.title.toLowerCase().includes(searchQueryTitle.value.toLowerCase())) : recipes.value
+  filteredRecipes.value = titleSearch.value ? recipes.value.filter(item => item.title.toLowerCase().includes(titleSearch.value.toLowerCase())) : recipes.value
 }
 
-const init = async () => {
+const clearSearch = () => {
+  if (ingredientsSearch.value.length) {
+    ingredientsSearch.value = ''
+    getRecipes()
+  }
+}
+
+const clearSearchByTitle = () => {
+  if (titleSearch.value.length) {
+    titleSearch.value = ''
+    getRecipes()
+  }
+}
+
+const searchRecipes = () => {
+  clearCategoryParams()
+  getRecipes()
+}
+
+const searchRecipesByTitle = async() => {
+  clearCategoryParams()
+  await getRecipes()
+  getRecipesByTitle()
+}
 
 getCategories()
-await getRecipes()
-  filteredRecipes.value = recipes.value
-}
+getRecipes()
 
 watch(recipes, () => {
   filteredRecipes.value = recipes.value
 })
 
-init()
-
-watch(searchQuery, () => {
-  debounced()
-})
-
-watch(searchQueryTitle, () => {
-  debouncedTitle()
-})
-
-watch(() => category_params.value, async (n, o) => {
-  // console.log('store', `params:${category_params.value.id}` , `n:${n.id}`, `o:${o.id}`)
-  if (n.id !== o.id) {
-    getRecipes()
-  }
-})
-
 onBeforeUnmount(() => {
-  searchQuery.value = ''
-  searchQueryTitle.value = ''
+  ingredientsSearch.value = ''
+  titleSearch.value = ''
+  clearCategoryParams()
 })
 </script>
 
@@ -71,14 +74,16 @@ onBeforeUnmount(() => {
     <aside class="aside">
       <h2>Categories</h2>
       <div
-        @click=getParams()
+        :class="category_params.id === '' ? 'category--active' : ''"
         class="category"
+        @click=getRecipesByCategory()
       >Все</div>
       <div
         v-for="category in categories"
         :key="category.id"
+        :class="category_params.id === category.id ? 'category--active' : ''"
         class="category"
-        @click=getParams(category)
+        @click=getRecipesByCategory(category)
       >
         {{ category?.name ||'Без категории' }}
       </div>
@@ -86,33 +91,50 @@ onBeforeUnmount(() => {
       <CategoryDelete />
     </aside>
     <div class="content">
-      <div class="search-container">
-        <input
-          type="text"
-          v-model="searchQueryTitle"
-          placeholder="Поиск по названию"
-          class="search-input"
-          @focusin="searchQuery = ''"
-        >
-        <div
-          class="search-close"
-          @click="searchQueryTitle = ''" 
-        ><IconClose /></div>
+      <div class="search">
+        <div class="search__container">
+          <input
+            type="text"
+            v-model.lazy="titleSearch"
+            placeholder="Поиск по названию"
+            class="search__input"
+            @focusin="clearSearch"
+            @keyup.enter="searchRecipesByTitle"
+          >
+          <div
+            class="search__close"
+            @click="clearSearchByTitle" 
+          ><IconClose /></div>
+          <div
+            class="search__search"
+            @click="searchRecipesByTitle"
+          ><IconSearch /></div>
+        </div>
+        <div class="search__container">
+          <input
+            type="text"
+            v-model.lazy="ingredientsSearch"
+            placeholder="Поиск по ингредиентам"
+            class="search__input"
+            @focusin="clearSearchByTitle"
+            @keyup.enter="searchRecipes"
+          >
+          <div
+            class="search__close"
+            @click="clearSearch" 
+          ><IconClose /></div>
+          <div
+            class="search__search"
+            @click="searchRecipes"
+          ><IconSearch /></div>
+        </div>
+
       </div>
-      <div class="search-container">
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Поиск по ингредиентам"
-          class="search-input"
-          @focusin="searchQueryTitle = ''"
-        >
-        <div
-          class="search-close"
-          @click="searchQuery = ''" 
-        ><IconClose /></div>
-      </div>
-      <RecipesList :filteredRecipes="filteredRecipes" />
+      <RecipesList 
+        :filteredRecipes="filteredRecipes"
+        :titleSearch="titleSearch"
+        :ingredientsSearch="ingredientsSearch"
+      />
     </div>
   </div>
 </template>
@@ -123,52 +145,65 @@ onBeforeUnmount(() => {
   grid-template-columns: 1fr 3fr;
 }
 
+.category {
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.category--active {
+ color: var(--green);
+ text-decoration: underline;
+}
+
+.category:hover {
+  /* background-color: #f0f0f0; */
+}
+
 .content {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.search-container {
+.search {
+  display: flex;
+  flex-direction: column;
+}
+
+.search__container {
+  display: grid;
+  grid-template-columns: 1fr 30px 40px;
   margin-bottom: 1rem;
 }
 
-.search-input {
+.search__input {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-.category {
-  cursor: pointer;
-  padding: 0.5rem 0;
-}
-
-.category:hover {
-  background-color: #f0f0f0;
-}
-
-.search-container {
-  display: grid;
-  grid-template-columns: 1fr 40px;
-}
-
-.search-input {
-  grid-column: 1 / 3;
+  grid-column: 1 / 4;
   grid-row: 1 / 2;
 }
 
-.search-close {
+.search__close,
+.search__search {
   cursor: pointer;
-  grid-column: 2 / 3;
   grid-row: 1 / 2;
   display: flex;
   align-Items: center; 
   justify-content: center;
 }
 
-.search-close > svg {
+.search__close {
+  grid-column: 2 / 3;
+}
+
+.search__search {
+  grid-column: 3 / 4;
+}
+
+.search__close > svg,
+.search__search > svg {
   width: 24px;
   height: 24px;
 }
