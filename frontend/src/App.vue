@@ -1,15 +1,15 @@
 <script setup>
-import Header from '@/components/common/Header.vue'
-import Footer from '@/components/common/Footer.vue'
+import CommonHeader from '@/components/common/CommonHeader.vue'
+import CommonFooter from '@/components/common/CommonFooter.vue'
 </script>
 
 <template>
   <div class="container">
-    <Header />
+    <CommonHeader />
     <main class="main">
       <RouterView />
     </main>
-    <Footer />
+    <CommonFooter />
   </div>
 </template>
 

@@ -11,22 +11,23 @@ const createRecipe = () => {
 </script>
 
 <template>
-    <div class="full">
-      <header class="container-inner header">
-        <div class="logo">Logo</div>
-        <nav class="nav">
-          <RouterLink to="/">Рецепты</RouterLink>
-          <RouterLink to="/recipes">Page</RouterLink>
-        </nav>
-        <button
-          v-if="route.path === '/'"
-          @click="createRecipe"
-          type="button" 
-          class="actions">
-            Добавить рецепт
-        </button>
-      </header>
-    </div>
+  <div class="full">
+    <header class="container-inner header">
+      <div class="logo">Logo</div>
+      <nav class="nav">
+        <RouterLink to="/">Рецепты</RouterLink>
+        <RouterLink to="/recipes">Page</RouterLink>
+      </nav>
+      <button
+        v-if="route.path === '/'"
+        @click="createRecipe"
+        type="button" 
+        class="actions"
+      >
+        Добавить рецепт
+      </button>
+    </header>
+  </div>
 </template>
 
 <style scoped>

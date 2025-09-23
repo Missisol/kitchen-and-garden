@@ -47,7 +47,7 @@ export default defineConfig([
       }],
 
       "vue/multi-word-component-names": ["error", {
-      "ignores": ['Header', 'Footer']
+      "ignores": []
       }],  
       'vue/html-closing-bracket-newline': ['error', {
         singleline: 'never',

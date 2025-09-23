@@ -4,7 +4,7 @@
 <template>
   <footer class="full">
     <footer class="footer">
-    <p>Footer</p>
+      <p>Footer</p>
     </footer>
   </footer>
 </template>
