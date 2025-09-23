@@ -1,9 +1,10 @@
 import os
-from flask import  flash, jsonify, request, redirect, current_app, url_for, send_from_directory
-from app import app, db
+from flask import  flash, abort, current_app, jsonify, request, send_from_directory
+from app import db
 from app.models import Category, Recipe
 # from werkzeug.utils import secure_filename
 from app.utils.secure_filename import secure_filename
+from app.recipes import bp
 
 fields = ['title', 'ingredients', 'instructions', 'links', 'comment', 'category_id', 'file']
 
@@ -12,7 +13,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
 
-@app.route('/categories', methods=['GET'])
+@bp.route('/categories', methods=['GET'])
 def get_categories():
     categories = Category.query.all()
     return jsonify([{
@@ -21,7 +22,7 @@ def get_categories():
     } for c in categories])
 
 
-@app.route('/categories', methods=['POST'])
+@bp.route('/categories', methods=['POST'])
 def create_category():
     data = request.json
     category = Category(name=data['name'])
@@ -33,7 +34,7 @@ def create_category():
     return jsonify({'id': category.id}), 201
 
 
-@app.route('/categories', methods=['DELETE'])
+@bp.route('/categories', methods=['DELETE'])
 def delete_category():
     data = request.get_json(silent=True)
     # или
@@ -51,7 +52,7 @@ def delete_category():
         return jsonify({'error': str(e)}), 500
     
 
-@app.route('/recipes', methods=['GET'])
+@bp.route('/recipes', methods=['GET'])
 def get_recipes():
     category_id = request.args.get('category_id', type=int)
     search_query = request.args.get('search', '', type=str).lower()
@@ -81,24 +82,31 @@ def get_recipes():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/recipes/<int:id>', methods=['POST'])
+@bp.route('/recipes/<int:id>', methods=['POST'])
 def get_recipe(id):
     print(f'id: {id}')
-    recipe = Recipe.query.get_or_404(id)
-    return jsonify({
-        'id': recipe.id,
-        'title': recipe.title,
-        'ingredients': recipe.ingredients,
-        'instructions': recipe.instructions,
-        'category_id': recipe.category_id,
-        'category_name': recipe.recipe_name.name,
-        'links': recipe.links,
-        'comment': recipe.comment,
-        'file': recipe.file,
-    })
+    # recipe = Recipe.query.get_or_404(id)
+    recipe = Recipe.query.get(id)
 
+    if recipe is not None:
+        return jsonify({
+            'id': recipe.id,
+            'title': recipe.title,
+            'ingredients': recipe.ingredients,
+            'instructions': recipe.instructions,
+            'category_id': recipe.category_id,
+            'category_name': recipe.recipe_name.name,
+            'links': recipe.links,
+            'comment': recipe.comment,
+            'file': recipe.file,
+        })
+    
+    else:
+        abort(404, description="Resource not found")
+        return jsonify(recipe)
+    
 
-@app.route('/recipe/file', methods=['POST'])
+@bp.route('/recipe/file', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
         flash('No file part')
@@ -116,12 +124,12 @@ def upload_file():
         return jsonify({'filename': filename}), 201
 
 
-@app.route('/static/uploads/<name>')
+@bp.route('/static/uploads/<name>')
 def download_file(name):
-    return send_from_directory(app.config["UPLOAD_FOLDER"], name)
+    return send_from_directory(current_app.config["UPLOAD_FOLDER"], name)
 
     
-@app.route('/recipe', methods=['POST'])
+@bp.route('/recipe', methods=['POST'])
 def create_recipe():
     data = request.json
     recipe_data = {}
@@ -139,7 +147,7 @@ def create_recipe():
         return jsonify({'error': 'Title is required'}), 400
 
 
-@app.route('/recipe/<int:id>', methods=['PUT'])
+@bp.route('/recipe/<int:id>', methods=['PUT'])
 def update_recipe(id):
     try:
         recipe = Recipe.query.get_or_404(id)
@@ -166,7 +174,7 @@ def update_recipe(id):
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/recipe/<int:id>', methods=['DELETE'])
+@bp.route('/recipe/<int:id>', methods=['DELETE'])
 def delete_recipe(id):
     try:
         recipe = Recipe.query.get_or_404(id)
