@@ -3,7 +3,7 @@ import PageView from '@/views/PageView.vue'
 import RecipeView from '@/views/RecipeView.vue'
 import RecipeCreateView from '@/views/RecipeCreateView.vue'
 import RecipeUpdateView from '@/views/RecipeUpdateView.vue'
-
+import ErrorView from './views/ErrorView.vue'
 
 export const routes = [
   {
@@ -30,5 +30,10 @@ export const routes = [
     path: '/recipes/:id',
     name: 'recipe',
     component: RecipeView,
+  },
+  {
+    path: '/errors',
+    name: 'errors',
+    component: ErrorView,
   },
 ]

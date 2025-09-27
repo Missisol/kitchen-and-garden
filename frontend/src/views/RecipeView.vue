@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
 import { useRecipesStore } from '@/stores/recipes'
+import CommonError from '@/components/common/CommonError.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -34,7 +35,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="recipe">
+  <section 
+    v-if="!recipe.error" 
+    class="recipe"
+  >
     <h1>{{ recipe.title }}</h1>
     <p>Ингредиенты: {{ recipe.ingredients }}</p>
     <p>Инструкции: {{ recipe.instructions }}</p>
@@ -63,6 +67,9 @@ onBeforeUnmount(() => {
               @click="deleteRecipe(recipe.id)"
       >Удалить</button>
     </div>
+  </section>
+  <section v-else>
+    <CommonError :error="recipe.error" />
   </section>
 </template>
 
