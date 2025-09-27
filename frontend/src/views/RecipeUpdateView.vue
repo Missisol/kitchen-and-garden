@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
 
-import RecipeForm from '@/components/RecipeForm.vue'
+import RecipeForm from '@/components/recipes/RecipeForm.vue'
 
 const router = useRouter()
 const categoriesStore = useCategoriesStore()

@@ -19,8 +19,12 @@ const { filteredRecipes, titleSearch, ingredientsSearch } = defineProps({
 
 <template>
   <section class="categories">
-    <h2 class="title">Рецепты: {{ titleSearch }}</h2>
-    <h2 class="title">Ингредиенты: {{ ingredientsSearch }}</h2>
+    <h2 v-if="titleSearch"
+        :class="['title', titleSearch && 'active']"
+    >Рецепты: {{ titleSearch }}</h2>
+    <h2 v-if="ingredientsSearch"
+        :class="['title', ingredientsSearch && 'active']"
+    >Ингредиенты: {{ ingredientsSearch }}</h2>
     <ul class="list">
       <li v-for="item in filteredRecipes"
           :key="item.id"
@@ -45,6 +49,15 @@ const { filteredRecipes, titleSearch, ingredientsSearch } = defineProps({
   gap: 1rem;
   padding: 1rem;
 }
+
+.title {
+
+  &.active {
+    color: var(--color-text);
+  }
+}
+
+
 
 .list {
   display: flex;

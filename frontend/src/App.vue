@@ -7,7 +7,9 @@ import CommonFooter from '@/components/common/CommonFooter.vue'
   <div class="container">
     <CommonHeader />
     <main class="main">
-      <RouterView />
+      <RouterView v-slot="{ Component }">
+        <component :is="Component" />
+      </RouterView>
     </main>
     <CommonFooter />
   </div>

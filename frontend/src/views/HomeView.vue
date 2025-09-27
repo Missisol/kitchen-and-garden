@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
-import RecipesList from '@/components/RecipesList.vue'
+import RecipesList from '@/components/recipes/RecipesList.vue'
 import CategoryCreate from '@/components/category/CategoryCreate.vue'
 import CategoryDelete from '@/components/category/CategoryDelete.vue'
 import IconClose from '@/components/icons/IconClose.vue'
@@ -73,20 +73,22 @@ onBeforeUnmount(() => {
   <div class="parent">
     <aside class="aside">
       <h2>Categories</h2>
-      <div
-        :class="category_params.id === '' ? 'category--active' : ''"
-        class="category"
-        @click=getRecipesByCategory()
-      >Все</div>
-      <div
-        v-for="category in categories"
-        :key="category.id"
-        :class="category_params.id === category.id ? 'category--active' : ''"
-        class="category"
-        @click=getRecipesByCategory(category)
-      >
-        {{ category?.name ||'Без категории' }}
-      </div>
+      <ul>
+        <li
+          :class="category_params.id === '' ? 'category--active' : ''"
+          class="category"
+          @click=getRecipesByCategory()
+        >Все</li>
+        <li
+          v-for="category in categories"
+          :key="category.id"
+          :class="category_params.id === category.id ? 'category--active' : ''"
+          class="category"
+          @click=getRecipesByCategory(category)
+        >
+          {{ category?.name ||'Без категории' }}
+        </li>
+      </ul>
       <CategoryCreate />
       <CategoryDelete />
     </aside>
