@@ -1,5 +1,12 @@
 <script setup>
 import { RouterLink } from 'vue-router'
+import { storeToRefs } from 'pinia'
+
+import { useRecipesStore } from '@/stores/recipes'
+import { computed } from 'vue'
+
+const recipesStore = useRecipesStore()
+const { category_params } = storeToRefs(recipesStore)
 
 const { filteredRecipes, titleSearch, ingredientsSearch } = defineProps({
   filteredRecipes: {
@@ -15,15 +22,17 @@ const { filteredRecipes, titleSearch, ingredientsSearch } = defineProps({
     default: '',
   }
 })
+
+const recipesTitle = computed(() => {
+  return titleSearch ? titleSearch : category_params.value?.name ? category_params.value.name : category_params.value?.id ? 'Без категории' : 'Все'
+})
 </script>
 
 <template>
   <section class="categories">
-    <h2 v-if="titleSearch"
-        :class="['title', titleSearch && 'active']"
-    >Рецепты: {{ titleSearch }}</h2>
+    <h2 class="title">Рецепты: {{ recipesTitle }}</h2>
     <h2 v-if="ingredientsSearch"
-        :class="['title', ingredientsSearch && 'active']"
+        class="title"
     >Ингредиенты: {{ ingredientsSearch }}</h2>
     <ul class="list">
       <li v-for="item in filteredRecipes"
@@ -49,15 +58,6 @@ const { filteredRecipes, titleSearch, ingredientsSearch } = defineProps({
   gap: 1rem;
   padding: 1rem;
 }
-
-.title {
-
-  &.active {
-    color: var(--color-text);
-  }
-}
-
-
 
 .list {
   display: flex;
