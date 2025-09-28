@@ -1,6 +1,8 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 
+import { mainMenu } from '@/utils/mainMenu'
+
 const route = useRoute()
 const router = useRouter()
 
@@ -13,13 +15,17 @@ const createRecipe = () => {
 <template>
   <div class="full">
     <header class="container-inner header">
-      <div class="logo">Logo</div>
+      <div class="logo">
+        <RouterLink to="/">Logo</RouterLink>
+      </div>
       <nav class="nav">
-        <RouterLink to="/">Рецепты</RouterLink>
-        <RouterLink to="/recipes">Page</RouterLink>
+        <RouterLink v-for="item in mainMenu"
+                    :key="item.name"
+                    :to="item.path"
+        >{{ item.name }}</RouterLink>
       </nav>
       <button
-        v-if="route.path === '/'"
+        v-if="route.path === '/recipes'"
         @click="createRecipe"
         type="button" 
         class="actions"
@@ -63,6 +69,11 @@ const createRecipe = () => {
 
 .logo {
   grid-area: logo;
+
+  & a {
+    color: var(--green);
+    text-decoration: none;
+  }
 }
 
 .nav {

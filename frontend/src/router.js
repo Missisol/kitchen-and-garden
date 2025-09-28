@@ -1,9 +1,9 @@
 import HomeView from '@/views/HomeView.vue'
-import PageView from '@/views/PageView.vue'
+import RecipesView from '@/views/RecipesView.vue'
 import RecipeView from '@/views/RecipeView.vue'
 import RecipeCreateView from '@/views/RecipeCreateView.vue'
 import RecipeUpdateView from '@/views/RecipeUpdateView.vue'
-import ErrorView from './views/ErrorView.vue'
+import GardenView from '@/views/GardenView.vue'
 
 export const routes = [
   {
@@ -14,7 +14,7 @@ export const routes = [
   {
     path: '/recipes',
     name: 'recipes',
-    component: PageView,
+    component: RecipesView,
   },
   {
     path: '/recipes/create',
@@ -32,8 +32,8 @@ export const routes = [
     component: RecipeView,
   },
   {
-    path: '/errors',
-    name: 'errors',
-    component: ErrorView,
+    path: '/garden',
+    name: 'garden',
+    component: GardenView,
   },
 ]

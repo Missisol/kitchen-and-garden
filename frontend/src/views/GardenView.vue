@@ -2,9 +2,7 @@
 </script>
 
 <template>
-  <div>I am Recipe Page
-    
-  </div>
+  <div>Сад - огород</div>
 </template>
 
 <style scoped></style>
