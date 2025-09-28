@@ -1,15 +1,5 @@
 <script setup>
-import { useRoute, useRouter } from 'vue-router'
-
 import { mainMenu } from '@/utils/mainMenu'
-
-const route = useRoute()
-const router = useRouter()
-
-const createRecipe = () => {
-  router.push({ path: '/recipes/create' })
-}
-
 </script>
 
 <template>
@@ -24,14 +14,6 @@ const createRecipe = () => {
                     :to="item.path"
         >{{ item.name }}</RouterLink>
       </nav>
-      <button
-        v-if="route.path === '/recipes'"
-        @click="createRecipe"
-        type="button" 
-        class="actions"
-      >
-        Добавить рецепт
-      </button>
     </header>
   </div>
 </template>

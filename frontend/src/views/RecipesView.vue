@@ -1,14 +1,19 @@
 <script setup>
 import { onBeforeUnmount, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
 import RecipesList from '@/components/recipes/RecipesList.vue'
 import CategoryCreate from '@/components/category/CategoryCreate.vue'
 import CategoryDelete from '@/components/category/CategoryDelete.vue'
-import IconClose from '@/components/icons/IconClose.vue'
-import IconSearch from '@/components/icons/IconSearch.vue'
+
+const router = useRouter()
+
+const createRecipe = () => {
+  router.push({ path: '/recipes/create' })
+}
 
 const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
@@ -108,11 +113,15 @@ onBeforeUnmount(() => {
           <div
             class="search__close"
             @click="clearSearchByTitle" 
-          ><IconClose /></div>
+          ><img src="@/assets/icons/close.svg"
+                alt="Close"
+          ></div>
           <div
             class="search__search"
             @click="searchRecipesByTitle"
-          ><IconSearch /></div>
+          ><img src="@/assets/icons/search.svg"
+                alt="Search"
+          ></div>
         </div>
         <div class="search__container">
           <input
@@ -126,14 +135,26 @@ onBeforeUnmount(() => {
           <div
             class="search__close"
             @click="clearSearch" 
-          ><IconClose /></div>
+          ><img src="@/assets/icons/close.svg"
+                alt="Close"
+          ></div>
           <div
             class="search__search"
             @click="searchRecipes"
-          ><IconSearch /></div>
+          ><img src="@/assets/icons/search.svg"
+                alt="Search"
+          ></div>
         </div>
 
       </div>
+      <button
+        @click="createRecipe"
+        type="button" 
+        class="actions"
+      >
+        Добавить рецепт
+      </button>
+
       <RecipesList 
         :filteredRecipes="filteredRecipes"
         :titleSearch="titleSearch"
@@ -206,8 +227,8 @@ onBeforeUnmount(() => {
   grid-column: 3 / 4;
 }
 
-.search__close > svg,
-.search__search > svg {
+.search__close > img,
+.search__search > img {
   width: 24px;
   height: 24px;
 }
