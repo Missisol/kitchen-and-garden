@@ -11,7 +11,7 @@ import CategoryDelete from '@/components/category/CategoryDelete.vue'
 
 const router = useRouter()
 
-const createRecipe = () => {
+const goToCreateRecipe = () => {
   router.push({ path: '/recipes/create' })
 }
 
@@ -148,7 +148,7 @@ onBeforeUnmount(() => {
 
       </div>
       <button
-        @click="createRecipe"
+        @click="goToCreateRecipe"
         type="button" 
         class="actions"
       >
