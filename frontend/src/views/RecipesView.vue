@@ -8,6 +8,7 @@ import { useRecipesStore } from '@/stores/recipes'
 import RecipesList from '@/components/recipes/RecipesList.vue'
 import RecipesCategories from '@/components/recipes/RecipesCategories.vue'
 import RecipeSearch from '@/components/recipes/RecipeSearch.vue'
+import CommonButton from '@/components/common/CommonButton.vue'
 
 const router = useRouter()
 
@@ -100,14 +101,14 @@ onBeforeUnmount(() => {
           v-model="ingredientsSearch"
         />
       </div>
-      <button
-        @click="goToCreateRecipe"
-        type="button" 
-        class="actions"
-      >
-        Добавить рецепт
-      </button>
-
+      <div class="add-recipe">
+        <CommonButton
+          buttonType="button"
+          :buttonAction="goToCreateRecipe"
+        >
+          Добавить рецепт
+        </CommonButton>
+      </div>
       <RecipesList 
         :filteredRecipes="filteredRecipes"
         :titleSearch="titleSearch"
@@ -140,5 +141,10 @@ onBeforeUnmount(() => {
 .search {
   display: flex;
   flex-direction: column;
+}
+
+.add-recipe {
+  --padding: 4px 16px;
+  align-self: start;
 }
 </style>
