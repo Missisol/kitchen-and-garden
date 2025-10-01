@@ -6,7 +6,12 @@ import { mainMenu } from '@/utils/mainMenu'
   <div class="full">
     <header class="container-inner header">
       <div class="logo">
-        <RouterLink to="/">Logo</RouterLink>
+        <RouterLink to="/">
+          <img 
+            src="@/assets/icons/logo.svg"
+            alt="Logo"
+          >
+        </RouterLink>
       </div>
       <nav class="nav">
         <RouterLink
@@ -52,6 +57,7 @@ import { mainMenu } from '@/utils/mainMenu'
 
 .logo {
   grid-area: logo;
+  width: 80px;
 
   & a {
     color: var(--green);
@@ -64,6 +70,7 @@ import { mainMenu } from '@/utils/mainMenu'
   display: flex;
   gap: 1rem;
   justify-content: center;
+  align-items: center;
 }
 
 .actions {
