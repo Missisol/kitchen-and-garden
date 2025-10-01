@@ -43,28 +43,32 @@ onBeforeUnmount(() => {
     <p>Ингредиенты: {{ recipe.ingredients }}</p>
     <p>Инструкции: {{ recipe.instructions }}</p>
     <ul v-if="recipe.links">
-      <li v-for="link in links"
-          :key="link"
+      <li
+        v-for="link in links"
+        :key="link"
       >
-        <a :href="link"
-           target="_blank"
-           class="link"
+        <a
+          :href="link"
+          target="_blank"
+          class="link"
         >{{ link }}</a>
       </li>
     </ul>
     <p v-if="recipe.comment">Комментарий: {{ recipe.comment }}</p>
-    <a v-if="filePath"
-       :href="filePath"
-       target="_blank"
-       class="link"
+    <a
+      v-if="filePath"
+      :href="filePath"
+      target="_blank"
+      class="link"
     >Открыть файл</a>
     <div class="wrapper">
       <button type="button">
         <RouterLink :to="`/recipes/${recipe.id}/edit`">Редактировать</RouterLink>
       </button>
       <button type="button">Добавить комментарий</button>
-      <button type="button"
-              @click="deleteRecipe(recipe.id)"
+      <button
+        type="button"
+        @click="deleteRecipe(recipe.id)"
       >Удалить</button>
     </div>
   </section>

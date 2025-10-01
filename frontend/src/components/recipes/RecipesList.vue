@@ -31,13 +31,15 @@ const recipesTitle = computed(() => {
 <template>
   <section class="categories">
     <h2 class="title">Рецепты: {{ recipesTitle }}</h2>
-    <h2 v-if="ingredientsSearch"
-        class="title"
+    <h2
+      v-if="ingredientsSearch"
+      class="title"
     >Ингредиенты: {{ ingredientsSearch }}</h2>
     <ul class="list">
-      <li v-for="item in filteredRecipes"
-          :key="item.id"
-          class="item"
+      <li
+        v-for="item in filteredRecipes"
+        :key="item.id"
+        class="item"
       >
         <RouterLink :to="`/recipes/${item.id}`">
           <div class="title">{{ item.title }}</div>

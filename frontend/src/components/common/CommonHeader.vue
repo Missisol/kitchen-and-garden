@@ -9,9 +9,10 @@ import { mainMenu } from '@/utils/mainMenu'
         <RouterLink to="/">Logo</RouterLink>
       </div>
       <nav class="nav">
-        <RouterLink v-for="item in mainMenu"
-                    :key="item.name"
-                    :to="item.path"
+        <RouterLink
+          v-for="item in mainMenu"
+          :key="item.name"
+          :to="item.path"
         >{{ item.name }}</RouterLink>
       </nav>
     </header>
@@ -28,13 +29,13 @@ import { mainMenu } from '@/utils/mainMenu'
   @media (width < 380px) {
     & {
         grid-template-areas:
-          "logo nav nav"
-          "logo actions actions";
+          "logo logo actions"
+          "nav nav nav";
       }
 
-    & .nav {
+    /* & .nav {
       justify-self: end;
-    }
+    } */
   }
 }
 

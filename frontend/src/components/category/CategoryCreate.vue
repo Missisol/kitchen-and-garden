@@ -27,7 +27,11 @@ async function saveCategory(e) {
     <h2>Добавление категории</h2>
     <form @submit="saveCategory($event)">
       <label for="category_name"></label>
-      <input v-model="params.name" id="category_name" type="text">
+      <input
+        v-model="params.name"
+        id="category_name"
+        type="text"
+      >
       <button type="submit">Добавить</button>
     </form>
   </section>

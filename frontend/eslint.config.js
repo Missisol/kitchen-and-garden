@@ -29,6 +29,7 @@ export default defineConfig([
   },
   {
     rules: {
+      '@stylistic/quotes': ['error', 'single'],
       '@stylistic/object-curly-newline': ['error', {
         consistent: true,
         // ObjectExpression: 'always',
@@ -46,8 +47,8 @@ export default defineConfig([
         requireForBlockBody: true,
       }],
 
-      "vue/multi-word-component-names": ["error", {
-      "ignores": []
+      'vue/multi-word-component-names': ['error', {
+      'ignores': []
       }],  
       'vue/html-closing-bracket-newline': ['error', {
         singleline: 'never',
@@ -66,6 +67,10 @@ export default defineConfig([
           max: 1,
         },
       }],
+      'vue/first-attribute-linebreak': ['error', {
+        singleline: 'ignore',
+        multiline: 'below',
+  }],
       'vue/html-indent': ['error', 2, {
         attribute: 1,
         baseIndent: 1,

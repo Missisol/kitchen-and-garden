@@ -31,11 +31,15 @@ async function deleteCategory(e) {
     <h2>Удаление категории</h2>
     <form @submit="deleteCategory($event)">
       <label for="category_name"></label>
-      <select v-model="model.category_id" id="category_name">
+      <select
+        v-model="model.category_id"
+        id="category_name"
+      >
         <option 
           v-for="category in categories" 
           :key="category.id" 
-          :value="category.id">{{ category?.name }}</option>
+          :value="category.id"
+        >{{ category?.name }}</option>
       </select>
 
       <button type="submit">Удалить</button>

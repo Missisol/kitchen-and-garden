@@ -42,13 +42,15 @@ function deleteFile() {
       type="text"
     ></textarea>
     <label for="links">links</label>
-    <input v-model="model.links"
-           id="links"
-           type="text"
+    <input
+      v-model="model.links"
+      id="links"
+      type="text"
     >
     <label for="category">category</label>
-    <select v-model="model.category_id"
-            id="category"
+    <select
+      v-model="model.category_id"
+      id="category"
     >
       <option 
         v-for="category in categories" 
@@ -74,9 +76,10 @@ function deleteFile() {
       >
     </div>
     <label for="comment">comment</label>
-    <textarea v-model="model.comment"
-              name="comment"
-              id="comment"
+    <textarea
+      v-model="model.comment"
+      name="comment"
+      id="comment"
     ></textarea>
 
     <button type="submit">Сохранить</button>
