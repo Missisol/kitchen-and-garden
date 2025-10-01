@@ -6,8 +6,7 @@ import { useRouter } from 'vue-router'
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
 import RecipesList from '@/components/recipes/RecipesList.vue'
-import CategoryCreate from '@/components/category/CategoryCreate.vue'
-import CategoryDelete from '@/components/category/CategoryDelete.vue'
+import RecipesCategories from '@/components/recipes/RecipesCategories.vue'
 
 const router = useRouter()
 
@@ -16,7 +15,6 @@ const goToCreateRecipe = () => {
 }
 
 const categoriesStore = useCategoriesStore()
-const { categories } = storeToRefs(categoriesStore)
 const { getCategories } = categoriesStore
 
 const recipesStore = useRecipesStore()
@@ -57,6 +55,7 @@ const searchRecipes = () => {
 }
 
 const searchRecipesByTitle = async() => {
+  if (!titleSearch.value.length) return
   clearCategoryParams()
   await getRecipes()
   getRecipesByTitle()
@@ -78,44 +77,33 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="parent">
-    <aside class="aside">
-      <h2>Categories</h2>
-      <ul>
-        <li
-          :class="category_params.id === '' ? 'category--active' : ''"
-          class="category"
-          @click=getRecipesByCategory()
-        >Все</li>
-        <li
-          v-for="category in categories"
-          :key="category.id"
-          :class="category_params.id === category.id ? 'category--active' : ''"
-          class="category"
-          @click=getRecipesByCategory(category)
-        >
-          {{ category?.name ||'Без категории' }}
-        </li>
-      </ul>
-      <CategoryCreate />
-      <CategoryDelete />
-    </aside>
+    <RecipesCategories
+      @getRecipesByCategory="getRecipesByCategory"
+    />
     <div class="content">
       <div class="search">
         <div class="search__container">
+          <label for="title"
+                 class="search__label"
+          >Поиск по названию</label>
           <input
+            id="title"
             type="text"
             v-model.lazy="titleSearch"
             placeholder="Поиск по названию"
             class="search__input"
+            maxlength="100"
             @focusin="clearSearch"
             @keyup.enter="searchRecipesByTitle"
           >
-          <div
-            class="search__close"
-            @click="clearSearchByTitle" 
-          ><img src="@/assets/icons/close.svg"
-                alt="Close"
-          ></div>
+          <div class="search__controls">
+            <div
+              class="search__close"
+              @click="clearSearchByTitle" 
+            ><img src="@/assets/icons/close.svg"
+                  alt="Close"
+            ></div>
+          </div>
           <div
             class="search__search"
             @click="searchRecipesByTitle"
@@ -124,20 +112,27 @@ onBeforeUnmount(() => {
           ></div>
         </div>
         <div class="search__container">
+          <label for="ingredients"
+                 class="search__label"
+          >Поиск по ингредиентам</label>
           <input
+            id="ingredients"
             type="text"
             v-model.lazy="ingredientsSearch"
             placeholder="Поиск по ингредиентам"
             class="search__input"
+            maxlength="100"
             @focusin="clearSearchByTitle"
             @keyup.enter="searchRecipes"
           >
-          <div
-            class="search__close"
-            @click="clearSearch" 
-          ><img src="@/assets/icons/close.svg"
-                alt="Close"
-          ></div>
+          <div class="search__controls">
+            <div
+              class="search__close"
+              @click="clearSearch" 
+            ><img src="@/assets/icons/close.svg"
+                  alt="Close"
+            ></div>
+          </div>
           <div
             class="search__search"
             @click="searchRecipes"
@@ -145,7 +140,6 @@ onBeforeUnmount(() => {
                 alt="Search"
           ></div>
         </div>
-
       </div>
       <button
         @click="goToCreateRecipe"
@@ -168,26 +162,20 @@ onBeforeUnmount(() => {
 .parent {
   display: grid;
   grid-template-columns: 1fr 3fr;
+  grid-template-areas: "aside content";
 }
 
-.category {
-  cursor: pointer;
-  padding: 0.5rem 0;
-}
-
-.category--active {
- color: var(--green);
- text-decoration: underline;
-}
-
-.category:hover {
-  /* background-color: #f0f0f0; */
+@media (width < 600px) {
+  .parent {
+    grid-template-areas: "aside aside"
+                         "content content";}
 }
 
 .content {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  grid-area: content;
 }
 
 .search {
@@ -197,8 +185,13 @@ onBeforeUnmount(() => {
 
 .search__container {
   display: grid;
-  grid-template-columns: 1fr 30px 40px;
+  grid-template-columns: 1fr auto auto;
+  grid-template-rows: 1fr auto;
   margin-bottom: 1rem;
+}
+
+.search__label {
+  grid-row: 1 / 2;
 }
 
 .search__input {
@@ -206,30 +199,36 @@ onBeforeUnmount(() => {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  grid-column: 1 / 4;
-  grid-row: 1 / 2;
+  grid-column: 1 / 3;
+  grid-row: 2 / 3;
+  padding-inline-end: calc(2rem + 24px);
+}
+
+.search__controls {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  display: flex;
+  place-content: center;
+  gap: 1rem;
 }
 
 .search__close,
 .search__search {
   cursor: pointer;
-  grid-row: 1 / 2;
   display: flex;
   align-Items: center; 
   justify-content: center;
-}
-
-.search__close {
-  grid-column: 2 / 3;
-}
-
-.search__search {
-  grid-column: 3 / 4;
+    padding-inline: 1rem;
 }
 
 .search__close > img,
 .search__search > img {
   width: 24px;
   height: 24px;
+}
+
+.search__search {
+  grid-column: 3 / 4;
+  grid-row: 2 / 3;
 }
 </style>

@@ -40,11 +40,11 @@ const recipesTitle = computed(() => {
           class="item"
       >
         <RouterLink :to="`/recipes/${item.id}`">
-          <div>title: {{ item.title }}</div>
-          <div>ingredients: {{ item.ingredients }}</div>
-          <div>instructions: {{ item.instructions }}</div>
-          <div>links: {{ item.links }}</div>
-          <div>category: {{ item.category_name || 'Без категории' }}</div>
+          <div class="title">{{ item.title }}</div>
+          <div><span class="label">Ингредиенты:</span> {{ item.ingredients }}</div>
+          <div><span class="label">Инструкции:</span> {{ item.instructions }}</div>
+          <div><span class="label">Ссылки:</span> {{ item.links }}</div>
+          <div><span class="label">Категория:</span> {{ item.category_name || 'Без категории' }}</div>
         </RouterLink>
       </li>
     </ul>
@@ -60,19 +60,49 @@ const recipesTitle = computed(() => {
 }
 
 .list {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
 }
 
 .item {
   border: 1px solid var(--color-border);
-  padding: 1rem;
+  border-radius: 8px;
+  padding: 1.5rem;
   color: var(--color-text);
+  background-color: var(--color-background-soft);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-  & a {
-    color: inherit;
-    text-decoration: none;
-  }
+.item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.item a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.item div {
+  margin-bottom: 0.75rem;
+}
+
+.item div:last-child {
+  margin-bottom: 0;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--color-heading);
+}
+
+.label {
+  font-weight: 600;
+  margin-right: 0.5rem;
 }
 </style>
