@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 import { useCategoriesStore } from '@/stores/categories'
-import CommonButton from '../common/CommonButton.vue'
+import CategoryAction from './CategoryAction.vue'
 
 const categoriesStore = useCategoriesStore()
 const { getCategories, createCategory } = categoriesStore
@@ -24,18 +24,18 @@ async function saveCategory(e) {
 </script>
 
 <template>
-  <section>
-    <h4>Добавление категории</h4>
-    <form @submit="saveCategory($event)">
-      <label for="category_add"></label>
-      <input
-        v-model="params.name"
-        id="category_add"
-        type="text"
-      >
-      <CommonButton :buttonType="'submit'">Добавить</CommonButton>
-    </form>
-  </section>
+  <CategoryAction
+    title="Добавление категории"
+    idName="category_add"
+    buttonTitle="Добавить"
+    @submitAction="saveCategory"
+  >
+    <input
+      v-model="params.name"
+      id="category_add"
+      type="text"
+    >
+  </CategoryAction>
 </template>
 
 <style scoped></style>

@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useCategoriesStore } from '@/stores/categories'
-import CommonButton from '../common/CommonButton.vue'
+import CategoryAction from './CategoryAction.vue'
 
 const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
@@ -14,8 +14,6 @@ const model = ref({})
 async function deleteCategory(e) {
   e.preventDefault()
 
-  console.log('model', model.value.category_id)
-  
   if (!model.value.category_id) {
     return
   }
@@ -27,23 +25,27 @@ async function deleteCategory(e) {
 </script>
 
 <template>
-  <section>
-    <h4>Удаление категории</h4>
-    <form @submit="deleteCategory($event)">
-      <label for="category_del"></label>
-      <select
-        v-model="model.category_id"
-        id="category_del"
-      >
-        <option 
-          v-for="category in categories" 
-          :key="category.id" 
-          :value="category.id"
-        >{{ category?.name }}</option>
-      </select>
-      <CommonButton :buttonType="'submit'">Удалить</CommonButton>
-    </form>
-  </section>
+  <CategoryAction
+    title="Удаление категории"
+    idName="category_del"
+    buttonTitle="Удалить"
+    @submitAction="deleteCategory"
+  >
+    <select
+      v-model="model.category_id"
+      id="category_del"
+    >
+      <option 
+        v-for="category in categories" 
+        :key="category.id" 
+        :value="category.id"
+      >{{ category?.name }}</option>
+    </select>
+  </CategoryAction>
 </template>
 
-<style scoped></style>
+<style scoped>
+select {
+  /* field-sizing: content; */
+}
+</style>

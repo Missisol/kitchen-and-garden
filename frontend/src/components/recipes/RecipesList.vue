@@ -29,7 +29,7 @@ const recipesTitle = computed(() => {
 </script>
 
 <template>
-  <section class="categories">
+  <section class="recipes">
     <h2 class="title">Рецепты: {{ recipesTitle }}</h2>
     <h2
       v-if="ingredientsSearch"
@@ -54,11 +54,10 @@ const recipesTitle = computed(() => {
 </template>
 
 <style scoped>
-.categories {
+.recipes {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1rem;
 }
 
 .list {

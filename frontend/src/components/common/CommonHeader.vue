@@ -1,18 +1,46 @@
 <script setup>
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+
 import { mainMenu } from '@/utils/mainMenu'
+import { watch } from 'vue'
+
+const route = useRoute()
+console.log('route', route)
+
+const logoText = ref('')
+
+
+watch(() => route.name, () => {
+  console.log('route', route.name)
+
+  if (route.name === 'home') {
+    logoText.value = 'Кухня и сад'
+  }
+  if (route.name === 'recipes') {
+    logoText.value = 'Кухня'
+  }
+  if (route.name === 'garden') {
+    logoText.value = 'Сад'
+  }
+})
+
 </script>
 
 <template>
   <div class="full">
     <header class="container-inner header">
-      <div class="logo">
-        <RouterLink to="/">
-          <img 
-            src="@/assets/icons/logo.svg"
-            alt="Logo"
-          >
-        </RouterLink>
-      </div>
+      <RouterLink
+        to="/"
+        class="logo"
+      >
+        <img 
+          src="@/assets/icons/logo.svg"
+          alt="Logo"
+          class="logo__img"
+        >
+        <span>{{ logoText }}</span>
+      </RouterLink>
       <nav class="nav">
         <RouterLink
           v-for="item in mainMenu"
@@ -46,7 +74,7 @@ import { mainMenu } from '@/utils/mainMenu'
 
 .nav {
   & a {
-    color: var(--green);
+    color: var(--c-green);
     text-decoration: none;
   }
 
@@ -57,12 +85,17 @@ import { mainMenu } from '@/utils/mainMenu'
 
 .logo {
   grid-area: logo;
-  width: 80px;
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  color: var(--c-white);
+  text-decoration: none;
+  font-weight: bold;
+}
 
-  & a {
-    color: var(--green);
-    text-decoration: none;
-  }
+.logo__img {
+  width: 40px;
+  height: 40px;
 }
 
 .nav {

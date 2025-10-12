@@ -20,7 +20,17 @@
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 
-  --green:  hsla(160, 100%, 37%, 1);
+  /* --c-green:  hsla(160, 100%, 37%); */
+  --c-green:  #FF6B35;
+  --c-green-soft: hsla(160, 50%, 37%);
+
+
+  --c-white: #ffffff;
+
+  --c-black: #262627;
+
+  /* --c-black: #313130; */
+  --c-black-hard: #262627; 
 }
 
 /* semantic color variables for this project */
@@ -42,8 +52,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
+    --color-background: var(--c-black);
+    --color-background-soft: var(--c-black-hard);
     --color-background-mute: var(--vt-c-black-mute);
 
     --color-border: var(--vt-c-divider-dark-2);
@@ -58,6 +68,7 @@ body {
   min-height: 100vh;
   color: var(--color-text);
   background: var(--color-background);
+  accent-color: var(--c-green);
   transition:
     color 0.5s,
     background-color 0.5s;

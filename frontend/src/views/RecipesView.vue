@@ -123,6 +123,7 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-columns: 1fr 3fr;
   grid-template-areas: "aside content";
+  gap: 2rem;
 }
 
 @media (width < 600px) {
@@ -134,7 +135,7 @@ onBeforeUnmount(() => {
 .content {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
   grid-area: content;
 }
 
@@ -145,6 +146,6 @@ onBeforeUnmount(() => {
 
 .add-recipe {
   --padding: 4px 16px;
-  align-self: start;
+  align-self: end;
 }
 </style>

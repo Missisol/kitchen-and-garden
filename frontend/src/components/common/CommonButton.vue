@@ -24,7 +24,8 @@ const { buttonType, buttonAction } = defineProps({
 <style scoped>
 .common-button {
   background: var(--bgcolor, var(--c-green));
-  border: 1px solid var(--c-green);
+  /* border: 1px solid var(--c-green); */
+  border: none;
   border-radius: 4px;
   color: var(--color, var(--vt-c-white));
   padding: var(--padding, 4px 8px);
@@ -33,5 +34,9 @@ const { buttonType, buttonAction } = defineProps({
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
+
+  &:hover {
+    background: var(--c-green-soft);
+  }
 }
 </style>
