@@ -125,6 +125,7 @@ onBeforeUnmount(() => {
   grid-template-areas: "filter" 
                         "content";
   gap: 2rem;
+  padding-block: 2rem;
 }
 
 @media (width < 600px) {

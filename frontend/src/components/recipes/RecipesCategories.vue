@@ -47,7 +47,6 @@ const emit = defineEmits(['getRecipesByCategory'])
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-block: 1rem;
 }
 
 .categories__title {
