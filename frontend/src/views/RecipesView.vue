@@ -121,15 +121,16 @@ onBeforeUnmount(() => {
 <style scoped>
 .parent {
   display: grid;
-  grid-template-columns: 1fr 3fr;
-  grid-template-areas: "aside content";
+  grid-template-columns: 1fr;
+  grid-template-areas: "filter" 
+                        "content";
   gap: 2rem;
 }
 
 @media (width < 600px) {
   .parent {
-    grid-template-areas: "aside aside"
-                         "content content";}
+    grid-template-areas: "filter"
+                         "content";}
 }
 
 .content {
