@@ -20,17 +20,41 @@
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 
-  /* --c-green:  hsla(160, 100%, 37%); */
-  --c-green:  #FF6B35;
+
+
+
+
+
+  --c-white: hsl(0, 0%, 100%);
+  --c-white-soft: hsl(0, 0%, 85%);
+  --c-white-soft-1: #9d9d9d;
+
+  --c-orange: hsl(19, 70%, 59%);
+  --c-orange-soft-1: hsl(19, 70%, 69%);
+  --c-orange-light-1: hsl(38, 60%, 52%);
+
+  /* --c-orange-soft-2: hsl(45, 100%, 74%);
+  --c-orange-soft-3: #decd9c; */
+
+  --c-green:hsla(160, 100%, 37%);
   --c-green-soft: hsla(160, 50%, 37%);
 
+  --c-black: hsl(240, 1%, 15%); 
+  --c-black-1: hsl(0, 0%, 9%);
+  --c-black-2: hsl(0, 0%, 13%);
+  --c-black-3: hsl(0, 0%, 18%);
+  --c-black-4: hsl(60, 1%, 15%);
 
-  --c-white: #ffffff;
+  --c-text-light-1: var(--c-black);
+  --c-text-light-2: hsla(0, 0%, 100%, 0.64);
 
-  --c-black: #262627;
+  --c-text-dark-1: var(--c-white);
+  --c-text-dark-2: hsl(0, 0%, 62%);
 
-  /* --c-black: #313130; */
-  --c-black-hard: #262627; 
+
+  --section-gap: 160px;
+
+  --maxContainer: 1320px;
 }
 
 /* semantic color variables for this project */
@@ -45,22 +69,26 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
 
-  --section-gap: 160px;
-
-  --maxContainer: 1320px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--c-black);
-    --color-background-soft: var(--c-black-hard);
+    --color-background: var(--c-black-1);
+    --color-background-soft: var(--c-black-2);
     --color-background-mute: var(--vt-c-black-mute);
 
     --color-border: var(--vt-c-divider-dark-2);
     --color-border-hover: var(--vt-c-divider-dark-1);
 
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
+    --color-heading: var(--c-text-dark-1);
+    --color-text: var(--c-text-dark-2);
+    --color-text-soft: var(--c-white-soft);
+
+    --color-button: var(--c-orange);
+    --color-button-hover: var(--c-orange-soft-1);
+    --color-button-shadow: var(--c-orange-light-1);
+
+    --color-accent: var(--c-orange);
   }
 }
 
@@ -68,7 +96,7 @@ body {
   min-height: 100vh;
   color: var(--color-text);
   background: var(--color-background);
-  accent-color: var(--c-green);
+  accent-color: var(--color-accent);
   transition:
     color 0.5s,
     background-color 0.5s;

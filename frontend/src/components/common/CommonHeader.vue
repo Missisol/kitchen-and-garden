@@ -74,12 +74,14 @@ watch(() => route.name, () => {
 
 .nav {
   & a {
-    color: var(--c-green);
+    color: var(--color-text);
+    font-weight: bold;
     text-decoration: none;
   }
 
   & a.router-link-active {
-    text-decoration: underline;
+    color: var(--color-text-soft);
+    /* text-decoration: underline; */
   }
 }
 
@@ -109,7 +111,7 @@ watch(() => route.name, () => {
 .actions {
   grid-area: actions;
   justify-self: end;
-  background: var(--color-text);
+  background: var(--color-background);
   border: none;
 }
 </style>
