@@ -18,7 +18,7 @@ const emit = defineEmits(['getRecipesByCategory'])
 
 <template>
   <section class="categories">
-    <h2>Категории</h2>
+    <h2 class="categories__title">Категории</h2>
     <ul class="categories__list">
       <li
         :class="category_params.id === '' ? 'category--active' : ''"
@@ -48,6 +48,10 @@ const emit = defineEmits(['getRecipesByCategory'])
   flex-direction: column;
   gap: 1rem;
   padding-block: 1rem;
+}
+
+.categories__title {
+  color: var(--color-heading);
 }
 
 .categories__list {

@@ -90,7 +90,7 @@ watch(() => route.name, () => {
   display: flex;
   gap: .5rem;
   align-items: center;
-  color: var(--c-white);
+  color: var(--color-text-soft);
   text-decoration: none;
   font-weight: bold;
 }

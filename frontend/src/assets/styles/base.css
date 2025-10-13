@@ -26,8 +26,7 @@
 
 
   --c-white: hsl(0, 0%, 100%);
-  --c-white-soft: hsl(0, 0%, 85%);
-  --c-white-soft-1: #9d9d9d;
+  --c-white-soft: hsl(0, 0%, 90%);
 
   --c-orange: hsl(19, 70%, 59%);
   --c-orange-soft-1: hsl(19, 70%, 69%);
@@ -48,7 +47,7 @@
   --c-text-light-1: var(--c-black);
   --c-text-light-2: hsla(0, 0%, 100%, 0.64);
 
-  --c-text-dark-1: var(--c-white);
+  --c-text-dark-1: var(--c-white-soft);
   --c-text-dark-2: hsl(0, 0%, 62%);
 
 
@@ -82,7 +81,7 @@
 
     --color-heading: var(--c-text-dark-1);
     --color-text: var(--c-text-dark-2);
-    --color-text-soft: var(--c-white-soft);
+    --color-text-soft: var(--c-text-dark-1);
 
     --color-button: var(--c-orange);
     --color-button-hover: var(--c-orange-soft-1);
