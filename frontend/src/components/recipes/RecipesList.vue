@@ -7,6 +7,8 @@ import { computed } from 'vue'
 
 const recipesStore = useRecipesStore()
 const { category_params } = storeToRefs(recipesStore)
+const { addToFavorites, removeFromFavorites } = recipesStore
+
 
 const { filteredRecipes, titleSearch, ingredientsSearch } = defineProps({
   filteredRecipes: {
@@ -26,6 +28,18 @@ const { filteredRecipes, titleSearch, ingredientsSearch } = defineProps({
 const recipesTitle = computed(() => {
   return titleSearch ? titleSearch : category_params.value?.name ? category_params.value.name : category_params.value?.id ? 'Без категории' : 'Все'
 })
+
+const toggleFavorite = async (item) => {
+  try {
+    if (item.favorite) {
+      await removeFromFavorites(item.id)
+    } else {
+      await addToFavorites(item.id)
+    }
+  } catch (error) {
+    console.error('Error toggling favorite:', error)
+  }
+}
 </script>
 
 <template>
@@ -49,6 +63,14 @@ const recipesTitle = computed(() => {
           <div><span class="label">Категория:</span> {{ item.category_name || 'Без категории' }}</div>
           <div><span class="label">Избранное:</span> {{ item.favorite ? 'Да' : 'Нет' }}</div>
         </RouterLink>
+        <button
+          type="button"
+          class="favorite-btn"
+          :class="{ favorite: item.favorite }"
+          @click.prevent.stop="toggleFavorite(item)"
+        >
+          {{ item.favorite ? 'Убрать из избранного' : 'Добавить в избранное' }}
+        </button>
       </li>
     </ul>
   </section>
@@ -106,5 +128,33 @@ const recipesTitle = computed(() => {
 .label {
   font-weight: 600;
   margin-right: 0.5rem;
+}
+
+.favorite-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.favorite-btn:hover {
+  background-color: var(--color-background-soft);
+  border-color: var(--color-border-hover);
+}
+
+.favorite-btn.favorite {
+  background-color: #ff6b6b;
+  color: white;
+  border-color: #ff6b6b;
+}
+
+.favorite-btn.favorite:hover {
+  background-color: #ff5252;
+  border-color: #ff5252;
 }
 </style>
