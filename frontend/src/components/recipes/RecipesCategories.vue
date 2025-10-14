@@ -35,8 +35,10 @@ const emit = defineEmits(['getRecipesByCategory'])
         <CategoryButton>{{ category?.name ||'Без категории' }}</CategoryButton>
       </li>
     </ul>
-    <CategoryCreate />
-    <CategoryDelete />
+    <div class="categories__action">
+      <CategoryCreate />
+      <CategoryDelete />
+    </div>
   </section>
 
 </template>
@@ -46,7 +48,7 @@ const emit = defineEmits(['getRecipesByCategory'])
   grid-area: filter;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .categories__title {
@@ -59,6 +61,13 @@ const emit = defineEmits(['getRecipesByCategory'])
   gap: 1rem;
   flex-direction: row;
   flex-wrap: wrap;
+}
+
+.categories__action {
+  display: flex;
+  flex-wrap: wrap;
+  /* flex-direction: column; */
+  gap: 1rem;
 }
 
 .category {

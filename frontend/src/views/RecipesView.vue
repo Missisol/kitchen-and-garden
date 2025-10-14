@@ -128,12 +128,6 @@ onBeforeUnmount(() => {
   padding-block: 2rem;
 }
 
-@media (width < 600px) {
-  .parent {
-    grid-template-areas: "filter"
-                         "content";}
-}
-
 .content {
   display: flex;
   flex-direction: column;
@@ -143,7 +137,7 @@ onBeforeUnmount(() => {
 
 .search {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
 }
 
 .add-recipe {

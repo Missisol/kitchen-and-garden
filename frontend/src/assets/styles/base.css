@@ -76,7 +76,7 @@
     --color-background-soft: var(--c-black-2);
     --color-background-mute: var(--vt-c-black-mute);
 
-    --color-border: var(--vt-c-divider-dark-2);
+    --color-border: var(--c-orange);
     --color-border-hover: var(--vt-c-divider-dark-1);
 
     --color-heading: var(--c-text-dark-1);

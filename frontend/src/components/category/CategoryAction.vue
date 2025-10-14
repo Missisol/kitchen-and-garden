@@ -29,11 +29,11 @@ const emit = defineEmits(['submitAction'])
       <label 
         :for="idName" 
         class="action__label"
-      >{{ title }}</label>
-
-      <div class="action__slot">
-        <slot></slot>
-      </div>
+      >{{ title }}
+        <div class="action__slot">
+          <slot></slot>
+        </div>
+      </label>
       <div class="action__button">
         <CommonButton :buttonType="'submit'">{{ buttonTitle }}</CommonButton>
       </div>
@@ -44,39 +44,40 @@ const emit = defineEmits(['submitAction'])
 <style scoped>
 .action__form {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 260px;
   grid-template-areas: 
-          "label label"
-          "slot button";
-  align-items: end;
-  gap: .5rem;
+          "label button";
+  /* align-items: end; */
+
+  display: flex;
+  flex-direction: column;
+  gap: .5rem 1rem;
+
+  @media (width < 500px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 .action__label {
   grid-area: label;
   font-weight: bold;
+  width: 260px;
 }
 
 .action__slot {
-  grid-area: slot;
+  display: flex;
+  height: 32px;
 }
 
-/* .action__slot {
-  margin-block-start: .5rem;
-}
- */
 .action__slot > * {
-  /* width: 100%; */
+  border-radius: 4px;
+  width: 100%;
 }
-
-.action__slot {
-  /* width: 100%; */
-}
-
 
 .action__button {
-  --padding: 2px 8px;
+  --padding: 2px 16px;
   grid-area: button;
-  align-self: end;
-}
+  /* align-self: end;
+ */}
 </style>

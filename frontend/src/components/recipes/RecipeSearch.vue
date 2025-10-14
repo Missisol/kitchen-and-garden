@@ -1,10 +1,25 @@
 <script setup>
 const { focusAction, keyupAction, clearFunction, searchFunction, labelTitle } = defineProps({
-  focusAction: Function,
-  keyupAction: Function,
-  clearFunction: Function,
-  searchFunction: Function,
-  labelTitle: String,
+  focusAction: {
+    type: Function,
+    default: () => {}
+  },
+  keyupAction: {
+    type: Function,
+    default: () => {}
+  },
+  clearFunction: {
+    type: Function,
+    default: () => {}
+  },
+  searchFunction: {
+    type: Function,
+    default: () => {}
+  },
+  labelTitle: {
+    type: String,
+    default: ''
+  },
 })
 
 const model = defineModel()
@@ -52,6 +67,11 @@ const model = defineModel()
   grid-template-columns: 1fr auto auto;
   grid-template-rows: 1fr auto;
   margin-bottom: 1rem;
+  flex-basis: 50%;
+
+  @media (width < 800px) {
+  flex-basis: 100%;  
+  }
 }
 
 .search__label {

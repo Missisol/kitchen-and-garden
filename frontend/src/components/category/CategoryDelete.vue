@@ -34,6 +34,7 @@ async function deleteCategory(e) {
     <select
       v-model="model.category_id"
       id="category_del"
+      class="select"
     >
       <option 
         v-for="category in categories" 
@@ -45,7 +46,7 @@ async function deleteCategory(e) {
 </template>
 
 <style scoped>
-select {
-  /* field-sizing: content; */
+.select {
+  height: inherit;
 }
 </style>
