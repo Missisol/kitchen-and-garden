@@ -48,3 +48,11 @@ class Recipe(db.Model):
 
     def __repr__(self):
         return f'<Recipe {self.title}>'
+
+    def add_to_favorites(self):
+        self.favorite = True
+        db.session.commit()
+
+    def remove_from_favorites(self):
+        self.favorite = False
+        db.session.commit()

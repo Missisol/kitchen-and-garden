@@ -202,8 +202,7 @@ def delete_recipe(id):
 def add_recipe_to_favorites(id):
     try:
         recipe = Recipe.query.get_or_404(id)
-        recipe.favorite = True
-        db.session.commit()
+        recipe.add_to_favorites()
         return jsonify({'id': recipe.id, 'favorite': recipe.favorite}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -213,8 +212,7 @@ def add_recipe_to_favorites(id):
 def remove_recipe_from_favorites(id):
     try:
         recipe = Recipe.query.get_or_404(id)
-        recipe.favorite = False
-        db.session.commit()
+        recipe.remove_from_favorites()
         return jsonify({'id': recipe.id, 'favorite': recipe.favorite}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
