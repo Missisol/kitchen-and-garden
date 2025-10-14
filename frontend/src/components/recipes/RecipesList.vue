@@ -47,6 +47,7 @@ const recipesTitle = computed(() => {
           <div><span class="label">Инструкции:</span> {{ item.instructions }}</div>
           <div><span class="label">Ссылки:</span> {{ item.links }}</div>
           <div><span class="label">Категория:</span> {{ item.category_name || 'Без категории' }}</div>
+          <div><span class="label">Избранное:</span> {{ item.favorite ? 'Да' : 'Нет' }}</div>
         </RouterLink>
       </li>
     </ul>

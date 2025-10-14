@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from typing import Optional
-from sqlalchemy import Integer, String, Text, ForeignKey,  select
+from sqlalchemy import Integer, String, Text, ForeignKey,  select, Boolean
 import sqlalchemy.orm as so
 
 from app import db
@@ -25,7 +25,7 @@ class Category(db.Model):
     def __repr__(self):
         return f'<Category {self.name}>'
 
-
+# TODO добавить избранное
 class Recipe(db.Model):
     __tablename__ = 'recipe'
 
@@ -42,6 +42,7 @@ class Recipe(db.Model):
     category_id: so.Mapped[int] = so.mapped_column(
         ForeignKey(Category.id), index=True, default=1)
     file: so.Mapped[Optional[str]] = so.mapped_column(String(255))
+    favorite: so.Mapped[Optional[bool]] = so.mapped_column(Boolean, nullable=True)
 
     recipe_name: so.Mapped[Category] = so.relationship(back_populates='recipes')
 

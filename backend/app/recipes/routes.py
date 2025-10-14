@@ -76,6 +76,7 @@ def get_recipes():
             'comment': r.comment,
             'file': r.file,
             'category_name': r.recipe_name.name,
+            'favorite': r.favorite,
         } for r in recipes])
 
     except Exception as e:
@@ -99,6 +100,7 @@ def get_recipe(id):
             'links': recipe.links,
             'comment': recipe.comment,
             'file': recipe.file,
+            'favorite': recipe.favorite,
         })
     
     else:
@@ -192,5 +194,27 @@ def delete_recipe(id):
         db.session.delete(recipe)
         db.session.commit()
         return '', 204
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@bp.route('/recipe/<int:id>/favorite', methods=['POST'])
+def add_recipe_to_favorites(id):
+    try:
+        recipe = Recipe.query.get_or_404(id)
+        recipe.favorite = True
+        db.session.commit()
+        return jsonify({'id': recipe.id, 'favorite': recipe.favorite}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@bp.route('/recipe/<int:id>/favorite', methods=['DELETE'])
+def remove_recipe_from_favorites(id):
+    try:
+        recipe = Recipe.query.get_or_404(id)
+        recipe.favorite = False
+        db.session.commit()
+        return jsonify({'id': recipe.id, 'favorite': recipe.favorite}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500

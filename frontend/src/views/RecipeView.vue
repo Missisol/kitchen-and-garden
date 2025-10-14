@@ -11,7 +11,7 @@ const route = useRoute()
 
 const recipesStore =  useRecipesStore()
 const { recipe, filePath } = storeToRefs(recipesStore)
-const { getRecipeById, deleteRecipeById } = recipesStore
+const { getRecipeById, deleteRecipeById, addToFavorites, removeFromFavorites } = recipesStore
 
 getRecipeById(route.params.id)
 
@@ -27,6 +27,14 @@ const links = computed(() => {
 async function deleteRecipe(id) {
   await deleteRecipeById(id)
   router.push({ path: '/' })
+}
+
+async function toggleFavorite() {
+  if (recipe.value.favorite) {
+    await removeFromFavorites(recipe.value.id)
+  } else {
+    await addToFavorites(recipe.value.id)
+  }
 }
 
 onBeforeUnmount(() => {
@@ -65,6 +73,13 @@ onBeforeUnmount(() => {
       <button type="button">
         <RouterLink :to="`/recipes/${recipe.id}/edit`">Редактировать</RouterLink>
       </button>
+      <button 
+        type="button"
+        @click="toggleFavorite"
+        :class="{ 'favorite': recipe.favorite }"
+      >
+        {{ recipe.favorite ? 'Убрать из избранного' : 'Добавить в избранное' }}
+      </button>
       <button type="button">Добавить комментарий</button>
       <button
         type="button"
@@ -82,5 +97,36 @@ onBeforeUnmount(() => {
   & .link {
     color: inherit;
   }
+}
+
+.wrapper {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.wrapper button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-background-soft);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.wrapper button:hover {
+  background-color: var(--color-border);
+}
+
+.wrapper button.favorite {
+  background-color: #ffd700;
+  border-color: #ffd700;
+  color: #333;
+}
+
+.wrapper button.favorite:hover {
+  background-color: #ffed4e;
 }
 </style>

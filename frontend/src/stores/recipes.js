@@ -99,6 +99,54 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
+  async function addToFavorites(id) {
+    try {
+      const res = await fetch(`${apiUrls.recipe}/${id}/favorite`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      const data = await res.json()
+      // update current recipe
+      if (recipe.value && recipe.value.id === id) {
+        recipe.value.favorite = data.favorite
+      }
+      // update list item if present
+      const index = recipes.value.findIndex(r => r.id === id)
+      if (index !== -1) {
+        recipes.value[index] = { ...recipes.value[index], favorite: data.favorite }
+      }
+      return data
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  async function removeFromFavorites(id) {
+    try {
+      const res = await fetch(`${apiUrls.recipe}/${id}/favorite`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      const data = await res.json()
+      // update current recipe
+      if (recipe.value && recipe.value.id === id) {
+        recipe.value.favorite = data.favorite
+      }
+      // update list item if present
+      const index = recipes.value.findIndex(r => r.id === id)
+      if (index !== -1) {
+        recipes.value[index] = { ...recipes.value[index], favorite: data.favorite }
+      }
+      return data
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
   async function uploadFile(formData) {
     try {
       const res = await fetch(`${apiUrls.recipeFile}`, {
@@ -129,6 +177,8 @@ export const useRecipesStore = defineStore('recipes', () => {
     deleteRecipeById,
     createRecipe,
     updateRecipe,
+    addToFavorites,
+    removeFromFavorites,
     uploadFile,
     clearCategoryParams,
   }
