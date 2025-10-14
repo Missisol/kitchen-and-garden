@@ -56,6 +56,7 @@ def delete_category():
 def get_recipes():
     category_id = request.args.get('category_id', type=int)
     search_query = request.args.get('search', '', type=str).lower()
+    favorite = request.args.get('favorite', type=str)
 
     try:
         query = Recipe.query
@@ -64,6 +65,13 @@ def get_recipes():
 
         if search_query:
             query = query.filter(Recipe.ingredients.collate("NOCASE").like(f'%{search_query}%'))
+
+        # Filter by favorite status
+        if favorite is not None:
+            if favorite.lower() == 'true':
+                query = query.filter(Recipe.favorite == True)
+            elif favorite.lower() == 'false':
+                query = query.filter(Recipe.favorite == False)
 
         recipes = query.all()
         return jsonify([{

@@ -12,13 +12,16 @@ export const useRecipesStore = defineStore('recipes', () => {
   const filePath = ref('')
   const ingredientsSearch = ref('')
 
-  async function getRecipes(category_id = '') {
+  async function getRecipes(category_id = '', favorite = null) {
     const params = new URLSearchParams()
     if (category_id) {
       params.append('category_id', category_id)
     }
     if (ingredientsSearch.value) {
       params.append('search', ingredientsSearch.value)
+    }
+    if (favorite !== null) {
+      params.append('favorite', favorite.toString())
     }
 
     try {
@@ -27,6 +30,10 @@ export const useRecipesStore = defineStore('recipes', () => {
     } catch (error) {
       console.log('error', error)
     }
+  }
+
+  async function getFavoriteRecipes() {
+    await getRecipes('', true)
   }
 
   async function getRecipeById(id) {
@@ -173,6 +180,7 @@ export const useRecipesStore = defineStore('recipes', () => {
     filePath,
     ingredientsSearch,
     getRecipes,
+    getFavoriteRecipes,
     getRecipeById,
     deleteRecipeById,
     createRecipe,

@@ -21,7 +21,7 @@ const { getCategories } = categoriesStore
 
 const recipesStore = useRecipesStore()
 const { category_params, ingredientsSearch, recipes } = storeToRefs(recipesStore)
-const { getRecipes, clearCategoryParams } = recipesStore
+const { getRecipes, getFavoriteRecipes, clearCategoryParams } = recipesStore
 
 const titleSearch = ref('')
 const filteredRecipes = ref([])
@@ -61,6 +61,13 @@ const searchRecipesByTitle = async() => {
   clearCategoryParams()
   await getRecipes()
   getRecipesByTitle()
+}
+
+const getFavoriteRecipesList = async () => {
+  titleSearch.value = ''
+  ingredientsSearch.value = ''
+  clearCategoryParams()
+  await getFavoriteRecipes()
 }
 
 getCategories()
@@ -104,6 +111,12 @@ onBeforeUnmount(() => {
       <div class="add-recipe">
         <CommonButton
           buttonType="button"
+          :buttonAction="getFavoriteRecipesList"
+        >
+          Избранные рецепты
+        </CommonButton>
+        <CommonButton
+          buttonType="button"
           :buttonAction="goToCreateRecipe"
         >
           Добавить рецепт
@@ -143,5 +156,7 @@ onBeforeUnmount(() => {
 .add-recipe {
   --padding: 4px 16px;
   align-self: end;
+  display: flex;
+  gap: 1rem;
 }
 </style>
