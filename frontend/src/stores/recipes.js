@@ -47,7 +47,7 @@ export const useRecipesStore = defineStore('recipes', () => {
         },
       })
       recipe.value = await res.json()
-      console.log('recipe', recipe.value)
+      // console.log('recipe', recipe.value)
 
       if (recipe.value.file) {
         try {
@@ -154,6 +154,18 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
+  async function toggleFavorite(item) {
+    try {
+      if (item.favorite) {
+        await removeFromFavorites(item.id)
+      } else {
+        await addToFavorites(item.id)
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error)
+    }
+  }
+
   async function uploadFile(formData) {
     try {
       const res = await fetch(`${apiUrls.recipeFile}`, {
@@ -187,6 +199,7 @@ export const useRecipesStore = defineStore('recipes', () => {
     updateRecipe,
     addToFavorites,
     removeFromFavorites,
+    toggleFavorite,
     uploadFile,
     clearCategoryParams,
   }

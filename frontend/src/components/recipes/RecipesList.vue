@@ -1,13 +1,13 @@
 <script setup>
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
 import { useRecipesStore } from '@/stores/recipes'
-import { computed } from 'vue'
 
 const recipesStore = useRecipesStore()
 const { category_params } = storeToRefs(recipesStore)
-const { addToFavorites, removeFromFavorites } = recipesStore
+const { toggleFavorite } = recipesStore
 
 
 const { filteredRecipes, titleSearch, ingredientsSearch } = defineProps({
@@ -28,18 +28,6 @@ const { filteredRecipes, titleSearch, ingredientsSearch } = defineProps({
 const recipesTitle = computed(() => {
   return titleSearch ? titleSearch : category_params.value?.name ? category_params.value.name : category_params.value?.id ? 'Без категории' : 'Все'
 })
-
-const toggleFavorite = async (item) => {
-  try {
-    if (item.favorite) {
-      await removeFromFavorites(item.id)
-    } else {
-      await addToFavorites(item.id)
-    }
-  } catch (error) {
-    console.error('Error toggling favorite:', error)
-  }
-}
 </script>
 
 <template>

@@ -11,7 +11,7 @@ const route = useRoute()
 
 const recipesStore =  useRecipesStore()
 const { recipe, filePath } = storeToRefs(recipesStore)
-const { getRecipeById, deleteRecipeById, addToFavorites, removeFromFavorites } = recipesStore
+const { getRecipeById, deleteRecipeById, toggleFavorite } = recipesStore
 
 getRecipeById(route.params.id)
 
@@ -27,14 +27,6 @@ const links = computed(() => {
 async function deleteRecipe(id) {
   await deleteRecipeById(id)
   router.push({ path: '/' })
-}
-
-async function toggleFavorite() {
-  if (recipe.value.favorite) {
-    await removeFromFavorites(recipe.value.id)
-  } else {
-    await addToFavorites(recipe.value.id)
-  }
 }
 
 onBeforeUnmount(() => {
@@ -75,7 +67,7 @@ onBeforeUnmount(() => {
       </button>
       <button 
         type="button"
-        @click="toggleFavorite"
+        @click="toggleFavorite(recipe)"
         :class="{ 'favorite': recipe.favorite }"
       >
         {{ recipe.favorite ? 'Убрать из избранного' : 'Добавить в избранное' }}
