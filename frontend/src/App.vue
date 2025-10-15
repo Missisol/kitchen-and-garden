@@ -1,6 +1,6 @@
 <script setup>
 import CommonHeader from '@/components/common/CommonHeader.vue'
-import CommonFooter from '@/components/common/CommonFooter.vue'
+// import CommonFooter from '@/components/common/CommonFooter.vue'
 </script>
 
 <template>
@@ -11,7 +11,7 @@ import CommonFooter from '@/components/common/CommonFooter.vue'
         <component :is="Component" />
       </RouterView>
     </main>
-    <CommonFooter />
+    <!-- <CommonFooter /> -->
   </div>
 </template>
 

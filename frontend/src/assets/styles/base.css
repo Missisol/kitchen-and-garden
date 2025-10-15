@@ -271,10 +271,6 @@ body {
   grid-column: full;
 }
 
-.full {
-  padding: 1rem;
-}
-
 /* .container-inner {
   --full: minmax(1rem, 1fr);
   --inner: minmax(0, var(--maxContainer));
