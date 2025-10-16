@@ -1,61 +1,9 @@
-/* color palette from <https://github.com/vuejs/theme> */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
-
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
-
-  --vt-c-indigo: #2c3e50;
-
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
-
-
-
-
-
-
-  --c-white: hsl(0, 0%, 100%);
-  --c-white-soft: hsl(0, 0%, 90%);
-
-  --c-orange: hsl(19, 70%, 59%);
-  --c-orange-soft-1: hsl(19, 70%, 69%);
-  --c-orange-light-1: hsl(38, 60%, 52%);
-
-  /* --c-orange-soft-2: hsl(45, 100%, 74%);
-  --c-orange-soft-3: #decd9c; */
-
-  --c-green:hsla(160, 100%, 37%);
-  --c-green-soft: hsla(160, 50%, 37%);
-
-  --c-black: hsl(240, 1%, 15%); 
-  --c-black-1: hsl(0, 0%, 9%);
-  --c-black-2: hsl(0, 0%, 13%);
-  --c-black-3: hsl(0, 0%, 18%);
-  --c-black-4: hsl(60, 1%, 15%);
-
-  --c-text-light-1: var(--c-black);
-  --c-text-light-2: hsla(0, 0%, 100%, 0.64);
-
-  --c-text-dark-1: var(--c-white-soft);
-  --c-text-dark-2: hsl(0, 0%, 62%);
-
-
   --section-gap: 160px;
   --maxContainer: 1320px;
+  --radius: 0.75rem;
 
-
-    /* new styles*/
+    /* colors */
     --background: hsl(0 0% 100%);
     --foreground: hsl(222.2 84% 4.9%);
 
@@ -84,7 +32,6 @@
     --input: hsl(214.3 31.8% 91.4%);
     --ring: hsl(24 88% 62%);
 
-    --radius: 0.75rem;
     
     --gradient-primary: linear-gradient(135deg, hsl(24 88% 62%), hsl(18 95% 58%));
     --gradient-secondary: linear-gradient(135deg, hsl(142 76% 45%), hsl(158 80% 48%));
@@ -95,8 +42,7 @@
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-
-
+    /* colors dark */
     --background-dark: hsl(216 15% 7%);
     --foreground-dark: hsl(210 20% 98%);
 
@@ -129,59 +75,7 @@
     --shadow-card-dark: 0 8px 32px hsl(216 30% 4% / 0.4);
 }
 
-/* semantic color variables for this project */
-/* :root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
-
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
-
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
-
-} */
-
-/* @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--c-black-1);
-    --color-background-soft: var(--c-black-2);
-    --color-background-mute: var(--vt-c-black-mute);
-
-    --color-border: var(--c-orange);
-    --color-border-hover: var(--vt-c-divider-dark-1);
-
-    --color-heading: var(--c-text-dark-1);
-    --color-text: var(--c-text-dark-2);
-    --color-text-soft: var(--c-text-dark-1);
-
-    --color-button: var(--c-orange);
-    --color-button-hover: var(--c-orange-soft-1);
-    --color-button-shadow: var(--c-orange-light-1);
-
-    --color-accent: var(--c-orange);
-  }
-} */
-
-  :root {
-/*     --color-background-soft: var(--c-black-2);
-    --color-background-mute: var(--vt-c-black-mute);
-
-    --color-border: light-dark(var(--border), var(--border-dark));
-    --color-border-hover: var(--vt-c-divider-dark-1);
-
-    --color-heading: var(--c-text-dark-1);
-    --color-text: var(--c-text-dark-2);
-    --color-text-soft: var(--c-text-dark-1);
-
-    --color-button: var(--c-orange);
-    --color-button-hover: var(--c-orange-soft-1);
-    --color-button-shadow: var(--c-orange-light-1);
-
-    --color-accent: var(--c-orange); */
-
-
     --color-background: light-dark(var(--background), var(--background-dark));
     --color-foreground: light-dark(var(--foreground), var(--foreground-dark));
 
@@ -271,8 +165,8 @@ body {
   grid-column: full;
 }
 
-/* .container-inner {
-  --full: minmax(1rem, 1fr);
+.container-inner {
+  --full: minmax(0, 1fr);
   --inner: minmax(0, var(--maxContainer));
   display: grid;
   grid-template-columns: var(--full)
@@ -282,5 +176,5 @@ body {
 
 .container-inner > * {
   grid-column: inner;
-} */
+}
 

@@ -30,49 +30,60 @@ watch(() => route.name, () => {
 </script>
 
 <template>
-  <div class="full">
+  <div class="full full-header">
     <header class="container-inner header">
-      <RouterLink
-        to="/"
-        class="logo__container"
-      >
-        <div class="logo">
-          <IconLogo />
-        </div>
-        <span class="logo__text">Кухня и сад</span>
-      </RouterLink>
       <div class="header__container">
-        <nav class="nav">
-          <RouterLink
-            v-for="item in mainMenu"
-            :key="item.name"
-            :to="item.path"
-            :class="route.name"
-          >{{ item.name }}</RouterLink>
-        </nav>
-        <button class="header__theme">
-          <IconMoon />     
-        </button>
+        <RouterLink
+          to="/"
+          class="logo__container"
+        >
+          <div class="logo">
+            <IconLogo />
+          </div>
+          <span class="logo__text">Кухня&Сад</span>
+        </RouterLink>
+        <div class="header__right">
+          <nav class="nav">
+            <RouterLink
+              v-for="item in mainMenu"
+              :key="item.name"
+              :to="item.path"
+              :class="route.name"
+            >{{ item.name }}</RouterLink>
+          </nav>
+          <button class="header__theme">
+            <IconMoon />     
+          </button>
+        </div>
       </div>
     </header>
   </div>
 </template>
 
 <style scoped>
+.full-header {
+  position: sticky;
+  top: 0px;
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid var(--color-border);
+}
+
 .header {
+  padding-inline: 1rem;
+  height: 4rem;
+}
+
+.header__container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 1rem;
-  border-bottom: 1px solid var(--color-border);
-  padding-inline: 1rem;
-  /* padding: 1rem; */
-  height: 4rem;
+  width: 100%;
 }
 
 .logo__container {
   display: flex;
   gap: .5rem;
-  align-items: center;
   text-decoration: none;
 }
 
@@ -103,24 +114,26 @@ watch(() => route.name, () => {
 }
 
 .logo__text {
+  align-self: center;
   font-size: 1.25rem;
   font-weight: 700;
+  text-wrap: nowrap;
   color: transparent;
   background-clip: text;
   background-image: linear-gradient(to right, var(--color-primary), var(--color-secondary));
 }
 
-.header__container {
+.header__right {
   display: flex;
   gap: 1rem;
-  align-items: center;
+  height: 40px;
 }
 
 .nav {
   display: flex;
   gap: .25rem;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
 
   & a {
     color: var(--color-muted-foreground);
@@ -129,7 +142,6 @@ watch(() => route.name, () => {
     padding: 0.5rem 1.5rem;
     border-radius: var(--radius);
     transition: var(--transition-smooth);
-    height: 40px;
   }
 
   & a:hover {
@@ -153,7 +165,6 @@ watch(() => route.name, () => {
   justify-content: center;
   align-items: center;
   width: 40px;
-  height: 40px;
   font-size: 0.875rem;
   font-weight: 500;
   background: var(--color-background);
