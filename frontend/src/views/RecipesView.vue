@@ -9,6 +9,8 @@ import RecipesList from '@/components/recipes/RecipesList.vue'
 import RecipesCategories from '@/components/recipes/RecipesCategories.vue'
 import RecipeSearch from '@/components/recipes/RecipeSearch.vue'
 import CommonButton from '@/components/common/CommonButton.vue'
+import IconChefhat from '@/components/icons/IconChefhat.vue'
+import CommonHero from '@/components/common/CommonHero.vue'
 
 const router = useRouter()
 
@@ -86,6 +88,13 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="parent">
+    <CommonHero>
+      <template #icon>
+        <IconChefhat />
+      </template>
+      <template #title>Рецепты</template>
+      <template #text>Управляйте своими рецептами</template>
+    </CommonHero>
     <RecipesCategories
       @getRecipesByCategory="getRecipesByCategory"
     />
@@ -133,19 +142,18 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .parent {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-areas: "filter" 
-                        "content";
+  --gradient: var(--gradient-primary);
+  --dim: right;
+
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
-  padding-block: 2rem;
 }
 
 .content {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  grid-area: content;
 }
 
 .search {

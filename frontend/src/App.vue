@@ -16,4 +16,7 @@ import CommonHeader from '@/components/common/CommonHeader.vue'
 </template>
 
 <style scoped>
+.main {
+  padding-block: 2rem;
+}
 </style>

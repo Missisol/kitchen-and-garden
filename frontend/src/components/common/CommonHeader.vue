@@ -121,6 +121,10 @@ watch(() => route.name, () => {
   color: transparent;
   background-clip: text;
   background-image: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+
+  @media (width < 768px) {
+    display: none;
+  }
 }
 
 .header__right {

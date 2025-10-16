@@ -45,7 +45,6 @@ const emit = defineEmits(['getRecipesByCategory'])
 
 <style scoped>
 .categories {
-  grid-area: filter;
   display: flex;
   flex-direction: column;
   gap: 2rem;
