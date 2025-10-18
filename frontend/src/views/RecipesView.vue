@@ -11,6 +11,8 @@ import RecipeSearch from '@/components/recipes/RecipeSearch.vue'
 import CommonButton from '@/components/common/CommonButton.vue'
 import IconChefhat from '@/components/icons/IconChefhat.vue'
 import CommonHero from '@/components/common/CommonHero.vue'
+import IconPlus from '@/components/icons/IconPlus.vue'
+import IconStar from '@/components/icons/IconStar.vue'
 
 const router = useRouter()
 
@@ -99,6 +101,31 @@ onBeforeUnmount(() => {
       @getRecipesByCategory="getRecipesByCategory"
     />
     <div class="content">
+      <div class="add-recipe">
+        <div class="add-recipe__button-dark">
+          <CommonButton
+            buttonType="button"
+            :buttonAction="getFavoriteRecipesList"
+          >
+            <template #icon><IconStar /></template>
+            <template #text>
+              <span>Избранные</span>
+            </template>
+          </CommonButton>
+        </div>
+        <div class="add-recipe__button">
+          <CommonButton
+            buttonType="button"
+            :buttonAction="goToCreateRecipe"
+          >
+            <template #icon><IconPlus /></template>
+            <template #text>
+              <span>Добавить рецепт</span>
+            </template>
+          </CommonButton>
+        </div>
+      </div>
+
       <div class="search">
         <RecipeSearch
           :focusAction="clearSearch"
@@ -116,20 +143,6 @@ onBeforeUnmount(() => {
           labelTitle="Поиск по ингредиентам"
           v-model="ingredientsSearch"
         />
-      </div>
-      <div class="add-recipe">
-        <CommonButton
-          buttonType="button"
-          :buttonAction="getFavoriteRecipesList"
-        >
-          Избранные рецепты
-        </CommonButton>
-        <CommonButton
-          buttonType="button"
-          :buttonAction="goToCreateRecipe"
-        >
-          Добавить рецепт
-        </CommonButton>
       </div>
       <RecipesList 
         :filteredRecipes="filteredRecipes"
@@ -166,5 +179,18 @@ onBeforeUnmount(() => {
   align-self: end;
   display: flex;
   gap: 1rem;
+}
+
+.add-recipe__button-dark {
+  --cbtn-background: var(--color-background);
+  --cbtn-border: var(--color-input);
+  --text-color: var(--color-foreground);
+  --cbtn-hover: var(--color-primary);
+  --text-hover: var(--color-primary-foreground);
+}
+
+.add-recipe__button {
+  --cbtn-background: var(--color-primary);
+  --text-color: var(--color-primary-foreground);
 }
 </style>

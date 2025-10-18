@@ -17,28 +17,41 @@ const { buttonType, buttonAction } = defineProps({
     @click="buttonAction" 
     class="common-button"
   >
-    <slot></slot>
+    <slot name="icon"></slot>
+    <slot name="text"></slot>
   </button>
 </template>
 
 <style scoped>
 .common-button {
-  background: var(--bgcolor, var(--color-button));
-  border: 1px solid var(--color-border);
-  border: none;
-  border-radius: 24px;
-  color: var(--color, var(--color-text-soft));
-  padding: var(--padding, 4px 8px);
-  text-align: center;
-  display: inline-block;
-  font-size: 16px;
-  font-weight: 600;
+
+  background: var(--cbtn-background, var(--color-primary));
+  color: var(--text-color, var(--color-primary-foreground));
+  border: 1px solid var(--cbtn-border, none);
+  border-radius: calc(var(--radius) - 2px);
+  padding-block: .5rem;
+  padding-inline: 1rem;
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  font-size: .875rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  white-space: nowrap;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background: var(--color-button-hover);
-    color: var(--color-background-soft);
+    background: var(--cbtn-hover, hsl(from var(--cbtn-background) h s l / 0.9));
+    color: var(--text-hover, var(--color-primary-foreground));
   }
+}
+
+</style>
+
+<style>
+.common-button>svg {
+  width: 1rem;
+  height: 1rem;
 }
 </style>
