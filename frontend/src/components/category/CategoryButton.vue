@@ -6,7 +6,7 @@
     type="button"
     class="button"
   ><span class="button__text">
-    <slot />  
+    <slot></slot>  
   </span>
   </button>
 </template>
@@ -14,34 +14,30 @@
 <style scoped>
 .button {
   background: var(--color-background);
-  border: none;
+  border: 1px solid var(--color-input);
   border-radius: 24px;
-  color: var(--color-text);
-  padding: 4px 16px;
+  padding: 6px 16px;
   text-align: center;
   display: inline-block;
-  font-size: 16px;
   cursor: pointer;
-  filter: drop-shadow(16px 0px 10px rgba(178,150,104, 0.5));
-  filter: drop-shadow(0px 0px 2px var(--color-text));
-  transition: all 0.2s ease-in-out;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: max-content;
 }
 
 .button .button__text {
-  font-weight: 400;
-  font-size: 18px;
-  text-shadow: none;
-  transition: text-shadow 0.2s ease-in-out;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
 }
 
 .button:hover {
-  color: var(--color-button-shadow);
+  color: var(--color-accent-foreground);
+  background: var(--color-accent);
 }
 
 .category--active>.button {
-  color: var(--color-button-shadow); 
-  filter: drop-shadow(0px 0px 8px var(--color-button-shadow));
+  color: var(--color-primary-foreground); 
+  background: var(--color-primary);
 }
 
 .button:hover .button__text,

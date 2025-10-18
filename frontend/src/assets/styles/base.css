@@ -104,8 +104,14 @@
     --color-input: light-dark(var(--input), var(--input-dark));
     --color-ring: light-dark(var(--ring), var(--ring-dark));
 
-    --color-gradient-card: light-dark(var(--gradient-card), var(--gradient-card-dark));
-    --color-shadow-card: light-dark(var(--shadow-card), var(--shadow-card-dark));
+    --color-gradient-card: var(--gradient-card);
+    --color-shadow-card: var(--shadow-card);
+
+
+    @media(prefers-color-scheme: dark) {
+      --color-gradient-card: var(--gradient-card-dark);
+      --color-shadow-card: var(--shadow-card-dark);
+    }
   }
 
   html {

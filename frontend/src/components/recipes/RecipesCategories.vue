@@ -47,7 +47,7 @@ const emit = defineEmits(['getRecipesByCategory'])
 .categories {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .categories__title {
@@ -56,17 +56,20 @@ const emit = defineEmits(['getRecipesByCategory'])
 
 .categories__list {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  /* justify-content: center; */
+  gap: .5rem;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
 .categories__action {
-  display: flex;
-  flex-wrap: wrap;
-  /* flex-direction: column; */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+
+  @media (width < 768px) {
+    grid-template-columns: auto;
+  }
 }
 
 .category {

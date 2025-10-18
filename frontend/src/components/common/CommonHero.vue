@@ -36,7 +36,7 @@
  }
 
 .hero__title {
-  font-size: 2.5rem;
+  font-size: 2.25rem;
   line-height: 2.5rem;
   font-weight: 700;
   text-wrap: nowrap;
