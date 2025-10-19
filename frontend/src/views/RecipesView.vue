@@ -29,6 +29,7 @@ const { getRecipes, getFavoriteRecipes, clearCategoryParams } = recipesStore
 
 const titleSearch = ref('')
 const filteredRecipes = ref([])
+const showFavoritesOnly = ref(false)
 
 const getRecipesByCategory = async (category={id: '', name: ''}) => {
   titleSearch.value = ''
@@ -71,7 +72,14 @@ const getFavoriteRecipesList = async () => {
   titleSearch.value = ''
   ingredientsSearch.value = ''
   clearCategoryParams()
-  await getFavoriteRecipes()
+  
+  if (showFavoritesOnly.value) {
+    await getRecipes()
+  } else {
+    await getFavoriteRecipes()
+  }
+  
+  showFavoritesOnly.value = !showFavoritesOnly.value
 }
 
 getCategories()
@@ -102,7 +110,10 @@ onBeforeUnmount(() => {
     />
     <div class="content">
       <div class="add-recipe">
-        <div class="add-recipe__button-dark">
+        <div
+          class="add-recipe__button-dark"
+          :class="{'add-recipe__button-dark--active': showFavoritesOnly}"
+        >
           <CommonButton
             buttonType="button"
             :buttonAction="getFavoriteRecipesList"
@@ -187,6 +198,17 @@ onBeforeUnmount(() => {
   --text-color: var(--color-foreground);
   --cbtn-hover: var(--color-primary);
   --text-hover: var(--color-primary-foreground);
+  
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.add-recipe__button-dark--active {
+  --cbtn-background: var(--color-primary);
+  --text-color: var(--color-primary-foreground);
+}
+
+.add-recipe__button-dark--active  svg {
+  fill: var(--color-primary-foreground);
 }
 
 .add-recipe__button {
