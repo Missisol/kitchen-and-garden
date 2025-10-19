@@ -109,34 +109,36 @@ onBeforeUnmount(() => {
       @getRecipesByCategory="getRecipesByCategory"
     />
     <div class="content">
-      <div class="add-recipe">
-        <div
-          class="add-recipe__button-dark"
-          :class="{'add-recipe__button-dark--active': showFavoritesOnly}"
-        >
-          <CommonButton
-            buttonType="button"
-            :buttonAction="getFavoriteRecipesList"
+      <div class="controls">
+        <h2 class="controls__title">Рецепты</h2>
+        <div class="controls__box">
+          <div
+            class="controls__button-dark"
+            :class="{'controls__button-dark--active': showFavoritesOnly}"
           >
-            <template #icon><IconStar /></template>
-            <template #text>
-              <span>Избранные</span>
-            </template>
-          </CommonButton>
-        </div>
-        <div class="add-recipe__button">
-          <CommonButton
-            buttonType="button"
-            :buttonAction="goToCreateRecipe"
-          >
-            <template #icon><IconPlus /></template>
-            <template #text>
-              <span>Добавить рецепт</span>
-            </template>
-          </CommonButton>
+            <CommonButton
+              buttonType="button"
+              :buttonAction="getFavoriteRecipesList"
+            >
+              <template #icon><IconStar /></template>
+              <template #text>
+                <span>Избранные</span>
+              </template>
+            </CommonButton>
+          </div>
+          <div class="controls__button">
+            <CommonButton
+              buttonType="button"
+              :buttonAction="goToCreateRecipe"
+            >
+              <template #icon><IconPlus /></template>
+              <template #text>
+                <span>Добавить рецепт</span>
+              </template>
+            </CommonButton>
+          </div>
         </div>
       </div>
-
       <div class="search">
         <RecipeSearch
           :focusAction="clearSearch"
@@ -181,18 +183,35 @@ onBeforeUnmount(() => {
 }
 
 .search {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+
+  @media (width < 768px) {
+    grid-template-columns: auto;
+  }
 }
 
-.add-recipe {
+.controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.controls__box {
   --padding: 4px 16px;
-  align-self: end;
   display: flex;
   gap: 1rem;
 }
 
-.add-recipe__button-dark {
+.controls__title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.controls__button-dark {
   --cbtn-background: var(--color-background);
   --cbtn-border: var(--color-input);
   --text-color: var(--color-foreground);
@@ -202,16 +221,16 @@ onBeforeUnmount(() => {
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.add-recipe__button-dark--active {
+.controls__button-dark--active {
   --cbtn-background: var(--color-primary);
   --text-color: var(--color-primary-foreground);
 }
 
-.add-recipe__button-dark--active  svg {
+.controls__button-dark--active  svg {
   fill: var(--color-primary-foreground);
 }
 
-.add-recipe__button {
+.controls__button {
   --cbtn-background: var(--color-primary);
   --text-color: var(--color-primary-foreground);
 }

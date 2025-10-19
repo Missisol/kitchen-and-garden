@@ -51,6 +51,9 @@ const emit = defineEmits(['getRecipesByCategory'])
 }
 
 .categories__title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
   color: var(--color-heading);
 }
 
