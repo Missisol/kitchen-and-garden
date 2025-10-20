@@ -24,12 +24,11 @@ const categoriesStore = useCategoriesStore()
 const { getCategories } = categoriesStore
 
 const recipesStore = useRecipesStore()
-const { category_params, ingredientsSearch, recipes } = storeToRefs(recipesStore)
+const { category_params, ingredientsSearch, recipes, showFavoritesOnly } = storeToRefs(recipesStore)
 const { getRecipes, getFavoriteRecipes, clearCategoryParams } = recipesStore
 
 const titleSearch = ref('')
 const filteredRecipes = ref([])
-const showFavoritesOnly = ref(false)
 
 const getRecipesByCategory = async (category={id: '', name: ''}) => {
   titleSearch.value = ''

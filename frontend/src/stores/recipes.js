@@ -11,6 +11,7 @@ export const useRecipesStore = defineStore('recipes', () => {
   const recipe = ref({})
   const filePath = ref('')
   const ingredientsSearch = ref('')
+  const showFavoritesOnly = ref(false)
 
   async function getRecipes(category_id = '', favorite = null) {
     const params = new URLSearchParams()
@@ -158,6 +159,9 @@ export const useRecipesStore = defineStore('recipes', () => {
     try {
       if (item.favorite) {
         await removeFromFavorites(item.id)
+        if (showFavoritesOnly.value) {
+          await getFavoriteRecipes()
+        }
       } else {
         await addToFavorites(item.id)
       }
@@ -191,6 +195,7 @@ export const useRecipesStore = defineStore('recipes', () => {
     recipe,
     filePath,
     ingredientsSearch,
+    showFavoritesOnly,
     getRecipes,
     getFavoriteRecipes,
     getRecipeById,
