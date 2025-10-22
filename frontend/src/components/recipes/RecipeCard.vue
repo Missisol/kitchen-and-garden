@@ -1,20 +1,16 @@
 <script setup>
 import { computed } from 'vue'
 
-import IconStar from '../icons/IconStar.vue'
 import IconLink from '../icons/IconLink.vue'
-import IconFile from '../icons/IconFile.vue';
+import IconFile from '../icons/IconFile.vue'
+import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
+import CommonCardCategory from '../common/CommonCardCategory.vue'
 
-const { item, toggleFavorite } = defineProps({
+const { item } = defineProps({
   item: {
     type: Object,
     required: true
   },
-  toggleFavorite: {
-    type: Function,
-    required: true,
-    default: () => {},
-  }
 })
 
 const linksCount = computed(() => {
@@ -26,19 +22,13 @@ const linksCount = computed(() => {
 </script>
 
 <template>
+  <!--TODO обрезать текст в разделе Приготовление -->
   <RouterLink :to="`/recipes/${item.id}`">
     <div class="heading">
       <h3 class="title">{{ item.title }}</h3>
-      <button
-        type="button"
-        class="favorite-btn"
-        :class="{ favorite: item.favorite }"
-        @click.prevent.stop="toggleFavorite(item)"
-      >
-        <IconStar />
-      </button>
+      <CommonFavoriteBtn :recipe="item" />
     </div>
-    <div class="card__category">{{ item.category_name || 'Без категории' }}</div>
+    <CommonCardCategory :recipe="item" />
     <div class="card__content">
       <dl class="content__list">
         <div class="content__item">
@@ -90,39 +80,6 @@ const linksCount = computed(() => {
 .label {
   font-weight: 600;
   margin-right: 0.5rem;
-}
-
-.favorite-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: var(--transition-smooth);
-}
-
-.favorite-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
-.favorite-btn.favorite svg {
-  color: var(--color-primary);
-fill: var(--color-primary);
-}
-
-.favorite-btn:hover {
-  transform: scale(1.1)
-}
-
-.card__category {
-  font-size: .75rem;
-  font-weight: 600;
-  line-height: 1rem;
-  padding-block: .125rem;
-  padding-inline: .625rem;
-  color: var(--color-primary);
-  background: hsl(from var(--color-primary) h s l / 0.2);
-  align-self: flex-start;
-  border-radius: 9999px;
 }
 
 .card__content {
