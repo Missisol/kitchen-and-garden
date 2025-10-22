@@ -53,7 +53,7 @@ async function getFormBody(e) {
 async function create() {
   const result = await createRecipe(data.value)
     if (result.id) {
-    router.push({ path: `/` })
+    router.push({ path: '/recipes' })
   }
 }
 </script>

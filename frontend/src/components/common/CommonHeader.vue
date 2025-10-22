@@ -9,8 +9,6 @@ import IconMoon from '../icons/IconMoon.vue'
 import IconLogo from '../icons/IconLogo.vue'
 
 const route = useRoute()
-console.log('route', route)
-
 const logoText = ref('')
 
 watch(() => route.name, () => {

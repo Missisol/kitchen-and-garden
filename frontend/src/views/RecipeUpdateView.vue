@@ -60,7 +60,7 @@ async function getFormBody(e) {
 async function update(id, body) {
   const result = await updateRecipe(id, body)
   if (result.id) {
-    router.push({ path: `/` })
+    router.push({ path: '/recipes' })
   }
 }
 
