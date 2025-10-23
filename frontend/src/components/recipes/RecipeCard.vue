@@ -19,6 +19,17 @@ const linksCount = computed(() => {
   }
   return 0
 })
+
+const ingredients = computed(() => {
+    const arr = item.ingredients.toLowerCase().split('\n').map(ing => ing.trim())
+    if (arr.length === 1 && arr[0].includes(',')) {
+     return arr[0].split(',').map(ing => ing.trim().replace(',', '')).filter(ing => ing.length).join(', ')
+    } else  return arr.join(', ')
+})
+
+const instructions = computed(() => {
+  return item.instructions.split('\n')[0].trim()
+})
 </script>
 
 <template>
@@ -33,11 +44,11 @@ const linksCount = computed(() => {
       <dl class="content__list">
         <div class="content__item">
           <dt class="content__term">Ингредиенты</dt>
-          <dd class="content__details">{{ item.ingredients }}</dd>
+          <dd class="content__details">{{ ingredients }}</dd>
         </div>
         <div class="content__item">
           <dt class="content__term">Приготовление</dt>
-          <dd class="content__details">{{ item.instructions }}</dd>
+          <dd class="content__details content__details--truncated">{{ instructions }}</dd>
         </div>
         <div
           v-if="linksCount"
@@ -113,4 +124,9 @@ const linksCount = computed(() => {
   height: 1rem;
 }
 
+.content__details--truncated {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>

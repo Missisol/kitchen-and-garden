@@ -116,8 +116,7 @@ onBeforeUnmount(() => {
             :class="{'controls__button-dark--active': showFavoritesOnly}"
           >
             <CommonButton
-              buttonType="button"
-              :buttonAction="getFavoriteRecipesList"
+              @buttonAction="getFavoriteRecipesList"
             >
               <template #icon><IconStar /></template>
               <template #text>
@@ -125,17 +124,14 @@ onBeforeUnmount(() => {
               </template>
             </CommonButton>
           </div>
-          <div class="controls__button">
-            <CommonButton
-              buttonType="button"
-              :buttonAction="goToCreateRecipe"
-            >
-              <template #icon><IconPlus /></template>
-              <template #text>
-                <span>Добавить рецепт</span>
-              </template>
-            </CommonButton>
-          </div>
+          <CommonButton
+            @buttonAction="goToCreateRecipe"
+          >
+            <template #icon><IconPlus /></template>
+            <template #text>
+              <span>Добавить рецепт</span>
+            </template>
+          </CommonButton>
         </div>
       </div>
       <div class="search">
@@ -210,6 +206,7 @@ onBeforeUnmount(() => {
   color: var(--color-heading);
 }
 
+/* TODO перенести стили в Commonbutton */
 .controls__button-dark {
   --cbtn-background: var(--color-background);
   --cbtn-border: var(--color-input);
@@ -227,10 +224,5 @@ onBeforeUnmount(() => {
 
 .controls__button-dark--active  svg {
   fill: var(--color-primary-foreground);
-}
-
-.controls__button {
-  --cbtn-background: var(--color-primary);
-  --text-color: var(--color-primary-foreground);
 }
 </style>

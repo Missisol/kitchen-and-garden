@@ -30,11 +30,11 @@ function deleteFile() {
       type="text"
     >
     <label for="ingredients">ingredients</label>
-    <input 
+    <textarea 
       v-model="model.ingredients" 
       id="ingredients" 
       type="text"
-    >
+    ></textarea>
     <label for="instructions">instructions</label>
     <textarea 
       v-model="model.instructions" 
@@ -42,11 +42,11 @@ function deleteFile() {
       type="text"
     ></textarea>
     <label for="links">links</label>
-    <input
+    <textarea
       v-model="model.links"
       id="links"
       type="text"
-    >
+    ></textarea>
     <label for="category">category</label>
     <select
       v-model="model.category_id"

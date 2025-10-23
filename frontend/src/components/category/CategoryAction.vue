@@ -17,6 +17,7 @@ const { title, idName } = defineProps({
 const emit = defineEmits(['submitAction'])
 </script>
 
+// TODO заменить кнопку на CommonButton
 <template>
   <form
     class="form"

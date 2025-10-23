@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
@@ -7,46 +7,99 @@ import { useRecipesStore } from '@/stores/recipes'
 import CommonError from '@/components/common/CommonError.vue'
 import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
 import CommonCardCategory from '@/components/common/CommonCardCategory.vue'
+import CommonButton from '@/components/common/CommonButton.vue'
+
 import IconLink from '@/components/icons/IconLink.vue'
 import IconFile from '@/components/icons/IconFile.vue'
+import IconEdit from '@/components/icons/IconEdit.vue'
+import IconDelete from '@/components/icons/IconDelete.vue'
+import IconArrowLeft from '@/components/icons/IconArrowLeft.vue'
 
 const router = useRouter()
 const route = useRoute()
 
 const recipesStore =  useRecipesStore()
 const { recipe, filePath } = storeToRefs(recipesStore)
-const { getRecipeById, deleteRecipeById } = recipesStore
+const { getRecipeById, deleteRecipeById, updateRecipe } = recipesStore
+
+// Comment editing state
+const isEditingComment = ref(false)
+const editedComment = ref('')
 
 getRecipeById(route.params.id)
 
 const links = computed(() => {
   if (recipe.value.links) {
-    console.log('links', recipe.value.links)
-    return recipe.value.links.split(',').map(link => link.trim())
-    
+    if (recipe.value.links.includes('\n')) {
+    return recipe.value.links.split('\n').map(link => link.trim())
+    }
+    if (recipe.value.links.includes(',')) {
+      return recipe.value.links.split(',').map(link => link.trim())
+    }
   }
   return []
 })
 
 const ingredients = computed(() => {
   if (recipe.value.ingredients) {
-    return recipe.value.ingredients
-      .split(',')
-      .map(ing => ing.trim().replace(/^[\D\S]/g, l => l.toUpperCase()))
+    if (recipe.value.ingredients.includes('\n')) {
+      return recipe.value.ingredients
+        .split('\n')
+        .map(ing => ing.trim().replace(/^[\D\S]/g, l => l.toUpperCase())).filter(ing => ing.length)
+    }
+    if (recipe.value.ingredients.includes(',')) {
+      return recipe.value.ingredients
+        .split(',')
+        .map(ing => ing.trim().replace(/^[\D\S]/g, l => l.toUpperCase())).filter(ing => ing.length)
+    }
+    
   }
   return []
 })
 
 const instructions = computed(() => {
   if (recipe.value.instructions) {
-    return recipe.value.instructions.split('\n')
+    return recipe.value.instructions.split('\n').map(instr => instr.trim())
   }
   return []
+})
+
+const comments = computed(() => {
+  if (recipe.value.comment) {
+    return recipe.value.comment.split('\n').map(comment => comment.trim())
+  }
+  return ''
 })
 
 async function deleteRecipe(id) {
   await deleteRecipeById(id)
   router.push({ path: '/recipes' })
+}
+
+// Comment editing functions
+function startEditingComment() {
+  isEditingComment.value = true
+  editedComment.value = recipe.value.comment || ''
+}
+
+function cancelEditingComment() {
+  isEditingComment.value = false
+  editedComment.value = ''
+}
+
+async function saveComment() {
+  if (editedComment.value === recipe.value.comment) {
+    cancelEditingComment()
+    return
+  }
+
+  try {
+    await updateRecipe(recipe.value.id, { comment: editedComment.value })
+    recipe.value.comment = editedComment.value
+    isEditingComment.value = false
+  } catch (error) {
+    console.error('Error updating comment:', error)
+  }
 }
 
 onBeforeUnmount(() => {
@@ -56,10 +109,12 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="content">
-    <button
-      class="back"
-      @click="router.back()"
-    >Назад</button>
+    <div class="button-back">
+      <CommonButton @buttonAction="router.back()">
+        <template #icon><IconArrowLeft /></template>
+        <template #text>Назад к рецептам</template>
+      </CommonButton>
+    </div>
     <section 
       v-if="!recipe.error" 
       class="recipe"
@@ -90,9 +145,12 @@ onBeforeUnmount(() => {
           >{{ instr }}</li>
         </ul>
       </div>
-      <div class="recipe__partition">
+      <div
+        v-if="recipe.links"
+        class="recipe__partition"
+      >
         <h2>Внешние ресурсы</h2>
-        <ul v-if="recipe.links">
+        <ul>
           <li
             v-for="link in links"
             :key="link"
@@ -107,7 +165,10 @@ onBeforeUnmount(() => {
           </li>
         </ul>
       </div>
-      <div class="recipe__partition">
+      <div
+        v-if="recipe.file"
+        class="recipe__partition"
+      >
         <h2>Прикрепленный файл</h2>
         <div class="recipe__links">
           <IconFile />
@@ -121,20 +182,69 @@ onBeforeUnmount(() => {
         </div>
       </div>
       <div class="recipe__partition">
-        <h2>Комментарий</h2>
-        <div class="recipe__comment-container">
-          <p v-if="recipe.comment">{{ recipe.comment }}</p>
-          <button type="button">Редактировать комментарий</button>
+        <h2 class="recipe__comment-title">Комментарий</h2>
+        <div>
+          <!-- Display comment when not editing -->
+          <div
+            v-if="!isEditingComment"
+            class="recipe__comment-container"
+          >
+            <ul
+              v-if="comments.length"
+              class="recipe__comment-list"
+            >
+              <li
+                v-for="comment in comments"
+                :key="comment"
+              >{{ comment }}</li>
+            </ul>
+            <div class="recipe__button-dark">
+              <CommonButton @buttonAction="startEditingComment">
+                <template #text>{{ recipe.comment ? 'Редактировать комментарий' : 'Добавить комментарий' }}</template>
+              </CommonButton>
+            </div>
+          </div>
+          
+          <!-- Edit comment when editing -->
+          <div 
+            v-else 
+            class="recipe__edit-comment"
+          >
+            <textarea
+              v-model="editedComment"
+              name="comment"
+              placeholder="Введите комментарий..."
+              class="recipe__comment-textarea"
+              rows="4"
+            ></textarea>
+            <div class="recipe__comment-actions">
+              <CommonButton
+                @buttonAction="saveComment"
+              >
+                <template #text>Сохранить</template>
+              </CommonButton>
+              <div class="recipe__button-dark">
+                <CommonButton @buttonAction="cancelEditingComment">
+                  <template #text>Отмена</template>
+                </CommonButton>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="wrapper">
-        <button type="button">
-          <RouterLink :to="`/recipes/${recipe.id}/edit`">Редактировать</RouterLink>
-        </button>
-        <button
-          type="button"
-          @click="deleteRecipe(recipe.id)"
-        >Удалить</button>
+        <RouterLink :to="`/recipes/${recipe.id}/edit`">
+          <CommonButton>
+            <template #icon><IconEdit /></template>
+            <template #text>Редактировать</template>
+          </CommonButton>
+        </RouterLink>
+        <div class="recipe__button-red">
+          <CommonButton @buttonAction="deleteRecipe(recipe.id)">
+            <template #icon><IconDelete /></template>
+            <template #text>Удалить</template>
+          </CommonButton>
+        </div>
       </div>
     </section>
     <section v-else>
@@ -150,8 +260,13 @@ onBeforeUnmount(() => {
   margin-inline: auto;
 }
 
-.back {
+.button-back {
   margin-block-end: 1.5rem;
+  --cbtn-background: var(--color-background);
+  --cbtn-border: var(--color-background);
+  --text-color: var(--color-foreground);
+  --cbtn-hover: var(--color-primary);
+  --text-hover: var(--color-primary-foreground);
 }
 
 .recipe {
@@ -242,15 +357,104 @@ gap: 1.5rem;
   text-decoration: underline;
 }
 
+.recipe__comment-title {
+  padding-inline-start: 1rem;
+  margin-block-start: 0.75rem;
+}
+
 .recipe__comment-container {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  gap: 0.75rem;
+}
+
+.recipe__comment-list {
+  background: hsl(from var(--color-background) h s l / 0.5);
+  padding: 1rem 0.75rem;
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.recipe__comment-container ul {
+  font-style: italic;
+}
+
+.recipe__no-comment {
+  color: var(--color-text-soft);
+  font-style: italic;
+}
+
+.recipe__edit-comment-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-background-soft);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.recipe__edit-comment-btn:hover {
+  background-color: var(--color-border);
+}
+
+.recipe__edit-comment {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 }
 
-.recipe__comment-container p {
-  font-style: italic;
+.recipe__comment-textarea {
+  flex-grow: 1;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--color-foreground);
+  background: hsl(from var(--color-background) h s l / 0.5);
+  border: 1px solid var(--color-input);
+  border-radius: calc(var(--radius) - 2px);
+  padding: 0.5rem .75rem;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.recipe__comment-textarea::placeholder {
+  color: hsl(from var(--color-foreground) h s l / 0.6);
+}
+
+.recipe__comment-textarea:focus-visible, 
+.recipe__comment-textarea:focus {
+  outline: 2px solid var(--color-ring);
+}
+
+.recipe__comment-textarea:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.recipe__comment-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* TODO перенести стили в Commonbutton */
+.recipe__button-dark {
+  --cbtn-background: var(--color-background);
+  --cbtn-border: var(--color-input);
+  --text-color: var(--color-foreground);
+  --cbtn-hover: var(--color-primary);
+  --text-hover: var(--color-primary-foreground);
+  
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.recipe__button-red {
+  --cbtn-background: var(--color-destructive);
+  --cbtn-border: var(--color-input);
+  --text-color: var(--color-foreground);
+  --cbtn-hover: hsl(from var(--color-destructive) h s l / 0.9);
+  --text-hover: var(--color-foreground);
+  
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .wrapper {
@@ -260,27 +464,17 @@ gap: 1.5rem;
   margin-top: 1.5rem;
 }
 
-.wrapper button {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  background-color: var(--color-background-soft);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.wrapper a {
+  text-decoration: none;
+  flex-grow: 1;
 }
 
-.wrapper button:hover {
-  background-color: var(--color-border);
+.wrapper a button {
+  width: 100%;
 }
 
-.wrapper button.favorite {
-  background-color: #ffd700;
-  border-color: #ffd700;
-  color: #333;
-}
-
-.wrapper button.favorite:hover {
-  background-color: #ffed4e;
+.wrapper a button > svg {
+ width: 1rem;
+ height: 1rem;
 }
 </style>
