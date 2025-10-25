@@ -82,7 +82,7 @@ watch(() => recipe.value, () => {
 <template>
   <div class="content">
     <div class="button-back">
-      <CommonButton @buttonAction="router.back()">
+      <CommonButton @buttonAction="router.push({ path: `/recipes/${id}` })">
         <template #icon><IconArrowLeft /></template>
         <template #text>Назад к рецепту</template>
       </CommonButton>
@@ -99,6 +99,7 @@ watch(() => recipe.value, () => {
         v-model:model="data"
         v-model:fileModel="fileModel"
         :categories="categories"
+        mode="update"
         @getFormBody="getFormBody"
       />
     </section>

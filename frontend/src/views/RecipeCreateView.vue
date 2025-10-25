@@ -7,6 +7,8 @@ import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
 
 import RecipeForm from '@/components/recipes/RecipeForm.vue'
+import CommonButton from '@/components/common/CommonButton.vue'
+import IconArrowLeft from '@/components/icons/IconArrowLeft.vue'
 
 const router = useRouter()
 const categoriesStore = useCategoriesStore()
@@ -28,8 +30,7 @@ if (!categories.value.length) {
   getCategories()
 }
 
-async function getFormBody(e) {
-  e.preventDefault()
+async function getFormBody() {
   console.log('data', data.value)
 
   if (!data.value.title) {
@@ -59,14 +60,48 @@ async function create() {
 </script>
 
 <template>
-  <h1>Добавление рецепта</h1>
-  <RecipeForm
-    v-model:model="data"
-    v-model:fileModel="fileModel"
-    :categories="categories"
-    @getFormBody="getFormBody"
-  />
+  <div class="content">
+    <div class="button-back">
+      <CommonButton @buttonAction="router.push({ path: '/recipes' })">
+        <template #icon><IconArrowLeft /></template>
+        <template #text>Назад к рецептам</template>
+      </CommonButton>
+    </div>
+    <section class="recipe">
+      <RecipeForm
+        v-model:model="data"
+        v-model:fileModel="fileModel"
+        :categories="categories"
+        @getFormBody="getFormBody"
+      />
+    </section>
+  </div>
+
 </template>
 
 <style scoped>
+.content {
+  max-width: 56rem;
+  margin-inline: auto;
+}
+
+.button-back {
+  margin-block-end: 1.5rem;
+  --cbtn-background: var(--color-background);
+  --cbtn-border: var(--color-background);
+  --text-color: var(--color-foreground);
+  --cbtn-hover: var(--color-primary);
+  --text-hover: var(--color-primary-foreground);
+}
+
+.recipe {
+  background: var(--color-gradient-card);
+  box-shadow: var(--shadow-card);
+  padding: 2rem;
+  border: 1px solid hsl(from var(--color-border) h s l / 0.5);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 </style>

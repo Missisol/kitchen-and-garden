@@ -3,8 +3,15 @@ import CommonButton from '../common/CommonButton.vue'
 import IconSave from '../icons/IconSave.vue'
 import IconDelete from '../icons/IconDelete.vue'
 
-const { categories } = defineProps({
-  categories: Array,
+const { categories, mode } = defineProps({
+  categories: {
+    type: Array,
+    default: () => [],
+  },
+  mode: {
+    type: String,
+    default: 'create',
+  }
 })
 
 const emit = defineEmits(['getFormBody'])
@@ -27,6 +34,18 @@ function sendForm() {
 
 <template>
   <form class="form">
+    <label
+      v-if="mode === 'create'"
+      for="title"
+      class="label"
+    >Название
+      <input
+        type="text"
+        name="title"
+        id="title"
+        v-model="model.title"
+      >
+    </label>
     <label
       for="category"
       class="label"
