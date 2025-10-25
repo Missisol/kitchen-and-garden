@@ -1,17 +1,15 @@
 <script setup>
+import { computed } from 'vue'
+
 import CommonButton from '../common/CommonButton.vue'
 import IconSave from '../icons/IconSave.vue'
 import IconDelete from '../icons/IconDelete.vue'
 
-const { categories, mode } = defineProps({
+const { categories } = defineProps({
   categories: {
     type: Array,
     default: () => [],
   },
-  mode: {
-    type: String,
-    default: 'create',
-  }
 })
 
 const emit = defineEmits(['getFormBody'])
@@ -19,12 +17,21 @@ const emit = defineEmits(['getFormBody'])
 const model = defineModel('model')
 const fileModel = defineModel('fileModel')
 
+const isDisabled = computed(() => {
+  return model.value?.file || fileModel.value?.file?.name
+})
+
 function handleFileChange(event) {
   fileModel.value.file = event.target.files[0]
 }
 
 function deleteFile() {
+  if (model.value.file) {
   model.value.file = null
+  }
+  if (fileModel.value.file) {
+    fileModel.value.file = null
+  }
 }
 
 function sendForm() {
@@ -35,7 +42,6 @@ function sendForm() {
 <template>
   <form class="form">
     <label
-      v-if="mode === 'create'"
       for="title"
       class="label"
     >Название
@@ -95,25 +101,13 @@ function sendForm() {
     </label>
     <div class="file-wrapper">
       <h3 class="label">Прикрепленный файл</h3>
-      <div
-        v-if="model.file"
-        class="del-file-wrapper"
-      >
-        <div>{{ model.file }}</div>
-        <CommonButton @buttonAction="deleteFile">
-          <template #icon><IconDelete /></template>
-          <template #text>Удалить файл</template>
-        </CommonButton>
-      </div>
-      <div
-        v-else
-        class="add-file-wrapper"
-      >
-        <div v-if="fileModel?.file?.name">{{ fileModel.file.name }}</div>
+      <div>{{ model.file }}</div>
+      <div v-if="fileModel?.file?.name">{{ fileModel.file.name }}</div>
+      <div class="button-wrapper">
         <label
-          v-else
           for="file"
           class="file-label"
+          :class="{ 'file-label--inactive': isDisabled }"
         >Добавьте файл</label>
         <input
           type="file" 
@@ -123,6 +117,13 @@ function sendForm() {
           accept=".doc, .docx, .pdf, .png, .jpg, .jpeg"
           @change="handleFileChange"
         >
+        <CommonButton
+          :disabled="!isDisabled"
+          @buttonAction="deleteFile"
+        >
+          <template #icon><IconDelete /></template>
+          <template #text>Удалить файл</template>
+        </CommonButton>
       </div>
     </div>
     <label
@@ -168,8 +169,7 @@ function sendForm() {
   padding: 0.5rem 0.75rem;
 }
 
-.file-wrapper,
-.del-file-wrapper {
+.file-wrapper {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -191,12 +191,18 @@ function sendForm() {
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: var(--transition-smooth);
+}
 
-    &:hover {
-    background: hsl(from var(--color-primary) h s l / 0.9);
-    color: var(--color-primary-foreground);
-  }
+.file-label--inactive {
+  cursor: default;
+  background: var(--color-muted);
+  color: var(--color-muted-foreground);
+}
+
+.file-label:not(.file-label--inactive):hover {
+  background: hsl(from var(--color-primary) h s l / 0.9);
+  color: var(--color-primary-foreground);
 }
 
 .file-wrapper .common-button {
@@ -209,11 +215,13 @@ function sendForm() {
   align-self: flex-start;
 }
 
-.add-file-wrapper {
+.button-wrapper {
   display: flex;
+  gap: 1rem;
 }
 
 .file-input {
   opacity: 0;
+  width: 1px;
 }
 </style>

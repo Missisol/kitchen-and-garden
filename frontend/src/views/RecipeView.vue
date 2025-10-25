@@ -279,7 +279,6 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
   align-items: start;
-  margin-block-end: 1.25rem;
 }
 
 .recipe__title-box {

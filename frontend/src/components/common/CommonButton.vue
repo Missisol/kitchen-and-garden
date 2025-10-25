@@ -1,9 +1,13 @@
 <script setup>
-const { buttonType } = defineProps({
+const { buttonType, disabled } = defineProps({
   buttonType: {
     type: String,
     default: 'button'
   },
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const emit = defineEmits(['buttonAction'])
@@ -12,8 +16,10 @@ const emit = defineEmits(['buttonAction'])
 <template>
   <button
     :type="buttonType"
+    :disabled="disabled"
     @click="emit('buttonAction')" 
     class="common-button"
+    :class="{'common-button--disabled': disabled}"
   >
     <slot name="icon"></slot>
     <slot name="text"></slot>
@@ -38,15 +44,20 @@ const emit = defineEmits(['buttonAction'])
   white-space: nowrap;
   cursor: pointer;
   transition: var(--transition-smooth);
-
-  &:hover {
-    --cbtn-fallback: var(--cbtn-background, var(--color-primary));
-
-    background: var(--cbtn-hover, hsl(from var(--cbtn-fallback) h s l / 0.9));
-    color: var(--text-hover, var(--color-primary-foreground));
-  }
 }
 
+.common-button--disabled {
+  background: hsl(from var(--cbtn-background) h s l / 0.1);
+  color: hsl(from var(--text-color) h s l / 0.3);
+  cursor: default;
+}
+
+.common-button:not(:disabled):hover {
+  --cbtn-fallback: var(--cbtn-background, var(--color-primary));
+
+  background: var(--cbtn-hover, hsl(from var(--cbtn-fallback) h s l / 0.9));
+  color: var(--text-hover, var(--color-primary-foreground));
+}
 </style>
 
 <style>

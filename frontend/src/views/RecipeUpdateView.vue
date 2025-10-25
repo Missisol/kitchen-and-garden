@@ -98,7 +98,6 @@ watch(() => recipe.value, () => {
         v-model:model="data"
         v-model:fileModel="fileModel"
         :categories="categories"
-        mode="update"
         @getFormBody="getFormBody"
       />
     </section>
