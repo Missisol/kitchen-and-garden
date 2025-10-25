@@ -7,6 +7,10 @@ import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
 
 import RecipeForm from '@/components/recipes/RecipeForm.vue'
+import CommonError from '@/components/common/CommonError.vue'
+import CommonButton from '@/components/common/CommonButton.vue'
+import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
+import IconArrowLeft from '@/components/icons/IconArrowLeft.vue'
 
 const router = useRouter()
 const categoriesStore = useCategoriesStore()
@@ -14,7 +18,7 @@ const { categories } = storeToRefs(categoriesStore)
 const { getCategories } = categoriesStore
 
 const recipesStore =  useRecipesStore()
-const { recipe, filePath } = storeToRefs(recipesStore)
+const { recipe } = storeToRefs(recipesStore)
 const { getRecipeById, updateRecipe, uploadFile } = recipesStore
 
 const id = router.currentRoute.value.params.id
@@ -35,8 +39,8 @@ if (!categories.value.length) {
   getCategories()
 }
 
-async function getFormBody(e) {
-  e.preventDefault()
+// TODO нужно отправлять только те поля, которые изменились
+async function getFormBody() {
   console.log('data', data.value)
 
   if (fileModel.value.file) {
@@ -58,7 +62,7 @@ async function getFormBody(e) {
 async function update(id, body) {
   const result = await updateRecipe(id, body)
   if (result.id) {
-    router.push({ path: '/recipes' })
+    router.push({ path: `/recipes/${id}` })
   }
 }
 
@@ -76,14 +80,73 @@ watch(() => recipe.value, () => {
 </script>
 
 <template>
-  <h1>Редактировать рецепт</h1>
-  <RecipeForm
-    v-model:model="data"
-    v-model:fileModel="fileModel"
-    :categories="categories"
-    :filePath="filePath"
-    @getFormBody="getFormBody"
-  />
+  <div class="content">
+    <div class="button-back">
+      <CommonButton @buttonAction="router.back()">
+        <template #icon><IconArrowLeft /></template>
+        <template #text>Назад к рецепту</template>
+      </CommonButton>
+    </div>
+    <section 
+      v-if="!recipe.error" 
+      class="recipe"
+    >
+      <div class="recipe__heading">
+        <h1 class="recipe__title">{{ recipe.title }}</h1>
+        <CommonFavoriteBtn :recipe="recipe" />
+      </div>
+      <RecipeForm
+        v-model:model="data"
+        v-model:fileModel="fileModel"
+        :categories="categories"
+        @getFormBody="getFormBody"
+      />
+    </section>
+    <section v-else>
+      <CommonError :error="recipe.error" />
+    </section>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.content {
+  max-width: 56rem;
+  margin-inline: auto;
+}
+
+.button-back {
+  margin-block-end: 1.5rem;
+  --cbtn-background: var(--color-background);
+  --cbtn-border: var(--color-background);
+  --text-color: var(--color-foreground);
+  --cbtn-hover: var(--color-primary);
+  --text-hover: var(--color-primary-foreground);
+}
+
+.recipe {
+  background: var(--color-gradient-card);
+  box-shadow: var(--shadow-card);
+  padding: 2rem;
+  border: 1px solid hsl(from var(--color-border) h s l / 0.5);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.recipe__heading {
+  --size-icon: 1.75rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-block-end: 1.25rem;
+}
+
+.recipe__title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 2.25rem;
+}
+
+</style>

@@ -103,7 +103,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="content">
     <div class="button-back">
-      <CommonButton @buttonAction="router.back()">
+      <CommonButton @buttonAction="router.push({ path: '/recipes' })">
         <template #icon><IconArrowLeft /></template>
         <template #text>Назад к рецептам</template>
       </CommonButton>
@@ -436,8 +436,6 @@ onBeforeUnmount(() => {
   --text-color: var(--color-foreground);
   --cbtn-hover: var(--color-primary);
   --text-hover: var(--color-primary-foreground);
-  
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .recipe__button-red {
@@ -446,8 +444,6 @@ onBeforeUnmount(() => {
   --text-color: var(--color-foreground);
   --cbtn-hover: hsl(from var(--color-destructive) h s l / 0.9);
   --text-hover: var(--color-foreground);
-  
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .wrapper {
