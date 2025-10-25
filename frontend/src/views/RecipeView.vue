@@ -4,16 +4,18 @@ import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
 import { useRecipesStore } from '@/stores/recipes'
+
 import CommonError from '@/components/common/CommonError.vue'
 import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
 import CommonCardCategory from '@/components/common/CommonCardCategory.vue'
 import CommonButton from '@/components/common/CommonButton.vue'
-
 import IconLink from '@/components/icons/IconLink.vue'
 import IconFile from '@/components/icons/IconFile.vue'
 import IconEdit from '@/components/icons/IconEdit.vue'
 import IconDelete from '@/components/icons/IconDelete.vue'
 import IconArrowLeft from '@/components/icons/IconArrowLeft.vue'
+
+import { getArrayFromString, getReplacedArrayFromString } from '@/utils/recipesHelpers'
 
 const router = useRouter()
 const route = useRoute()
@@ -29,46 +31,37 @@ const editedComment = ref('')
 getRecipeById(route.params.id)
 
 const links = computed(() => {
-  if (recipe.value.links) {
+  if (recipe.value?.links) {
     if (recipe.value.links.includes('\n')) {
-    return recipe.value.links.split('\n').map(link => link.trim())
+    return getArrayFromString(recipe.value.links, '\n')
     }
     if (recipe.value.links.includes(',')) {
-      return recipe.value.links.split(',').map(link => link.trim())
+      return getArrayFromString(recipe.value.links, ',') 
     }
   }
   return []
 })
 
 const ingredients = computed(() => {
-  if (recipe.value.ingredients) {
-    if (recipe.value.ingredients.includes('\n')) {
-      return recipe.value.ingredients
-        .split('\n')
-        .map(ing => ing.trim().replace(/^[\D\S]/g, l => l.toUpperCase())).filter(ing => ing.length)
+  if (recipe.value?.ingredients) {
+      if (recipe.value?.ingredients.includes('\n') && recipe.value.ingredients.includes(',')) {
+    return getReplacedArrayFromString(recipe.value.ingredients, '\n', /^[\D\S]/g, l => l.toUpperCase())
+      .map(ing => ing.replace(',', ''))
     }
-    if (recipe.value.ingredients.includes(',')) {
-      return recipe.value.ingredients
-        .split(',')
-        .map(ing => ing.trim().replace(/^[\D\S]/g, l => l.toUpperCase())).filter(ing => ing.length)
+    if (recipe.value?.ingredients.includes(',') || recipe.value?.ingredients.includes('\n')) {
+      const symbol = recipe.value.ingredients.includes(',') ? ',' : '\n'
+      return getReplacedArrayFromString(recipe.value.ingredients, symbol, /^[\D\S]/g, l => l.toUpperCase())
     }
-    
   }
   return []
 })
 
 const instructions = computed(() => {
-  if (recipe.value.instructions) {
-    return recipe.value.instructions.split('\n').map(instr => instr.trim())
-  }
-  return []
+    return recipe.value?.instructions ? getArrayFromString(recipe.value.instructions, '\n') : []
 })
 
 const comments = computed(() => {
-  if (recipe.value.comment) {
-    return recipe.value.comment.split('\n').map(comment => comment.trim())
-  }
-  return ''
+  return recipe.value?.comment ? getArrayFromString(recipe.value.comment, '\n')  : ''
 })
 
 async function deleteRecipe(id) {
@@ -137,7 +130,7 @@ onBeforeUnmount(() => {
         </ul>
       </div>
       <div class="recipe__partition">
-        <h2>Инструкции</h2>
+        <h2>Приготовление</h2>
         <ul>
           <li
             v-for="instr in instructions"
@@ -270,14 +263,14 @@ onBeforeUnmount(() => {
 }
 
 .recipe {
-background: var(--color-gradient-card);
-box-shadow: var(--shadow-card);
-padding: 2rem;
-border: 1px solid hsl(from var(--color-border) h s l / 0.5);
-border-radius: var(--radius);
-display: flex;
-flex-direction: column;
-gap: 1.5rem;
+  background: var(--color-gradient-card);
+  box-shadow: var(--shadow-card);
+  padding: 2rem;
+  border: 1px solid hsl(from var(--color-border) h s l / 0.5);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .recipe__heading {

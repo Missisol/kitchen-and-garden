@@ -18,8 +18,6 @@ const { recipe, filePath } = storeToRefs(recipesStore)
 const { getRecipeById, updateRecipe, uploadFile } = recipesStore
 
 const id = router.currentRoute.value.params.id
-console.log('id', id)
-
 const data = ref({
   title: '',
   ingredients: '',

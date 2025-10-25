@@ -1,7 +1,7 @@
 export const inputSearchData = [
   {
     id: 1,
-    type: `text`,
+    type: 'text',
     name: 'Поиск по названию',
     model: 'titleSearch'
   },

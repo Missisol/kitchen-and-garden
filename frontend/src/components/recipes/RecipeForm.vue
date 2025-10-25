@@ -1,4 +1,7 @@
 <script setup>
+import CommonButton from '../common/CommonButton.vue'
+import IconSave from '../icons/IconSave.vue'
+
 const { categories, filePath } = defineProps({
   categories: Array,
   filePath: String
@@ -16,38 +19,17 @@ function handleFileChange(event) {
 function deleteFile() {
   model.value.file = null
 }
+
+function sendForm() {
+  emit('getFormBody')
+}
 </script>
 
 <template>
   <form 
     class="form" 
-    @submit="emit('getFormBody', $event)"
   >
-    <label for="title">title</label>
-    <input 
-      v-model="model.title" 
-      id="title" 
-      type="text"
-    >
-    <label for="ingredients">ingredients</label>
-    <textarea 
-      v-model="model.ingredients" 
-      id="ingredients" 
-      type="text"
-    ></textarea>
-    <label for="instructions">instructions</label>
-    <textarea 
-      v-model="model.instructions" 
-      id="instructions" 
-      type="text"
-    ></textarea>
-    <label for="links">links</label>
-    <textarea
-      v-model="model.links"
-      id="links"
-      type="text"
-    ></textarea>
-    <label for="category">category</label>
+    <label for="category">Категория</label>
     <select
       v-model="model.category_id"
       id="category"
@@ -58,7 +40,27 @@ function deleteFile() {
         :value="category.id"
       >{{ category?.name || 'Без категории' }}</option>
     </select>
+
+    <label for="ingredients">Ингредиенты</label>
+    <textarea 
+      v-model="model.ingredients" 
+      id="ingredients" 
+      type="text"
+    ></textarea>
+    <label for="instructions">Приготовление</label>
+    <textarea 
+      v-model="model.instructions" 
+      id="instructions" 
+      type="text"
+    ></textarea>
+    <label for="links">Внешние ресурсы</label>
+    <textarea
+      v-model="model.links"
+      id="links"
+      type="text"
+    ></textarea>
     <div v-if="filePath">
+      <h3>Прикрепленный файл</h3>
       <div>{{ model.file }}</div>
       <button 
         type="button" 
@@ -75,14 +77,17 @@ function deleteFile() {
         @change="handleFileChange"
       >
     </div>
-    <label for="comment">comment</label>
+    <label for="comment">Комментарий</label>
     <textarea
       v-model="model.comment"
       name="comment"
       id="comment"
     ></textarea>
 
-    <button type="submit">Сохранить</button>
+    <CommonButton @buttonAction="sendForm">
+      <template #icon><IconSave /></template>
+      <template #text>Сохранить изменения</template>
+    </CommonButton>
   </form>
 </template>
 

@@ -5,6 +5,7 @@ import IconLink from '../icons/IconLink.vue'
 import IconFile from '../icons/IconFile.vue'
 import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
 import CommonCardCategory from '../common/CommonCardCategory.vue'
+import { getReplacedArrayFromString } from '@/utils/recipesHelpers'
 
 const { item } = defineProps({
   item: {
@@ -21,10 +22,13 @@ const linksCount = computed(() => {
 })
 
 const ingredients = computed(() => {
-    const arr = item.ingredients.toLowerCase().split('\n').map(ing => ing.trim())
+    const arr = item?.ingredients.toLowerCase().split('\n').map(ing => ing.trim())
     if (arr.length === 1 && arr[0].includes(',')) {
-     return arr[0].split(',').map(ing => ing.trim().replace(',', '')).filter(ing => ing.length).join(', ')
-    } else  return arr.join(', ')
+    return getReplacedArrayFromString(arr[0], ',', ',', '').join(', ')
+    //  return arr[0].split(',').map(ing => ing.trim().replace(',', '')).filter(ing => ing.length).join(', ')
+    } else  {
+      return arr.map(ing => ing.replace(',', '')).filter(ing => ing.length).join(', ')
+    }
 })
 
 const instructions = computed(() => {

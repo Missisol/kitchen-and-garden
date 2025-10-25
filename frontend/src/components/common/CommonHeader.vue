@@ -12,8 +12,6 @@ const route = useRoute()
 const logoText = ref('')
 
 watch(() => route.name, () => {
-  console.log('route', route.name)
-
   if (route.name === 'home') {
     logoText.value = 'Кухня и сад'
   }
