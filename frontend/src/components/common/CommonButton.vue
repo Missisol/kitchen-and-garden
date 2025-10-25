@@ -37,7 +37,7 @@ const emit = defineEmits(['buttonAction'])
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition-smooth);
 
   &:hover {
     --cbtn-fallback: var(--cbtn-background, var(--color-primary));

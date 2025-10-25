@@ -383,7 +383,7 @@ onBeforeUnmount(() => {
   background-color: var(--color-background-soft);
   color: var(--color-text);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+ transition: var(--transition-smooth);
   margin-top: 0.5rem;
 }
 

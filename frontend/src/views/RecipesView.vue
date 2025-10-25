@@ -214,7 +214,7 @@ onBeforeUnmount(() => {
   --cbtn-hover: var(--color-primary);
   --text-hover: var(--color-primary-foreground);
   
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+ transition: var(--transition-smooth);
 }
 
 .controls__button-dark--active {

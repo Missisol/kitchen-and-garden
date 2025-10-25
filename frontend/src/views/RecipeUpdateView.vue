@@ -39,7 +39,6 @@ if (!categories.value.length) {
   getCategories()
 }
 
-// TODO нужно отправлять только те поля, которые изменились
 async function getFormBody() {
   console.log('data', data.value)
 

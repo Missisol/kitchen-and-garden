@@ -20,7 +20,7 @@
   text-align: center;
   display: inline-block;
   cursor: pointer;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition-smooth);
   min-width: max-content;
 }
 
