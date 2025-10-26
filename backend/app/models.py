@@ -25,7 +25,7 @@ class Category(db.Model):
     def __repr__(self):
         return f'<Category {self.name}>'
 
-# TODO добавить избранное
+
 class Recipe(db.Model):
     __tablename__ = 'recipe'
 
