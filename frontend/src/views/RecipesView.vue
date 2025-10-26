@@ -112,8 +112,8 @@ onBeforeUnmount(() => {
         <h2 class="controls__title">Рецепты</h2>
         <div class="controls__box">
           <div
-            class="controls__button-dark"
-            :class="{'controls__button-dark--active': showFavoritesOnly}"
+            class="common-button--dark"
+            :class="{'common-button--dark-active': showFavoritesOnly}"
           >
             <CommonButton
               @buttonAction="getFavoriteRecipesList"
@@ -206,23 +206,7 @@ onBeforeUnmount(() => {
   color: var(--color-heading);
 }
 
-/* TODO перенести стили в Commonbutton */
-.controls__button-dark {
-  --cbtn-background: var(--color-background);
-  --cbtn-border: var(--color-input);
-  --text-color: var(--color-foreground);
-  --cbtn-hover: var(--color-primary);
-  --text-hover: var(--color-primary-foreground);
-  
- transition: var(--transition-smooth);
-}
-
-.controls__button-dark--active {
-  --cbtn-background: var(--color-primary);
-  --text-color: var(--color-primary-foreground);
-}
-
-.controls__button-dark--active  svg {
+.common-button--dark-active  svg {
   fill: var(--color-primary-foreground);
 }
 </style>

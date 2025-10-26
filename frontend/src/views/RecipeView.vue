@@ -188,7 +188,7 @@ onBeforeUnmount(() => {
                 :key="comment"
               >{{ comment }}</li>
             </ul>
-            <div class="recipe__button-dark">
+            <div class="common-button--dark">
               <CommonButton @buttonAction="startEditingComment">
                 <template #text>{{ recipe.comment ? 'Редактировать комментарий' : 'Добавить комментарий' }}</template>
               </CommonButton>
@@ -213,7 +213,7 @@ onBeforeUnmount(() => {
               >
                 <template #text>Сохранить</template>
               </CommonButton>
-              <div class="recipe__button-dark">
+              <div class="common-button--dark">
                 <CommonButton @buttonAction="cancelEditingComment">
                   <template #text>Отмена</template>
                 </CommonButton>
@@ -229,7 +229,7 @@ onBeforeUnmount(() => {
             <template #text>Редактировать</template>
           </CommonButton>
         </RouterLink>
-        <div class="recipe__button-red">
+        <div class="common-button--red">
           <CommonButton @buttonAction="deleteRecipe(recipe.id)">
             <template #icon><IconDelete /></template>
             <template #text>Удалить</template>
@@ -402,23 +402,6 @@ onBeforeUnmount(() => {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-}
-
-/* TODO перенести стили в Commonbutton */
-.recipe__button-dark {
-  --cbtn-background: var(--color-background);
-  --cbtn-border: var(--color-input);
-  --text-color: var(--color-foreground);
-  --cbtn-hover: var(--color-primary);
-  --text-hover: var(--color-primary-foreground);
-}
-
-.recipe__button-red {
-  --cbtn-background: var(--color-destructive);
-  --cbtn-border: var(--color-input);
-  --text-color: var(--color-foreground);
-  --cbtn-hover: hsl(from var(--color-destructive) h s l / 0.9);
-  --text-hover: var(--color-foreground);
 }
 
 .wrapper {

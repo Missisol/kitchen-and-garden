@@ -145,13 +145,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-
-/* @media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-} */
-
 .container {
   --full: minmax(1rem, 1fr);
   --container: minmax(0, var(--maxContainer));
@@ -184,3 +177,23 @@ body {
   grid-column: inner;
 }
 
+.common-button--dark {
+  --cbtn-background: var(--color-background);
+  --cbtn-border: var(--color-input);
+  --text-color: var(--color-foreground);
+  --cbtn-hover: var(--color-primary);
+  --text-hover: var(--color-primary-foreground);
+}
+
+.common-button--dark-active {
+  --cbtn-background: var(--color-primary);
+  --text-color: var(--color-primary-foreground);
+}
+
+.common-button--red {
+  --cbtn-background: var(--color-destructive);
+  --cbtn-border: var(--color-input);
+  --text-color: var(--color-foreground);
+  --cbtn-hover: hsl(from var(--color-destructive) h s l / 0.9);
+  --text-hover: var(--color-foreground);
+}
