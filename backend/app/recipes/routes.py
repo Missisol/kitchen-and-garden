@@ -51,7 +51,7 @@ def delete_category():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-
+# TODO добавить пагинацию 
 @bp.route('/recipes', methods=['GET'])
 def get_recipes():
     category_id = request.args.get('category_id', type=int)

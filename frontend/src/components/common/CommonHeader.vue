@@ -47,6 +47,7 @@ watch(() => route.name, () => {
               :class="route.name"
             >{{ item.name }}</RouterLink>
           </nav>
+          <!--TODO theme toggle-->
           <button class="header__theme">
             <IconMoon />     
           </button>

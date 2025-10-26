@@ -162,6 +162,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+/* TODO мобильная версия */
 .parent {
   --gradient: var(--gradient-primary);
   --dim: right;
