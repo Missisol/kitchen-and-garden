@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
+import CategorySelect from '../category/CategorySelect.vue'
 import CommonButton from '../common/CommonButton.vue'
 import IconSave from '../icons/IconSave.vue'
 import IconDelete from '../icons/IconDelete.vue'
@@ -56,7 +57,12 @@ function sendForm() {
       for="category"
       class="label"
     >Категория
-      <select
+      <CategorySelect
+        :categories="categories"
+        idName="category"
+        v-model:model="model.category_id"
+      />
+      <!-- <select
         v-model="model.category_id"
         id="category"
       >
@@ -65,7 +71,7 @@ function sendForm() {
           :key="category.id" 
           :value="category.id"
         >{{ category?.name || 'Без категории' }}</option>
-      </select>
+      </select> -->
     </label>
     <label
       for="ingredients"
@@ -163,6 +169,8 @@ function sendForm() {
 .label input, .label textarea, .label select {
   font-size: 0.875rem;
   line-height: 1.25rem;
+  font-weight: 400;
+  color: var(--color-foreground);
   background: hsl(from var(--color-background) h s l / 0.5);
   border: 1px solid var(--color-input);
   border-radius: calc(var(--radius) - 2px);
