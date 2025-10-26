@@ -37,7 +37,6 @@ const instructions = computed(() => {
 </script>
 
 <template>
-  <!--TODO обрезать текст в разделе Приготовление -->
   <RouterLink :to="`/recipes/${item.id}`">
     <div class="heading">
       <h3 class="title">{{ item.title }}</h3>
