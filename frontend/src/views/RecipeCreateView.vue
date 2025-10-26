@@ -6,9 +6,8 @@ import { useRouter } from 'vue-router'
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
 
+import RecipeLayout from '@/components/recipes/RecipeLayout.vue'
 import RecipeForm from '@/components/recipes/RecipeForm.vue'
-import CommonButton from '@/components/common/CommonButton.vue'
-import IconArrowLeft from '@/components/icons/IconArrowLeft.vue'
 
 const router = useRouter()
 const categoriesStore = useCategoriesStore()
@@ -60,48 +59,20 @@ async function create() {
 </script>
 
 <template>
-  <div class="content">
-    <div class="button-back">
-      <CommonButton @buttonAction="router.push({ path: '/recipes' })">
-        <template #icon><IconArrowLeft /></template>
-        <template #text>Назад к рецептам</template>
-      </CommonButton>
-    </div>
-    <section class="recipe">
+  <RecipeLayout
+    @action="router.push({ path: '/recipes' })"
+    text="Назад к рецептам"
+  >  
+    <template #recipe>
       <RecipeForm
         v-model:model="data"
         v-model:fileModel="fileModel"
         :categories="categories"
         @getFormBody="getFormBody"
       />
-    </section>
-  </div>
-
+    </template>
+  </RecipeLayout>
 </template>
 
 <style scoped>
-.content {
-  max-width: 56rem;
-  margin-inline: auto;
-}
-
-.button-back {
-  margin-block-end: 1.5rem;
-  --cbtn-background: var(--color-background);
-  --cbtn-border: var(--color-background);
-  --text-color: var(--color-foreground);
-  --cbtn-hover: var(--color-primary);
-  --text-hover: var(--color-primary-foreground);
-}
-
-.recipe {
-  background: var(--color-gradient-card);
-  box-shadow: var(--shadow-card);
-  padding: 2rem;
-  border: 1px solid hsl(from var(--color-border) h s l / 0.5);
-  border-radius: var(--radius);
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
 </style>

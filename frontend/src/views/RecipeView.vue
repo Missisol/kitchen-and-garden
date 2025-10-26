@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 
 import { useRecipesStore } from '@/stores/recipes'
 
+import RecipeLayout from '@/components/recipes/RecipeLayout.vue'
 import CommonError from '@/components/common/CommonError.vue'
 import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
 import CommonCardCategory from '@/components/common/CommonCardCategory.vue'
@@ -13,7 +14,6 @@ import IconLink from '@/components/icons/IconLink.vue'
 import IconFile from '@/components/icons/IconFile.vue'
 import IconEdit from '@/components/icons/IconEdit.vue'
 import IconDelete from '@/components/icons/IconDelete.vue'
-import IconArrowLeft from '@/components/icons/IconArrowLeft.vue'
 
 import { getArrayFromString, getReplacedArrayFromString } from '@/utils/recipesHelpers'
 
@@ -101,16 +101,13 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="content">
-    <div class="button-back">
-      <CommonButton @buttonAction="router.push({ path: '/recipes' })">
-        <template #icon><IconArrowLeft /></template>
-        <template #text>Назад к рецептам</template>
-      </CommonButton>
-    </div>
-    <section 
-      v-if="!recipe.error" 
-      class="recipe"
+  <RecipeLayout
+    @action="router.push({ path: '/recipes' })"
+    text="Назад к рецептам"
+  >  
+    <template
+      v-if="!recipe.error"
+      #recipe
     >
       <div class="recipe__heading">
         <div class="recipe__title-box">
@@ -239,40 +236,19 @@ onBeforeUnmount(() => {
           </CommonButton>
         </div>
       </div>
-    </section>
-    <section v-else>
-      <CommonError :error="recipe.error" />
-    </section>
-  </div>
- 
+    </template>
+    <template
+      v-else
+      #recipe
+    >
+      <div >
+        <CommonError :error="recipe.error" />
+      </div>
+    </template>
+  </RecipeLayout>
 </template>
 
 <style scoped>
-.content {
-  max-width: 56rem;
-  margin-inline: auto;
-}
-
-.button-back {
-  margin-block-end: 1.5rem;
-  --cbtn-background: var(--color-background);
-  --cbtn-border: var(--color-background);
-  --text-color: var(--color-foreground);
-  --cbtn-hover: var(--color-primary);
-  --text-hover: var(--color-primary-foreground);
-}
-
-.recipe {
-  background: var(--color-gradient-card);
-  box-shadow: var(--shadow-card);
-  padding: 2rem;
-  border: 1px solid hsl(from var(--color-border) h s l / 0.5);
-  border-radius: var(--radius);
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
 .recipe__heading {
   --size-icon: 1.75rem;
 

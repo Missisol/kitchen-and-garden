@@ -6,11 +6,10 @@ import { useRouter } from 'vue-router'
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
 
+import RecipeLayout from '@/components/recipes/RecipeLayout.vue'
 import RecipeForm from '@/components/recipes/RecipeForm.vue'
 import CommonError from '@/components/common/CommonError.vue'
-import CommonButton from '@/components/common/CommonButton.vue'
 import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
-import IconArrowLeft from '@/components/icons/IconArrowLeft.vue'
 
 const router = useRouter()
 const categoriesStore = useCategoriesStore()
@@ -79,16 +78,13 @@ watch(() => recipe.value, () => {
 </script>
 
 <template>
-  <div class="content">
-    <div class="button-back">
-      <CommonButton @buttonAction="router.push({ path: `/recipes/${id}` })">
-        <template #icon><IconArrowLeft /></template>
-        <template #text>Назад к рецепту</template>
-      </CommonButton>
-    </div>
-    <section 
+  <RecipeLayout
+    @action="router.push({ path: `/recipes/${id}`})"
+    text="Назад к рецепту"
+  >
+    <template 
       v-if="!recipe.error" 
-      class="recipe"
+      #recipe
     >
       <div class="recipe__heading">
         <h1 class="recipe__title">{{ recipe.title }}</h1>
@@ -100,39 +96,17 @@ watch(() => recipe.value, () => {
         :categories="categories"
         @getFormBody="getFormBody"
       />
-    </section>
-    <section v-else>
+    </template>
+    <template
+      v-else
+      #recipe
+    >
       <CommonError :error="recipe.error" />
-    </section>
-  </div>
+    </template>
+  </RecipeLayout>
 </template>
 
 <style scoped>
-.content {
-  max-width: 56rem;
-  margin-inline: auto;
-}
-
-.button-back {
-  margin-block-end: 1.5rem;
-  --cbtn-background: var(--color-background);
-  --cbtn-border: var(--color-background);
-  --text-color: var(--color-foreground);
-  --cbtn-hover: var(--color-primary);
-  --text-hover: var(--color-primary-foreground);
-}
-
-.recipe {
-  background: var(--color-gradient-card);
-  box-shadow: var(--shadow-card);
-  padding: 2rem;
-  border: 1px solid hsl(from var(--color-border) h s l / 0.5);
-  border-radius: var(--radius);
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
 .recipe__heading {
   --size-icon: 1.75rem;
 
