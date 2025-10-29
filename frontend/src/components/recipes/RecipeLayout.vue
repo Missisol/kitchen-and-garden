@@ -43,7 +43,7 @@ const emit = defineEmits(['action'])
 
 .recipe {
   background: var(--color-gradient-card);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--color-shadow-card);
   padding: 2rem;
   border: 1px solid hsl(from var(--color-border) h s l / 0.5);
   border-radius: var(--radius);

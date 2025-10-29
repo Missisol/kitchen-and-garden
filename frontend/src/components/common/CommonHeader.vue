@@ -1,15 +1,29 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { mainMenu } from '@/utils/mainMenu'
-// import IconSun from '../icons/IconSun.vue'
+import IconSun from '../icons/IconSun.vue'
 import IconMoon from '../icons/IconMoon.vue'
-// import IconSystem from '../icons/IconSystem.vue'
+import IconSystem from '../icons/IconSystem.vue'
 import IconLogo from '../icons/IconLogo.vue'
 
 const route = useRoute()
 const logoText = ref('')
+const isMenuOpen = ref(false)
+const theme = ref('light dark')
+const themes = [
+  {name: 'Светлая', value: 'light'},
+  {name: 'Темная', value: 'dark'},
+  {name: 'Авто', value: 'light dark'}
+]
+const switcherRef = useTemplateRef('switcher')
+
+const iconComponent = {
+  light: IconSun,
+  dark: IconMoon,
+  'light dark': IconSystem,
+}
 
 watch(() => route.name, () => {
   if (route.name === 'home') {
@@ -23,6 +37,47 @@ watch(() => route.name, () => {
   }
 })
 
+function applyTheme(value) {
+  const colorScheme = document.querySelector('meta[name="color-scheme"]')
+  colorScheme.content = value
+}
+
+function setTheme(value) {
+  theme.value = value
+  localStorage.setItem('theme', value)
+  applyTheme(value)
+  isMenuOpen.value = false
+}
+
+function toggleMenu() {
+  isMenuOpen.value = !isMenuOpen.value
+}
+
+  function onClickOutside(e) {
+    const el = switcherRef.value
+    if (!el) return
+    if (isMenuOpen.value && !el.contains(e.target)) {
+      isMenuOpen.value = false
+    }
+  }
+
+onMounted(() => {
+  const saved = localStorage.getItem('theme')
+  if (!saved) {
+    localStorage.setItem('theme', 'light dark')
+    theme.value = 'light dark'
+  } else {
+    theme.value = saved
+  }
+
+  applyTheme(theme.value)
+
+  document.addEventListener('click', onClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', onClickOutside)
+})
 </script>
 
 <template>
@@ -47,10 +102,38 @@ watch(() => route.name, () => {
               :class="route.name"
             >{{ item.name }}</RouterLink>
           </nav>
-          <!--TODO theme toggle-->
-          <button class="header__theme">
-            <IconMoon />     
-          </button>
+          <div
+            class="theme-switcher"
+            ref="switcher"
+          >
+            <button
+              class="header__theme"
+              @click="toggleMenu"
+              aria-haspopup="menu"
+              :aria-expanded="isMenuOpen"
+            >
+              <component :is="iconComponent[theme]" />
+            </button>
+            <transition name="dropdown-fade">
+              <div
+                v-if="isMenuOpen"
+                class="theme-menu"
+                role="menu"
+              >
+                <button
+                  v-for="item in themes"
+                  :key="item"
+                  class="theme-menu__item"
+                  :class="{ active: theme === item.value }"
+                  @click="setTheme(item.value)"
+                  role="menuitem"
+                >
+                  <component :is="iconComponent[item.value]"/>
+                  <span>{{ item.name }}</span>
+                </button>
+              </div>
+            </transition>
+          </div>
         </div>
       </div>
     </header>
@@ -165,7 +248,8 @@ watch(() => route.name, () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
+  width: 2.5rem;
+  height: 100%;
   font-size: 0.875rem;
   font-weight: 500;
   background: var(--color-background);
@@ -183,5 +267,58 @@ watch(() => route.name, () => {
 .header__theme>svg {
   width: 16px;
   height: 16px;
+}
+
+.theme-switcher {
+  position: relative;
+}
+
+.theme-menu {
+  position: absolute;
+  right: 0;
+  margin-top: .5rem;
+  min-width: max-content;
+  background: var(--color-popover);
+  color: var(--color-popover-foreground);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  z-index: 20;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.theme-menu__item {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  width: 100%;
+  padding: .375rem 1rem;
+  background: transparent;
+  border: 0;
+  transition: var(--transition-smooth);
+}
+
+.theme-menu__item:hover ,
+.theme-menu__item.active {
+  background:var(--color-accent);
+  color: var(--color-accent-foreground);
+}
+
+.theme-menu__item > svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* dropdown animation */
+.dropdown-fade-enter-active,
+.dropdown-fade-leave-active {
+  transition: var(--transition-smooth);
+}
+
+.dropdown-fade-enter-from,
+.dropdown-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4px) scale(0.98);
 }
 </style>
