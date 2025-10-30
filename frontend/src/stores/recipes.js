@@ -12,8 +12,12 @@ export const useRecipesStore = defineStore('recipes', () => {
   const filePath = ref('')
   const ingredientsSearch = ref('')
   const showFavoritesOnly = ref(false)
+  const totalPages = ref(1)
+  const totalItems = ref(0)
+  const currentPage = ref(1)
+  const perPage = ref(9) // default
 
-  async function getRecipes(category_id = '', favorite = null) {
+  async function getRecipes(category_id = '', favorite = null, page = 1) {
     const params = new URLSearchParams()
     if (category_id) {
       params.append('category_id', category_id)
@@ -24,10 +28,25 @@ export const useRecipesStore = defineStore('recipes', () => {
     if (favorite !== null) {
       params.append('favorite', favorite.toString())
     }
-
+    if (page) {
+      params.append('page', page)
+    }
     try {
       const res = await fetch(`${apiUrls.recipes}?${params.toString()}`)
-      recipes.value = await res.json()
+      const result = await res.json()
+      if (result.recipes && Array.isArray(result.recipes)) {
+        recipes.value = result.recipes
+        totalPages.value = result.total_pages || 1
+        totalItems.value = result.total_items || result.recipes.length
+        currentPage.value = result.page || 1
+        perPage.value = result.per_page || 9
+      } else {
+        recipes.value = result
+        totalPages.value = 1
+        totalItems.value = Array.isArray(result) ? result.length : 0
+        currentPage.value = 1
+        perPage.value = 9
+      }
     } catch (error) {
       console.log('error', error)
     }
@@ -196,6 +215,10 @@ export const useRecipesStore = defineStore('recipes', () => {
     filePath,
     ingredientsSearch,
     showFavoritesOnly,
+    totalPages,
+    totalItems,
+    currentPage,
+    perPage,
     getRecipes,
     getFavoriteRecipes,
     getRecipeById,

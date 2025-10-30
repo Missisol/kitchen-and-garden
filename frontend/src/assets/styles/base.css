@@ -125,12 +125,10 @@
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
+  color: var(--color-foreground);
   background: var(--color-background);
   accent-color: var(--color-accent);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
+  transition: color 0.5s, background-color 0.5s;
   line-height: 1.6;
   font-family:
     Inter,
@@ -153,6 +151,7 @@ body {
 .container {
   --full: minmax(1rem, 1fr);
   --container: minmax(0, var(--maxContainer));
+
   height: 100vh;
   display: grid;
   grid-template-columns: [full-start] var(--full)
@@ -172,6 +171,7 @@ body {
 .container-inner {
   --full: minmax(0, 1fr);
   --inner: minmax(0, var(--maxContainer));
+  
   display: grid;
   grid-template-columns: var(--full)
   [inner-start] var(--inner) [inner-end]

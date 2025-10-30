@@ -8,3 +8,4 @@ class Config(object):
   SQLALCHEMY_TRACK_MODIFICATIONS = False
   UPLOAD_FOLDER = os.path.join(basedir, 'static', 'uploads')
   ALLOWED_EXTENSIONS = {'doc', 'docx', 'pdf', 'png', 'jpg', 'jpeg'}
+  RECIPES_PER_PAGE = 9

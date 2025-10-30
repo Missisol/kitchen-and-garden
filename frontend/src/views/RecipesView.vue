@@ -26,6 +26,7 @@ const { getCategories } = categoriesStore
 const recipesStore = useRecipesStore()
 const { category_params, ingredientsSearch, recipes, showFavoritesOnly } = storeToRefs(recipesStore)
 const { getRecipes, getFavoriteRecipes, clearCategoryParams } = recipesStore
+const { totalPages,  currentPage } = storeToRefs(recipesStore)
 
 const titleSearch = ref('')
 const filteredRecipes = ref([])
@@ -79,6 +80,10 @@ const getFavoriteRecipesList = async () => {
   }
   
   showFavoritesOnly.value = !showFavoritesOnly.value
+}
+
+const handlePageChange = async (page) => {
+  await getRecipes(category_params.value.id, null, page)
 }
 
 getCategories()
@@ -156,6 +161,9 @@ onBeforeUnmount(() => {
         :filteredRecipes="filteredRecipes"
         :titleSearch="titleSearch"
         :ingredientsSearch="ingredientsSearch"
+        :currentPage="currentPage"
+        :totalPages="totalPages"
+        @pageSelected="handlePageChange"
       />
     </div>
   </div>

@@ -57,6 +57,8 @@ def get_recipes():
     category_id = request.args.get('category_id', type=int)
     search_query = request.args.get('search', '', type=str).lower()
     favorite = request.args.get('favorite', type=str)
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['RECIPES_PER_PAGE']
 
     try:
         query = Recipe.query
@@ -73,19 +75,29 @@ def get_recipes():
             elif favorite.lower() == 'false':
                 query = query.filter(Recipe.favorite == False)
 
-        recipes = query.all()
-        return jsonify([{
-            'id': r.id,
-            'title': r.title,
-            'ingredients': r.ingredients,
-            'instructions': r.instructions,
-            'category_id': r.category_id,
-            'links': r.links,
-            'comment': r.comment,
-            'file': r.file,
-            'category_name': r.recipe_name.name,
-            'favorite': r.favorite,
-        } for r in recipes])
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+        recipes = pagination.items
+        total_pages = pagination.pages
+        total_items = pagination.total
+
+        return jsonify({
+            'recipes': [{
+                'id': r.id,
+                'title': r.title,
+                'ingredients': r.ingredients,
+                'instructions': r.instructions,
+                'category_id': r.category_id,
+                'links': r.links,
+                'comment': r.comment,
+                'file': r.file,
+                'category_name': r.recipe_name.name,
+                'favorite': r.favorite,
+            } for r in recipes],
+            'total_pages': total_pages,
+            'total_items': total_items,
+            'page': page,
+            'per_page': per_page
+        })
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
