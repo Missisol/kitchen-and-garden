@@ -9,13 +9,13 @@ services:
     ports:
       - "5002:5002"
     volumes:
-      - ./backend/app.db:/app/app.db
-      - ./backend/static:/app/static
+      - ${DB_PATH}:/app/app.db
+      - ${UPLOAD_FOLDER}:/app/static/uploads
     environment:
       - FLASK_APP=recipe.py
       - FLASK_DEBUG=0
       - SECRET_KEY=${SECRET_KEY:-you-will-never-guess}
-      - DATABASE_URL=sqlite:///app.db
+      - DATABASE_URL=sqlite:////app/app.db
     restart: unless-stopped
     networks:
       - recipe-network
