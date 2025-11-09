@@ -150,7 +150,7 @@ onBeforeUnmount(() => {
 
 .header {
   padding-inline: 1rem;
-  height: 4rem;
+  padding-block: 1rem;
 }
 
 .header__container {
@@ -178,8 +178,8 @@ onBeforeUnmount(() => {
   align-items: center;
   color: var(--color-accent);
   font-weight: bold;
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 0.75rem;
   background: var(--gradient-primary);
   transition: var(--transition-smooth);
@@ -188,8 +188,8 @@ onBeforeUnmount(() => {
 }
 
 .logo>svg {
-  width: 24px;
-  height: 24px;
+  width: 2rem;
+  height: 2rem;
   color: var(--color-background);
 }
 
