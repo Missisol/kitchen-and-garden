@@ -15,7 +15,7 @@ docker-compose up --build
 ```
 
 2. Access the application:
-   - Frontend: http://localhost:5173
+   - Frontend: http://localhost:8080
    - Backend API: http://localhost:5002
 
 ## Services
@@ -27,7 +27,7 @@ docker-compose up --build
 - Database and uploads are persisted via volumes
 
 ### Frontend
-- **Port**: 5173
+- **Port**: 8080
 - **Container**: recipe-frontend
 - Runs in development mode with hot-reload
 - Connected to backend via environment variable
