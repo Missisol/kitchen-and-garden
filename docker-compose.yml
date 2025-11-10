@@ -9,13 +9,14 @@ services:
     ports:
       - "5002:5002"
     volumes:
-      - ${DB_PATH}:/app/app.db
-      - ${UPLOAD_FOLDER}:/app/static/uploads
+      - ${RECIPE_FOLDER}:${RECIPE_FOLDER}
+      - ${UPLOAD_FOLDER}:${UPLOAD_FOLDER}
     environment:
       - FLASK_APP=recipe.py
       - FLASK_DEBUG=0
       - SECRET_KEY=${SECRET_KEY:-you-will-never-guess}
-      - DATABASE_URL=sqlite:////app/app.db
+      - DATABASE_URL=${DATABASE_URL}
+      - UPLOAD_FOLDER=${UPLOAD_FOLDER}
     restart: unless-stopped
     networks:
       - recipe-network

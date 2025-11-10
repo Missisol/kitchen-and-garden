@@ -14,7 +14,7 @@ COPY . .
 # Build for production
 # Use empty string for relative URLs since nginx will proxy API requests
 ARG VITE_API_BASE_URL
-ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 RUN npm run build
 
 # Production stage
