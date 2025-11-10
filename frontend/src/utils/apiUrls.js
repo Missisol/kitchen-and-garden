@@ -1,4 +1,4 @@
-export const baseURL = 'http://localhost:5002'
+export const baseURL = 'http://127.0.0.1:5002'
 
 export const apiUrls = {
   categories: `${baseURL}/categories`,
