@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +14,11 @@ cors = CORS()
 def create_app(config_class=Config):
   app = Flask(__name__)
   app.config.from_object(config_class)
+
+  # Ensure upload directory exists
+  upload_folder = app.config['UPLOAD_FOLDER']
+  if not os.path.exists(upload_folder):
+    os.makedirs(upload_folder, exist_ok=True)
 
   db.init_app(app)
   migrate.init_app(app, db)
