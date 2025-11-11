@@ -131,5 +131,9 @@ const instructions = computed(() => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media (width < 768px) {
+    white-space: normal;
+  }
 }
 </style>
