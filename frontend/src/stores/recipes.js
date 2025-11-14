@@ -70,7 +70,12 @@ export const useRecipesStore = defineStore('recipes', () => {
       // console.log('recipe', recipe.value)
 
       if (recipe.value.file) {
-        filePath.value = `${apiUrls.filePath}/${recipe.value.file}`
+        try {
+          const res = await fetch(`${apiUrls.filePath}/${recipe.value.file}`)
+          filePath.value = res.url
+        } catch (error) {
+          console.log('error', error)
+        }
       }
       return recipe.value
     } catch (error) {

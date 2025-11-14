@@ -18,7 +18,7 @@ COPY . .
 RUN chmod a+x boot.sh
 
 # Create uploads directory if it doesn't exist
-# RUN mkdir -p static/uploads
+RUN mkdir -p static/uploads
 
 # Expose port
 EXPOSE 5002

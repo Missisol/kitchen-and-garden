@@ -1,14 +1,16 @@
+name: kitchen-and-garden
+
 services:
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: recipe-backend
+    container_name: kag-backend
     ports:
       - "5002:5002"
     volumes:
-      - ${RECIPE_FOLDER}:${RECIPE_FOLDER}
-      - ${UPLOAD_FOLDER}:${UPLOAD_FOLDER}
+      - ${DB_PATH}:${DB_PATH}
+      - ./backend/static/uploads:/app/static/uploads
     environment:
       - FLASK_APP=recipe.py
       - FLASK_DEBUG=0
@@ -31,7 +33,7 @@ services:
       dockerfile: Dockerfile
       args:
         - VITE_API_BASE_URL=${VITE_API_BASE_URL}
-    container_name: recipe-frontend
+    container_name: kag-frontend
     ports:
       # - "5173:5173"
       - "8080:80"
