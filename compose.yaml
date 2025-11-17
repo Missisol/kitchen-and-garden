@@ -5,12 +5,12 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: kag-backend
+    container_name: backend
     ports:
       - "5002:5002"
     volumes:
       - ${DB_PATH}:${DB_PATH}
-      - ./backend/static/uploads:/app/static/uploads
+      - ${UPLOAD_FOLDER}:${UPLOAD_FOLDER}
     environment:
       - FLASK_APP=recipe.py
       - FLASK_DEBUG=0
@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfile
       args:
         - VITE_API_BASE_URL=${VITE_API_BASE_URL}
-    container_name: kag-frontend
+    container_name: frontend
     ports:
       # - "5173:5173"
       - "8080:80"
