@@ -1,5 +1,5 @@
 import os
-from flask import  flash, abort, current_app, jsonify, request, send_from_directory
+from flask import  flash, abort, current_app, jsonify, request, send_from_directory, Response
 from app import db
 from app.models import Category, Recipe
 # from werkzeug.utils import secure_filename
@@ -146,10 +146,13 @@ def upload_file():
         return jsonify({'filename': filename}), 201
 
 
-@bp.route('/static/uploads/<name>')
-def download_file(name):
-    return send_from_directory(current_app.config["UPLOAD_FOLDER"], name)
-
+@bp.route('/static/uploads/<filename>')
+def download_file(filename):
+    return send_from_directory(current_app.config["UPLOAD_FOLDER"], filename)
+# def download_file(filename):
+#     response = Response()
+#     response.headers['X-Accel-Redirect'] = f'/internal_files/{filename}'
+#     return response
     
 @bp.route('/recipe', methods=['POST'])
 def create_recipe():

@@ -13,7 +13,7 @@ services:
       - ${UPLOAD_FOLDER}:${UPLOAD_FOLDER}
     environment:
       - FLASK_APP=recipe.py
-      - FLASK_DEBUG=0
+      - FLASK_DEBUG=${FLASK_DEBUG}
       - SECRET_KEY=${SECRET_KEY:-you-will-never-guess}
       - DATABASE_URL=${DATABASE_URL}
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
@@ -40,6 +40,7 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+      - ${UPLOAD_FOLDER}:${UPLOAD_FOLDER}
     depends_on:
       - backend
     restart: unless-stopped
