@@ -71,11 +71,7 @@ export const useRecipesStore = defineStore('recipes', () => {
 
       if (recipe.value.file) {
         // try {
-        //   const res = await fetch(`${apiUrls.filePath}/${recipe.value.file}`, {
-        //     headers: {
-        //       'X-Accel-Redirect': `${recipe.value.file}`
-        //     },  
-        //   })
+        //   const res = await fetch(`${apiUrls.filePath}/${recipe.value.file}`)
         //   console.log({res})
           
         //   filePath.value = res.url
