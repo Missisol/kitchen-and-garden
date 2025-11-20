@@ -1,4 +1,5 @@
 import os
+from urllib.parse import quote
 from flask import  flash, abort, current_app, jsonify, request, send_from_directory, Response
 from app import db
 from app.models import Category, Recipe
@@ -162,7 +163,9 @@ def download_file(filename):
 
     response = send_from_directory(upload_folder, safe_filename)
     # Keep support for X-Accel-Redirect when the request is proxied through nginx.
-    response.headers['X-Accel-Redirect'] = f'/internal_files/{safe_filename}'
+    # URL-encode the filename to handle non-ASCII characters (e.g., Cyrillic) in HTTP headers
+    encoded_filename = quote(safe_filename, safe='')
+    response.headers['X-Accel-Redirect'] = f'/internal_files/{encoded_filename}'
     return response
     
     
