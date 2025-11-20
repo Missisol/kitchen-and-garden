@@ -14,7 +14,7 @@ services:
     environment:
       - FLASK_APP=recipe.py
       - FLASK_DEBUG=${FLASK_DEBUG}
-      - SECRET_KEY=${SECRET_KEY:-you-will-never-guess}
+      - SECRET_KEY=${SECRET_KEY}
       - DATABASE_URL=${DATABASE_URL}
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
     restart: unless-stopped
