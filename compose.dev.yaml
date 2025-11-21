@@ -30,10 +30,21 @@ services:
       start_period: 40s
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+    build: ./frontend
+      # context: ./frontend
+      # dockerfile: Dockerfile.dev
     container_name: frontend-dev
+    command: npm run dev
+    develop:
+      watch:
+      - action: sync
+        path: ./frontend
+        target: /src/frontend
+        initial_sync: true
+        ignore:
+          - node_modules/
+      - action: rebuild
+        path: package.json
     ports:
       - "5173:5173"
     volumes:
