@@ -103,7 +103,43 @@ You can override these by creating a `.env` file in the project root or setting 
 - Frontend code changes are reflected immediately due to volume mounting
 - Backend code changes require container rebuild or restart
 
+____________________
+____________________
 
+
+
+## Running project using compose.yaml file
+
+### For production
+
+`docker compose up --build`
+
+`docker compose up --build -d`
+
+### For development
+
+- #### With Compose Watch
+
+[Use Compose Watch](https://docs.docker.com/compose/how-tos/file-watch/)
+
+`docker compose -f compose.dev.yaml up --watch`
+
+
+
+- #### Without Compose Watch
+
+`docker compose -f compose.dev.yaml up --build`
+
+In the compose.dev.yaml, you need to uncomment the commented lines.
+___________________
+
+The development setup enables:
+- Hot-reloading for both backend (Flask --reload) and frontend (Vite dev server)
+- Source code mounted as volumes for live changes
+- Debug mode enabled for backend
+- Separate container names (backend-dev, frontend-dev) to avoid conflicts
+
+Both configurations share the same network, so services can communicate.
 
 
 
