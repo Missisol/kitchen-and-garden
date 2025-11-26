@@ -15,6 +15,9 @@ RUN --mount=type=cache,target=/root/.npm npm ci
 # Copy application code
 COPY . .
 
+# Change ownership of the application directory to the node user
+RUN chown -R node:node /app
+
 # Build for production
 # Use empty string for relative URLs since nginx will proxy API requests
 ARG VITE_API_BASE_URL
