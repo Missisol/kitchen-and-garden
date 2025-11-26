@@ -2,7 +2,7 @@
   --section-gap: 160px;
   --maxContainer: 1320px;
   --radius: 0.75rem;
-
+  
     /* colors */
     --background: hsl(0 0% 100%);
     --foreground: hsl(222.2 84% 4.9%);
@@ -80,9 +80,8 @@
 
     --shadow-card-dark: 0 8px 32px hsl(216 30% 4% / 0.4);
     --shadow-card-color-dark: hsl(216 30% 4% / 0.4);
-}
 
-  :root {
+    /* light-dark() */
     --color-background: light-dark(var(--background), var(--background-dark));
     --color-foreground: light-dark(var(--foreground), var(--foreground-dark));
 
@@ -119,9 +118,9 @@
     --color-shadow-card: 0 8px 32px var(--color-shadow-card-color);
 }
 
-  html {
-    scroll-behavior: smooth;
-  }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   min-height: 100vh;

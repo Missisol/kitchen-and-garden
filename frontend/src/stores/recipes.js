@@ -67,9 +67,18 @@ export const useRecipesStore = defineStore('recipes', () => {
         },
       })
       recipe.value = await res.json()
-      // console.log('recipe', recipe.value)
+      console.log('recipe', recipe.value)
 
       if (recipe.value.file) {
+        // try {
+        //   const res = await fetch(`${apiUrls.filePath}/${recipe.value.file}`)
+        //   console.log({res})
+          
+        //   filePath.value = res.url
+        // } catch (error) {
+        //   console.log('error', error)
+        // }
+
         filePath.value = `${apiUrls.filePath}/${recipe.value.file}`
       }
       return recipe.value

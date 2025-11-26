@@ -1,5 +1,6 @@
 import os
-from flask import  flash, abort, current_app, jsonify, request, send_from_directory
+from urllib.parse import quote
+from flask import  flash, abort, current_app, jsonify, request, send_from_directory, Response
 from app import db
 from app.models import Category, Recipe
 # from werkzeug.utils import secure_filename
@@ -142,14 +143,31 @@ def upload_file():
     if file and allowed_file(file.filename):
         print(f'filename: {file.filename}')
         filename = secure_filename(file.filename)
+        print(f'secure filename: {filename}')
         file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
         return jsonify({'filename': filename}), 201
 
 
-@bp.route('/static/uploads/<name>')
-def download_file(name):
-    return send_from_directory(current_app.config["UPLOAD_FOLDER"], name)
+@bp.route('/static/uploads/<path:filename>')
+def download_file(filename):
+    """Serve uploaded files directly and keep compatibility with Nginx accel."""
+    safe_filename = secure_filename(filename)
+    upload_folder = current_app.config["UPLOAD_FOLDER"]
+    file_path = os.path.join(upload_folder, safe_filename)
 
+    if not os.path.isfile(file_path):
+        abort(404, description="File not found")
+
+    print(f'file_path: {file_path}')
+    print(f'safe_filename: {safe_filename}')
+
+    response = send_from_directory(upload_folder, safe_filename)
+    # Keep support for X-Accel-Redirect when the request is proxied through nginx.
+    # URL-encode the filename to handle non-ASCII characters (e.g., Cyrillic) in HTTP headers
+    encoded_filename = quote(safe_filename, safe='')
+    response.headers['X-Accel-Redirect'] = f'/internal_files/{encoded_filename}'
+    return response
+    
     
 @bp.route('/recipe', methods=['POST'])
 def create_recipe():

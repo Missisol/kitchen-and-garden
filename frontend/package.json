@@ -10,7 +10,8 @@
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview --port 8081",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "generate-icons": "node scripts/generate-icons.js"
   },
   "dependencies": {
     "pinia": "^3.0.3",
@@ -24,7 +25,9 @@
     "eslint": "^9.31.0",
     "eslint-plugin-vue": "~10.3.0",
     "globals": "^16.3.0",
+    "terser": "^5.44.1",
     "vite": "^7.0.6",
+    "vite-plugin-pwa": "^1.1.0",
     "vite-plugin-vue-devtools": "^8.0.0"
   }
 }

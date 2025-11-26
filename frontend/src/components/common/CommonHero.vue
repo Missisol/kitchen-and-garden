@@ -24,8 +24,9 @@
 }
 
 .hero__icon-container {
-  width: 5rem;
-  height: 5rem;
+  --container-size: 4rem;
+  width: var(--container-size);
+  height: var(--container-size);
   border-radius: 1rem;
   background: var(--gradient, var(--gradient-primary));
   box-shadow: var(--shadow-glow);

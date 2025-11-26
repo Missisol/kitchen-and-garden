@@ -1,4 +1,4 @@
-export const baseURL = 'http://127.0.0.1:5002'
+export const baseURL = import.meta.env.VITE_API_BASE_URL
 
 export const apiUrls = {
   categories: `${baseURL}/categories`,
