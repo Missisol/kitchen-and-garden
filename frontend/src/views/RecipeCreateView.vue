@@ -4,65 +4,74 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
 import { useCategoriesStore } from '@/stores/categories'
+import { useRecipesStore } from '@/stores/recipes'
 
-import RecipeForm from '@/components/RecipeForm.vue'
+import RecipeLayout from '@/components/recipes/RecipeLayout.vue'
+import RecipeForm from '@/components/recipes/RecipeForm.vue'
 
 const router = useRouter()
 const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
 const { getCategories } = categoriesStore
+const recipesStore = useRecipesStore()
+const { createRecipe, uploadFile } = recipesStore
 
 const data = ref({
   title: '',
   ingredients: '',
   instructions: '',
-  image: '',
   links: '',
   comment: '',
-  category_id: '',
 })
+const fileModel = ref({})
 
 if (!categories.value.length) {
   getCategories()
 }
 
-async function getFormBody(e) {
-  e.preventDefault()
+async function getFormBody() {
   console.log('data', data.value)
 
-  if (data.value.title) {
-    createRecipe(data.value)
+  if (!data.value.title) {
+    return
   }
+
+  if (data.value.ingredients) {
+    data.value.ingredients = data.value.ingredients.toLowerCase()
+  }
+
+  if (fileModel.value.file) {
+    const formData = new FormData()
+    formData.append('file', fileModel.value.file)
+    const result = await uploadFile(formData)
+    data.value.file = result.filename  // Сохраняем только имя файла
+  }
+  console.log('data', data.value)
+  create()
 }
 
-async function createRecipe(body) {
-  try {
-  const res = await fetch('http://localhost:5002/recipes', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  })
-  const result = await res.json()
-  if (result.id) {
-    router.push({ path: `/` })
-    // router.push({ path: `/recipes/${result.id}` })
-  }
-  } catch (error) {
-    console.log('error', error)
+async function create() {
+  const result = await createRecipe(data.value)
+    if (result.id) {
+    router.push({ path: '/recipes' })
   }
 }
-
 </script>
 
 <template>
-  <h1>Добавление рецепта</h1>
-  <RecipeForm
-    v-model="data"
-    :categories="categories"
-    @getFormBody="getFormBody"
-  />
+  <RecipeLayout
+    @action="router.push({ path: '/recipes' })"
+    text="Назад к рецептам"
+  >  
+    <template #recipe>
+      <RecipeForm
+        v-model:model="data"
+        v-model:fileModel="fileModel"
+        :categories="categories"
+        @getFormBody="getFormBody"
+      />
+    </template>
+  </RecipeLayout>
 </template>
 
 <style scoped>

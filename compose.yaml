@@ -1,0 +1,52 @@
+name: kitchen-and-garden
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "5002:5002"
+    volumes:
+      - ${DB_PATH}:${DB_PATH}
+      - ${UPLOAD_FOLDER}:${UPLOAD_FOLDER}
+    environment:
+      - FLASK_APP=recipe.py
+      - FLASK_DEBUG=${FLASK_DEBUG}
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+    restart: unless-stopped
+    networks:
+      - recipe-network
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import socket; s=socket.socket(); s.settimeout(1); s.connect((\"localhost\", 5002)); s.close()' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+    container_name: frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - ${UPLOAD_FOLDER}:${UPLOAD_FOLDER}
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - recipe-network
+
+networks:
+  recipe-network:
+    driver: bridge
+
