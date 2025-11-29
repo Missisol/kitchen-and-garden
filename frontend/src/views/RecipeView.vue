@@ -308,18 +308,20 @@ onBeforeUnmount(() => {
 .recipe__links {
   display: flex;
   gap: 0.5rem;
-  align-items: center;
+  align-items: baseline;
 }
 
 .recipe__links svg {
   width: 1rem;
   height: 1rem;
   color: var(--color-primary);
+  flex-shrink: 0;
 }
 
 .recipe__link {
   color: var(--color-primary);
   text-decoration: none;
+  word-break: break-all;
 }
 
 .recipe__link:hover {
