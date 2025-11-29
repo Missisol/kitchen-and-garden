@@ -197,7 +197,7 @@ body {
 .common-button--red {
   --cbtn-background: var(--color-destructive);
   --cbtn-border: var(--color-input);
-  --text-color: var(--color-foreground);
+  --text-color: var(--color-destructive-foreground);
   --cbtn-hover: hsl(from var(--color-destructive) h s l / 0.9);
   --text-hover: var(--color-foreground);
 }
