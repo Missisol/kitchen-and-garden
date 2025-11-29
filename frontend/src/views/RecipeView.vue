@@ -38,6 +38,7 @@ const links = computed(() => {
     if (recipe.value.links.includes(',')) {
       return getArrayFromString(recipe.value.links, ',') 
     }
+    return [recipe.value.links]
   }
   return []
 })

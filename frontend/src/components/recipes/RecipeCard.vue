@@ -79,6 +79,10 @@ const instructions = computed(() => {
   align-items: center;
 }
 
+.heading > button {
+  flex-shrink: 0;
+}
+
 .card:hover .title {
   color: var(--color-primary);
 }
