@@ -40,10 +40,26 @@ async function deleteCategoryById(id) {
   }
 }
 
+async function updateCategoryById(id, name) {
+  try {
+    const res =await fetch(`${apiUrls.categories}/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name })
+    })
+    return await res.json()
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
   return {
     categories,
     getCategories,
     createCategory,
     deleteCategoryById,
+    updateCategoryById,
   }
 })

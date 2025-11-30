@@ -87,7 +87,7 @@ const emit = defineEmits(['submitAction'])
 </style>
 
 <style>
-.form__action>.input {
+.form__action .input {
   flex-grow: 1;
   font-size: 0.875rem;
   line-height: 1.25rem;

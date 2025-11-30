@@ -13,7 +13,7 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
-
+# TODO добавить сортировку по алфавиту
 @bp.route('/categories', methods=['GET'])
 def get_categories():
     categories = Category.query.all()
@@ -34,6 +34,19 @@ def create_category():
         return jsonify({'error': str(e)}), 500
     return jsonify({'id': category.id}), 201
 
+@bp.route('/categories/<int:id>', methods=['PUT'])
+def update_category(id):
+    try:
+        category = Category.query.get_or_404(id)
+        data = request.json
+        
+        if 'name' in data:
+            category.name = data['name']
+        
+        db.session.commit()
+        return jsonify({'id': category.id, 'name': category.name}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @bp.route('/categories', methods=['DELETE'])
 def delete_category():
@@ -52,7 +65,6 @@ def delete_category():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-# TODO добавить пагинацию 
 @bp.route('/recipes', methods=['GET'])
 def get_recipes():
     category_id = request.args.get('category_id', type=int)
