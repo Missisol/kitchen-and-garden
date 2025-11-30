@@ -2,8 +2,7 @@
 import { storeToRefs } from 'pinia'
 
 import CategoryCreate from '@/components/category/CategoryCreate.vue'
-import CategoryDelete from '@/components/category/CategoryDelete.vue'
-import CategoryUpdate from '@/components/category/CategoryUpdate.vue'
+import CategoryManage from '@/components/category/CategoryManage.vue'
 
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
@@ -39,9 +38,7 @@ const emit = defineEmits(['getRecipesByCategory'])
     </ul>
     <div class="categories__action">
       <CategoryCreate />
-      <CategoryDelete />
-      <CategoryUpdate />
-
+      <CategoryManage />
     </div>
   </section>
 
