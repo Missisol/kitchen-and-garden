@@ -25,40 +25,38 @@ async function createCategory(category) {
   }
 }
 
-async function deleteCategoryById(id) {
+async function manageCategory(id, data) {
   try {
-    const res =await fetch(`${apiUrls.categories}`, {
-      method: 'DELETE',
+    const res = await fetch(`${apiUrls.categories}/${id}`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ id })
+      body: JSON.stringify(data)
     })
-    return res.status
-  } catch (error) {
-    console.log('error', error)
-  }
-}
-
-async function updateCategoryById(id, name) {
-  try {
-    const res =await fetch(`${apiUrls.categories}/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name })
-    })
+    
+    if (res.status === 204) {
+      return res.status
+    }
     return await res.json()
   } catch (error) {
     console.log('error', error)
   }
 }
 
+async function deleteCategoryById(id) {
+  return await manageCategory(id, { action: 'delete' })
+}
+
+async function updateCategoryById(id, name) {
+  return await manageCategory(id, { name })
+}
+
   return {
     categories,
     getCategories,
     createCategory,
+    manageCategory,
     deleteCategoryById,
     updateCategoryById,
   }

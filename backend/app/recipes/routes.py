@@ -13,14 +13,23 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
-# TODO добавить сортировку по алфавиту
+
 @bp.route('/categories', methods=['GET'])
 def get_categories():
-    categories = Category.query.all()
-    return jsonify([{
-        'id': c.id,
-        'name': c.name,
-    } for c in categories])
+    """Get all recipe categories sorted alphabetically
+    
+    Returns:
+        JSON response with list of categories or error message
+    """
+    try:
+        categories = Category.query.order_by(Category.name.asc()).all()
+        return jsonify([{
+            'id': c.id,
+            'name': c.name,
+        } for c in categories]), 200
+    except Exception as e:
+        current_app.logger.error(f'Error fetching categories: {str(e)}')
+        return jsonify({'error': 'Internal server error'}), 500
 
 
 @bp.route('/categories', methods=['POST'])
@@ -34,36 +43,34 @@ def create_category():
         return jsonify({'error': str(e)}), 500
     return jsonify({'id': category.id}), 201
 
-@bp.route('/categories/<int:id>', methods=['PUT'])
-def update_category(id):
+
+@bp.route('/categories/<int:id>', methods=['PATCH'])
+def manage_category(id):
+    """Update or delete a category based on the request body
+    
+    - If 'name' is provided: updates the category name
+    - If 'action' is 'delete': deletes the category
+    """
     try:
         category = Category.query.get_or_404(id)
         data = request.json
         
+        # Check if this is a delete operation
+        if data.get('action') == 'delete':
+            db.session.delete(category)
+            db.session.commit()
+            return '', 204
+        
+        # Otherwise, update the category name
         if 'name' in data:
             category.name = data['name']
+            db.session.commit()
+            return jsonify({'id': category.id, 'name': category.name}), 200
         
-        db.session.commit()
-        return jsonify({'id': category.id, 'name': category.name}), 200
+        return jsonify({'error': 'Missing name or action parameter'}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-@bp.route('/categories', methods=['DELETE'])
-def delete_category():
-    data = request.get_json(silent=True)
-    # или
-    # data = request.json
-
-    if 'id' not in data:
-        return jsonify({'error': 'Missing id parameter'}), 400
-
-    try:
-        category = Category.query.get_or_404(data['id'])
-        db.session.delete(category)
-        db.session.commit()
-        return '', 204
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    
     
 @bp.route('/recipes', methods=['GET'])
 def get_recipes():
