@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import CategoryCreate from '@/components/category/CategoryCreate.vue'
@@ -15,6 +16,8 @@ const recipesStore = useRecipesStore()
 const { category_params } = storeToRefs(recipesStore)
 
 const emit = defineEmits(['getRecipesByCategory'])
+
+const isOpen = ref(false)
 </script>
 
 <template>
@@ -36,9 +39,23 @@ const emit = defineEmits(['getRecipesByCategory'])
         <CategoryButton>{{ category?.name ||'Без категории' }}</CategoryButton>
       </li>
     </ul>
-    <div class="categories__action">
-      <CategoryCreate />
-      <CategoryManage />
+    <div class="categories__action-box">
+      <button 
+        :class="[isOpen ? 'open' : '', 'categories__button']" 
+        @click="isOpen = !isOpen"
+      >
+        Управление категориями
+      </button>
+      <Transition name="cat">
+        <div 
+          v-if="isOpen"
+          name="cat" 
+          class="categories__action"
+        >
+          <CategoryCreate />
+          <CategoryManage />
+        </div>
+      </Transition>
     </div>
   </section>
 
@@ -66,6 +83,30 @@ const emit = defineEmits(['getRecipesByCategory'])
   flex-wrap: wrap;
 }
 
+.categories__button {
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-block-end: 1rem;
+
+  &::after {
+    content: "";
+    border: 6px solid transparent;
+    border-top-color: currentColor;
+    transform: translateY(50%);
+  }
+
+  &.open::after {
+    border-top-color: transparent;
+    border-bottom-color: currentColor;
+    transform: translateY(-50%);
+  }
+}
+
 .categories__action {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -78,5 +119,15 @@ const emit = defineEmits(['getRecipesByCategory'])
 
 .category {
   cursor: pointer;
+}
+</style>
+
+<style>
+.cat-enter-active, .cat-leave-active {
+  transition: height .2s ease, opacity .2s ease;
+}
+.cat-enter-from, .cat-leave-to {
+  height: 0;
+  opacity: 0;
 }
 </style>

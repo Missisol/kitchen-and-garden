@@ -116,6 +116,8 @@
 
     --color-shadow-card-color: light-dark(var(--shadow-card-color), var(--shadow-card-color-dark));
     --color-shadow-card: 0 8px 32px var(--color-shadow-card-color);
+
+    interpolate-size: allow-keywords;
 }
 
 html {
