@@ -92,6 +92,7 @@ const isOpen = ref(false)
   align-items: center;
   gap: 1rem;
   margin-block-end: 1rem;
+  cursor: pointer;
 
   &::after {
     content: "";

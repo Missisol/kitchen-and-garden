@@ -9,8 +9,6 @@ import RecipesList from '@/components/recipes/RecipesList.vue'
 import RecipesCategories from '@/components/recipes/RecipesCategories.vue'
 import RecipeSearch from '@/components/recipes/RecipeSearch.vue'
 import CommonButton from '@/components/common/CommonButton.vue'
-import IconChefhat from '@/components/icons/IconChefhat.vue'
-import CommonHero from '@/components/common/CommonHero.vue'
 import IconPlus from '@/components/icons/IconPlus.vue'
 import IconStar from '@/components/icons/IconStar.vue'
 
@@ -102,13 +100,6 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="parent">
-    <CommonHero>
-      <template #icon>
-        <IconChefhat />
-      </template>
-      <template #title>Рецепты</template>
-      <template #text>Управляйте своими рецептами</template>
-    </CommonHero>
     <RecipesCategories
       @getRecipesByCategory="getRecipesByCategory"
     />

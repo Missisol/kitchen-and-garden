@@ -1,17 +1,9 @@
 <script setup>
-import CommonHero from '@/components/common/CommonHero.vue'
-import IconSprout from '@/components/icons/IconSprout.vue'
 </script>
 
 <template>
   <div class="parent">
-    <CommonHero>
-      <template #icon>
-        <IconSprout />
-      </template>
-      <template #title>Сад</template>
-      <template #text>Управляйте своим садом</template>
-    </CommonHero>
+    Раздел в разработке
   </div>
 </template>
 
