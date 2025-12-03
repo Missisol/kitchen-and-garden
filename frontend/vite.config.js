@@ -20,8 +20,8 @@ export default defineConfig(({ mode }) => {
           name: 'Кухня и сад',
           short_name: 'Кухня и сад',
           description: 'Приложение для рецептов и садоводства',
-          theme_color: '#15ba67',
-          background_color: '#ffffff',
+          theme_color: '#f38d49',
+          background_color: '#0f1115',
           display: 'standalone',
           orientation: 'portrait',
           scope: '/',
@@ -37,6 +37,12 @@ export default defineConfig(({ mode }) => {
               sizes: '512x512',
               type: 'image/png',
               purpose: 'maskable',
+            },
+            {
+              src: '/maskable_icon.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any',
             },
             {
               src: '/pwa-512x512.png',
