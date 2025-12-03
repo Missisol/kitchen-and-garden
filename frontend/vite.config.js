@@ -4,6 +4,26 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Plugin to dynamically set favicon based on environment variable
+function faviconPlugin() {
+  return {
+    name: 'favicon-plugin',
+    transformIndexHtml(html, { mode }) {
+      // eslint-disable-next-line no-undef
+      const env = loadEnv(mode, process.cwd(), '')
+      const faviconPath = env.VITE_APP_FAVICON_PATH || '/favicon.svg'
+      
+      // Determine .ico path based on .svg path
+      const faviconIcoPath = faviconPath.replace('.svg', '.ico')
+      
+      // Replace favicon links in HTML
+      return html
+        .replace(/href="\/favicon\.svg"/g, `href="${faviconPath}"`)
+        .replace(/href="\/favicon\.ico"/g, `href="${faviconIcoPath}"`)
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   // eslint-disable-next-line no-undef
@@ -13,9 +33,10 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       vueDevTools(),
+      faviconPlugin(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.svg', 'robots.txt', 'safari-pinned-tab.svg'],
+        includeAssets: ['favicon.svg', 'favicon-dev.svg', 'robots.txt', 'safari-pinned-tab.svg'],
         manifest: {
           name: 'Кухня и сад',
           short_name: 'Кухня и сад',

@@ -6,6 +6,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
     container_name: backend-dev
+    env_file: .env.local
     ports:
       - "5002:5002"
     volumes:
@@ -35,6 +36,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: frontend-dev
     command: npm run dev
+    env_file: .env.local
     develop:
       watch:
       - action: sync
