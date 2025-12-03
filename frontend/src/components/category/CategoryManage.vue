@@ -1,11 +1,12 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useCategoriesStore } from '@/stores/categories'
 import CategorySelect from './CategorySelect.vue'
 import IconEdit from '../icons/IconEdit.vue'
 import IconDelete from '../icons/IconDelete.vue'
+import CommonConfirmDialog from '../common/CommonConfirmDialog.vue'
 
 const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
@@ -13,6 +14,21 @@ const { getCategories, updateCategoryById, deleteCategoryById } = categoriesStor
 
 const categoryId = ref('')
 const categoryName = ref('')
+const showDeleteDialog = ref(false)
+
+// Computed property to get the selected category name for the warning message
+const selectedCategoryName = computed(() => {
+  if (categoryId.value) {
+    const selectedCategory = categories.value.find(cat => cat.id === categoryId.value)
+    return selectedCategory?.name || ''
+  }
+  return ''
+})
+
+// Computed property for the delete confirmation message
+const deleteMessage = computed(() => {
+  return `Вы уверены, что хотите удалить категорию "${selectedCategoryName.value}"? Это действие также удалит все рецепты, связанные с этой категорией. Это действие нельзя отменить.`
+})
 
 // Watch for category selection to populate the name field
 watch(categoryId, (newId) => {
@@ -38,9 +54,15 @@ async function updateCategory(e) {
   }
 }
 
-async function deleteCategory(e) {
+function handleDeleteClick(e) {
   e.preventDefault()
+  if (!categoryId.value) {
+    return
+  }
+  showDeleteDialog.value = true
+}
 
+async function confirmDelete() {
   if (!categoryId.value) {
     return
   }
@@ -88,7 +110,7 @@ async function deleteCategory(e) {
           type="button"
           class="form__button form__button--delete"
           :disabled="!categoryId"
-          @click="deleteCategory"
+          @click="handleDeleteClick"
         >
           <IconDelete />
         </button>
@@ -103,6 +125,14 @@ async function deleteCategory(e) {
       </div>
     </div>
   </form>
+  <CommonConfirmDialog
+    v-model="showDeleteDialog"
+    title="Удаление категории"
+    :message="deleteMessage"
+    :confirmText="'Удалить'"
+    :cancelText="'Отмена'"
+    @confirm="confirmDelete"
+  />
 </template>
 
 <style scoped>
