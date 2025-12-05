@@ -20,6 +20,10 @@ import CommonHeader from '@/components/common/CommonHeader.vue'
 <style scoped>
 .main {
   padding-block: 2rem;
+
+  @media (width < 768px) {
+    padding-block: 1rem;
+  }
 }
 
 .slide-enter-active {

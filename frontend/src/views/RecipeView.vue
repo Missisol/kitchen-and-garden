@@ -272,6 +272,11 @@ onBeforeUnmount(() => {
   color: transparent;
   background-clip: text;
   background-image: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+
+  @media (width < 768px) {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
 }
 
 .recipe__partition > h2 {
