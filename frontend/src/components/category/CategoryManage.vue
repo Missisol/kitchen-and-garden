@@ -12,6 +12,8 @@ const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
 const { getCategories, updateCategoryById, deleteCategoryById } = categoriesStore
 
+const emit = defineEmits(['getRecipes'])
+
 const categoryId = ref('')
 const categoryName = ref('')
 const showDeleteDialog = ref(false)
@@ -71,6 +73,7 @@ async function confirmDelete() {
     categoryId.value = ''
     categoryName.value = ''
     getCategories()
+    emit('getRecipes')
   }
 }
 </script>

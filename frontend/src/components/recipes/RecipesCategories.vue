@@ -14,6 +14,7 @@ const { categories } = storeToRefs(categoriesStore)
 
 const recipesStore = useRecipesStore()
 const { category_params } = storeToRefs(recipesStore)
+const { getRecipes } = recipesStore
 
 const emit = defineEmits(['getRecipesByCategory'])
 
@@ -53,7 +54,7 @@ const isOpen = ref(false)
           class="categories__action"
         >
           <CategoryCreate />
-          <CategoryManage />
+          <CategoryManage @getRecipes="getRecipes" />
         </div>
       </Transition>
     </div>
