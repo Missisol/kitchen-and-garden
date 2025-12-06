@@ -18,10 +18,10 @@ export function parseIngredientsWithHeadings(ingredientsString) {
     if (line.startsWith('#')) {
       // Save previous section if exists
       if (currentHeading !== null) {
-        result.push({ type: 'section', heading: currentHeading, items: currentItems })
+        result.push({ heading: currentHeading, items: currentItems })
       } else if (currentItems.length > 0) {
         // Items without heading
-        result.push({ type: 'section', heading: null, items: currentItems })
+        result.push({ heading: null, items: currentItems })
       }
       // Start new section
       currentHeading = line.replace(/^#\s*/g, '').replace(/^[\D\S]/g, l => l.toUpperCase()) // Remove "# " prefix and capitalize first letter
@@ -41,10 +41,10 @@ export function parseIngredientsWithHeadings(ingredientsString) {
   
   // Save last section
   if (currentHeading !== null) {
-    result.push({ type: 'section', heading: currentHeading, items: currentItems })
+    result.push({ heading: currentHeading, items: currentItems })
   } else if (currentItems.length > 0) {
     // No headings, just add items as before
-    result.push({ type: 'section', heading: null, items: currentItems })
+    result.push({ heading: null, items: currentItems })
   }
   return result
 }
@@ -58,5 +58,8 @@ let items = []
       const symbol = ingredientsString.includes(',') ? ',' : '\n'
       items = getReplacedArrayFromString(ingredientsString, symbol, /^[\D\S]/g, l => l.toUpperCase())
     }
-    return items
+    return [{
+      heading: null,
+      items
+    }]
   }
