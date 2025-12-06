@@ -18,9 +18,10 @@ const { categories } = defineProps({
 })
 
 const emit = defineEmits(['getFormBody'])
-
 const model = defineModel('model')
 const fileModel = defineModel('fileModel')
+
+const hintText = 'Для создания заголовков используйте символ # в начале строки (например: # Для теста)'
 
 const isDisabled = computed(() => {
   return model.value?.file || fileModel.value?.file?.name
@@ -85,6 +86,7 @@ function cancelEditing() {
       for="ingredients"
       class="label"
     >Ингредиенты
+      <span class="label__hint">{{ hintText }}</span>
       <textarea 
         v-model="model.ingredients" 
         id="ingredients" 
@@ -97,6 +99,7 @@ function cancelEditing() {
       for="instructions"
       class="label"
     >Приготовление
+      <span class="label__hint">{{ hintText }}</span>
       <textarea 
         v-model="model.instructions" 
         id="instructions" 
@@ -191,6 +194,20 @@ function cancelEditing() {
   border: 1px solid var(--color-input);
   border-radius: calc(var(--radius) - 2px);
   padding: 0.5rem 0.75rem;
+}
+
+.label textarea {
+  resize: vertical;
+  /* min-height: 100px; */
+  field-sizing: content;
+}
+
+.label__hint {
+  font-size: .75rem;
+  line-height: 1rem;
+  color: var(--color-muted-foreground);
+  font-style: italic;
+  margin-top: -0.25rem;
 }
 
 .file-wrapper {

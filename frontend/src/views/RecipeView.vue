@@ -15,7 +15,7 @@ import IconFile from '@/components/icons/IconFile.vue'
 import IconEdit from '@/components/icons/IconEdit.vue'
 import IconDelete from '@/components/icons/IconDelete.vue'
 
-import { getArrayFromString, getReplacedArrayFromString } from '@/utils/recipesHelpers'
+import { getArrayFromString, parseIngredientsWithHeadings, parseIngredients } from '@/utils/recipesHelpers'
 
 const router = useRouter()
 const route = useRoute()
@@ -45,20 +45,24 @@ const links = computed(() => {
 
 const ingredients = computed(() => {
   if (recipe.value?.ingredients) {
-      if (recipe.value?.ingredients.includes('\n') && recipe.value.ingredients.includes(',')) {
-    return getReplacedArrayFromString(recipe.value.ingredients, '\n', /^[\D\S]/g, l => l.toUpperCase())
-      .map(ing => ing.replace(',', ''))
+    // Check if ingredients contain headings (lines starting with "# ")
+    if (recipe.value.ingredients.includes('# ')) {
+      return parseIngredientsWithHeadings(recipe.value.ingredients)
     }
-    if (recipe.value?.ingredients.includes(',') || recipe.value?.ingredients.includes('\n')) {
-      const symbol = recipe.value.ingredients.includes(',') ? ',' : '\n'
-      return getReplacedArrayFromString(recipe.value.ingredients, symbol, /^[\D\S]/g, l => l.toUpperCase())
-    }
+    // Fallback to original logic for backward compatibility
+    return parseIngredients(recipe.value.ingredients)
   }
   return []
 })
 
 const instructions = computed(() => {
-    return recipe.value?.instructions ? getArrayFromString(recipe.value.instructions, '\n') : []
+  if (recipe.value?.instructions) {
+    const result = []
+    const arr = getArrayFromString(recipe.value.instructions, '\n')
+    arr.map(item =>  item.includes('#') ? result.push({ heading: item.replace(/^#/g, ''), text: null}) : result.push({ heading: null, text: item}) )
+    return result
+  }
+  return []
 })
 
 const comments = computed(() => {
@@ -119,21 +123,41 @@ onBeforeUnmount(() => {
       </div>
       <div class="recipe__partition">
         <h2>Ингредиенты</h2>
-        <ul>
-          <li
-            v-for="ing in ingredients"
-            :key="ing"
-            class="li--circle"
-          >{{ ing }}</li>
-        </ul>
+        <template v-if="ingredients.length > 0">
+          <template
+            v-for="(section, sectionIndex) in ingredients"
+            :key="sectionIndex"
+          >
+            <h3
+              v-if="section.heading"
+              class="recipe__subtitle"
+            >{{ section.heading }}</h3>
+            <ul
+              v-if="section.items && section.items.length > 0"
+              class="recipe__ingredients-list"
+            >
+              <li
+                v-for="(item, itemIndex) in section.items"
+                :key="itemIndex"
+                class="li--circle"
+              >{{ item }}</li>
+            </ul>
+          </template>
+        </template>
       </div>
       <div class="recipe__partition">
         <h2>Приготовление</h2>
         <ul>
           <li
-            v-for="instr in instructions"
-            :key="instr"
-          >{{ instr }}</li>
+            v-for="{ heading, text} in instructions"
+            :key="heading || text"
+          >
+            <h3
+              v-if="heading"
+              class="recipe__subtitle"
+            >{{ heading }}</h3>
+            <p v-if="text">{{ text }}</p>
+          </li>
         </ul>
       </div>
       <div
@@ -291,6 +315,27 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+.recipe__subtitle {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  text-decoration: underline;
+  margin-block-start: 1rem;
+  margin-block-end: 0.5rem;
+}
+
+.recipe__subtitle:first-of-type {
+  margin-block-start: 0;
+}
+
+li +li:has(h3.recipe__subtitle) {
+  margin-block-start: 1rem;
+}
+
+.recipe__ingredients-list {
+  margin-block-end: 0.5rem;
 }
 
 .li--circle {
