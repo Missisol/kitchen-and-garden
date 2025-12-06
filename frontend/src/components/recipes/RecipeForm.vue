@@ -1,10 +1,14 @@
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import CategorySelect from '../category/CategorySelect.vue'
 import CommonButton from '../common/CommonButton.vue'
 import IconSave from '../icons/IconSave.vue'
 import IconDelete from '../icons/IconDelete.vue'
+
+const router = useRouter()
+const id = router.currentRoute.value.params.id
 
 const { categories } = defineProps({
   categories: {
@@ -37,6 +41,10 @@ function deleteFile() {
 
 function sendForm() {
   emit('getFormBody')
+}
+
+function cancelEditing() {
+  router.push({ path: `/recipes/${id}` })
 }
 </script>
 
@@ -82,6 +90,7 @@ function sendForm() {
         id="ingredients" 
         type="text"
         rows="4"
+        wrap="hard"
       ></textarea>
     </label>
     <label
@@ -143,10 +152,17 @@ function sendForm() {
         rows="6"
       ></textarea>
     </label>
-    <CommonButton @buttonAction="sendForm">
-      <template #icon><IconSave /></template>
-      <template #text>Сохранить изменения</template>
-    </CommonButton>
+    <div class="button-wrapper">
+      <CommonButton @buttonAction="sendForm">
+        <template #icon><IconSave /></template>
+        <template #text>Сохранить изменения</template>
+      </CommonButton>
+      <div class="common-button--dark">
+        <CommonButton @buttonAction="cancelEditing">
+          <template #text>Отмена</template>
+        </CommonButton>
+      </div>
+    </div>
   </form>
 </template>
 
@@ -225,6 +241,7 @@ function sendForm() {
 
 .button-wrapper {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
