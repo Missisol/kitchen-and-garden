@@ -30,9 +30,11 @@
   font-weight: 500;
 }
 
-.button:hover {
-  color: var(--color-accent-foreground);
-  background: var(--color-accent);
+@media (hover:hover) {
+  .button:hover {
+    color: var(--color-accent-foreground);
+    background: var(--color-accent);
+  }
 }
 
 .category--active>.button {

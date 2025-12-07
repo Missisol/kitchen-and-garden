@@ -102,9 +102,11 @@ function selectPage(page) {
   transition: var(--transition-smooth);
 }
 
-.card:hover {
-  box-shadow: var(--shadow-glow);
-  border: 1px solid hsl(from var(--color-primary) h s l / 0.5);
+@media (hover:hover) {
+  .card:hover {
+    box-shadow: var(--shadow-glow);
+    border: 1px solid hsl(from var(--color-primary) h s l / 0.5);
+  }
 }
 
 .card a {
@@ -115,6 +117,7 @@ function selectPage(page) {
   gap: 1rem;
   padding: 1.5rem;
 }
+
 .pagination-controls {
   /* align like CommonButton wrappers */
   --cbtn-background: var(--color-background);
@@ -128,6 +131,7 @@ function selectPage(page) {
   gap: 1rem;
   margin-top: 2rem;
 }
+
 .pagination-btn,
 .pagination-page-btn {
   background: var(--cbtn-background, var(--color-primary));
@@ -146,18 +150,23 @@ function selectPage(page) {
   cursor: pointer;
   transition: var(--transition-smooth);
 }
-.pagination-btn:not(:disabled):hover,
-.pagination-page-btn:not(:disabled):hover {
-  --cbtn-fallback: var(--cbtn-background, var(--color-primary));
-  background: var(--cbtn-hover, hsl(from var(--cbtn-fallback) h s l / 0.9));
-  color: var(--text-hover, var(--color-primary-foreground));
+
+@media (hover:hover) {
+  .pagination-btn:not(:disabled):hover,
+  .pagination-page-btn:not(:disabled):hover {
+    --cbtn-fallback: var(--cbtn-background, var(--color-primary));
+    background: var(--cbtn-hover, hsl(from var(--cbtn-fallback) h s l / 0.9));
+    color: var(--text-hover, var(--color-primary-foreground));
+  }
 }
+
 .pagination-btn:disabled,
 .pagination-page-btn:disabled {
   background: hsl(from var(--cbtn-background) h s l / 0.1);
   color: hsl(from var(--text-color) h s l / 0.3);
   cursor: not-allowed;
 }
+
 .pagination-page-btn.active {
   background: var(--cbtn-hover, var(--color-primary));
   color: var(--text-hover, var(--color-primary-foreground));

@@ -379,8 +379,10 @@ li +li:has(h3.recipe__subtitle) {
   word-break: break-all;
 }
 
-.recipe__link:hover {
-  text-decoration: underline;
+@media (hover:hover) {
+  .recipe__link:hover {
+    text-decoration: underline;
+  }
 }
 
 .recipe__comment-title {

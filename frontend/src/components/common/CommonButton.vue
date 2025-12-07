@@ -52,11 +52,13 @@ const emit = defineEmits(['buttonAction'])
   cursor: default;
 }
 
-.common-button:not(:disabled):hover {
-  --cbtn-fallback: var(--cbtn-background, var(--color-primary));
+@media (hover:hover) {
+  .common-button:not(:disabled):hover {
+    --cbtn-fallback: var(--cbtn-background, var(--color-primary));
 
-  background: var(--cbtn-hover, hsl(from var(--cbtn-fallback) h s l / 0.9));
-  color: var(--text-hover, var(--color-primary-foreground));
+    background: var(--cbtn-hover, hsl(from var(--cbtn-fallback) h s l / 0.9));
+    color: var(--text-hover, var(--color-primary-foreground));
+  }
 }
 </style>
 

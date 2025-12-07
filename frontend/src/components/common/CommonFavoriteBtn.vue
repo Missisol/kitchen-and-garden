@@ -44,7 +44,9 @@ const { toggleFavorite } = recipesStore
 fill: var(--color-primary);
 }
 
-.favorite-btn:hover {
-  transform: scale(1.1)
+@media (hover:hover) {
+  .favorite-btn:hover {
+    transform: scale(1.1)
+  }
 }
 </style>

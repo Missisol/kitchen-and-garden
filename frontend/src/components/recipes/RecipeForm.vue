@@ -241,9 +241,11 @@ function cancelEditing() {
   color: var(--color-muted-foreground);
 }
 
-.file-label:not(.file-label--inactive):hover {
-  background: hsl(from var(--color-primary) h s l / 0.9);
-  color: var(--color-primary-foreground);
+@media (hover:hover) {
+  .file-label:not(.file-label--inactive):hover {
+    background: hsl(from var(--color-primary) h s l / 0.9);
+    color: var(--color-primary-foreground);
+  }
 }
 
 .file-wrapper .common-button {
