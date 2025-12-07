@@ -45,8 +45,8 @@ const links = computed(() => {
 
 const ingredients = computed(() => {
   if (recipe.value?.ingredients) {
-    // Check if ingredients contain headings (lines starting with "# ")
-    if (recipe.value.ingredients.includes('# ')) {
+    // Check if ingredients contain headings (lines starting with "#")
+    if (recipe.value.ingredients.includes('#')) {
       return parseIngredientsWithHeadings(recipe.value.ingredients)
     }
     // Fallback to original logic for backward compatibility
