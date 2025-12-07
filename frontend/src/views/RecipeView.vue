@@ -311,12 +311,6 @@ onBeforeUnmount(() => {
   margin-block-end: 0.75rem;
 }
 
-.recipe__partition ul {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
 .recipe__subtitle {
   font-size: 1.125rem;
   line-height: 1.5rem;
@@ -339,21 +333,32 @@ li +li:has(h3.recipe__subtitle) {
 }
 
 .li--circle {
-  position: relative;
-  padding-left: 1rem;
+  list-style: initial;
+  margin-inline-start: 1rem;
 }
 
-.li--circle::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background-color: var(--color-primary);
-  border-radius: 50%;
-  position: absolute;
-  left: 0;
-  top: 0.5em;
+@supports not selector(::marker) {
+  .li--circle {
+    display: flex;
+    align-items: center;
+  }
+
+  .li--circle::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    margin-inline-end: 1rem;
+  }
 }
+
+ @supports selector(::marker) {
+  .li--circle::marker {
+    color: var(--color-primary);
+  }
+ }
 
 .recipe__links {
   display: flex;
