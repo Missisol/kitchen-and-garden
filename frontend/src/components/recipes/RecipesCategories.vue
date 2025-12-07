@@ -122,12 +122,11 @@ const isOpen = ref(false)
 .category {
   cursor: pointer;
 }
-</style>
 
-<style>
 .cat-enter-active, .cat-leave-active {
   transition: height .2s ease, opacity .2s ease;
 }
+
 .cat-enter-from, .cat-leave-to {
   height: 0;
   opacity: 0;
