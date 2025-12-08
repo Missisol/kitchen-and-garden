@@ -69,7 +69,7 @@ const model = defineModel()
 
 .search__container {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 1fr auto auto;
   grid-template-rows: auto;
 }
 
@@ -82,7 +82,6 @@ const model = defineModel()
 
 .search__input {
   width: 100%;
-  border-radius: 4px;
   grid-column: 1 / 4;
   grid-row: 1 / 2;
   color: var(--color-foreground);
@@ -90,7 +89,7 @@ const model = defineModel()
   border: 1px solid var(--color-input);
   border-radius: calc(var(--radius) - 2px);
   padding-block: 0.5rem;
-  padding-inline: 2.5rem 0.75rem;
+  padding-inline: 1rem 0.75rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
@@ -105,7 +104,7 @@ const model = defineModel()
 }
 
 .search__search {
-  grid-column: 1 / 2;
+  grid-column: 2 / 3;
   grid-row: 1 / 2;
 }
 
@@ -120,8 +119,8 @@ const model = defineModel()
 
 .search__close > img,
 .search__search > img {
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
 }
 
 .search__input:focus-visible, 

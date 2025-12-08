@@ -113,9 +113,11 @@ const isOpen = ref(false)
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  margin-block-end: 2rem;
 
   @media (width < 768px) {
     grid-template-columns: auto;
+    margin-block-end: 1rem;
   }
 }
 

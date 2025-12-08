@@ -167,7 +167,6 @@ onBeforeUnmount(() => {
 
   display: flex;
   flex-direction: column;
-  gap: 2rem;
 }
 
 .content {
