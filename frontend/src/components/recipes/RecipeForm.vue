@@ -45,7 +45,11 @@ function sendForm() {
 }
 
 function cancelEditing() {
-  router.push({ path: `/recipes/${id}` })
+  if (router.currentRoute.value.path.includes('create')) {
+    router.push({ path: '/recipes' })
+  } else {
+    router.push({ path: `/recipes/${id}` })
+  }
 }
 </script>
 
