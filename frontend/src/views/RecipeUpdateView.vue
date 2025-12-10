@@ -9,7 +9,6 @@ import { useRecipesStore } from '@/stores/recipes'
 import RecipeLayout from '@/components/recipes/RecipeLayout.vue'
 import RecipeForm from '@/components/recipes/RecipeForm.vue'
 import CommonError from '@/components/common/CommonError.vue'
-import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
 
 const router = useRouter()
 const categoriesStore = useCategoriesStore()
@@ -39,14 +38,6 @@ if (!categories.value.length) {
 }
 
 async function getFormBody() {
-  console.log('data', data.value)
-
-  data.value.title = data.value.title.toLowerCase()
-
-    if (data.value.ingredients) {
-    data.value.ingredients = data.value.ingredients.toLowerCase()
-  }
-
   if (fileModel.value.file) {
     const formData = new FormData()
     formData.append('file', fileModel.value.file)
@@ -56,17 +47,24 @@ async function getFormBody() {
 
   for ( const [key, value] of Object.entries(data.value)) {
     if (value !== recipe.value[key]) {
-      body.value[key] = key === 'ingredients' ? value.toLowerCase() : value
+      body.value[key] = key === 'ingredients' || key === 'title' ? value.toLowerCase() : value
     }
   }
-  // console.log('body', body.value)
-  update(id, body.value)
 }
 
-async function update(id, body) {
-  const result = await updateRecipe(id, body)
-  if (result.id) {
-    router.push({ path: `/recipes/${id}` })
+async function update() {
+  await getFormBody()
+  if (Object.keys(body.value).length === 0) {
+    return
+  }
+
+  try {
+  const result = await updateRecipe(id, body.value)
+    if (result.id) {
+      router.push({ path: `/recipes/${id}` })
+    }
+  } catch (error) {
+    console.log('error', error)
   }
 }
 
@@ -92,15 +90,11 @@ watch(() => recipe.value, () => {
       v-if="!recipe.error" 
       #recipe
     >
-      <div class="recipe__heading">
-        <h1 class="recipe__title">{{ recipe.title }}</h1>
-        <CommonFavoriteBtn :recipe="recipe" />
-      </div>
       <RecipeForm
         v-model:model="data"
         v-model:fileModel="fileModel"
         :categories="categories"
-        @getFormBody="getFormBody"
+        @sendForm="update"
       />
     </template>
     <template

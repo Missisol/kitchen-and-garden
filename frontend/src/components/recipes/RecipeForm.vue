@@ -17,7 +17,7 @@ const { categories } = defineProps({
   },
 })
 
-const emit = defineEmits(['getFormBody'])
+const emit = defineEmits(['sendForm'])
 const model = defineModel('model')
 const fileModel = defineModel('fileModel')
 
@@ -41,7 +41,7 @@ function deleteFile() {
 }
 
 function sendForm() {
-  emit('getFormBody')
+  emit('sendForm')
 }
 
 function cancelEditing() {
@@ -75,16 +75,6 @@ function cancelEditing() {
         idName="category"
         v-model:model="model.category_id"
       />
-      <!-- <select
-        v-model="model.category_id"
-        id="category"
-      >
-        <option 
-          v-for="category in categories" 
-          :key="category.id" 
-          :value="category.id"
-        >{{ category?.name || 'Без категории' }}</option>
-      </select> -->
     </label>
     <label
       for="ingredients"

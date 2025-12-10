@@ -100,6 +100,7 @@ function selectPage(page) {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   transition: var(--transition-smooth);
+  height: 100%;
 }
 
 @media (hover: hover) and (pointer: fine) {

@@ -30,15 +30,13 @@ if (!categories.value.length) {
 }
 
 async function getFormBody() {
-  // console.log('data', data.value)
-
   if (!data.value.title) {
     return
   }
 
   data.value.title = data.value.title.toLowerCase()
 
-  if (data.value.ingredients) {
+  if (data.value?.ingredients) {
     data.value.ingredients = data.value.ingredients.toLowerCase()
   }
 
@@ -48,14 +46,18 @@ async function getFormBody() {
     const result = await uploadFile(formData)
     data.value.file = result.filename  // Сохраняем только имя файла
   }
-  // console.log('data', data.value)
-  create()
 }
 
 async function create() {
+  await getFormBody()
+
+  try {
   const result = await createRecipe(data.value)
     if (result.id) {
-    router.push({ path: '/recipes' })
+      router.push({ path: '/recipes' })
+    }
+  } catch (error) {
+    console.log('error', error)
   }
 }
 </script>
@@ -70,7 +72,7 @@ async function create() {
         v-model:model="data"
         v-model:fileModel="fileModel"
         :categories="categories"
-        @getFormBody="getFormBody"
+        @sendForm="create"
       />
     </template>
   </RecipeLayout>
