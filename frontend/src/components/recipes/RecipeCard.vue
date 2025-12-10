@@ -16,13 +16,19 @@ const { item } = defineProps({
 
 const linksCount = computed(() => {
   if (item.links) {
-    return item.links.split(',').length
+    if (item.links.includes('\n')) {
+      return item.links.split('\n').length
+    }
+    if (item.links.includes(',')) {
+      return item.links.split(',').length
+    }
+    return 1
   }
   return 0
 })
 
 const ingredients = computed(() => {
-    const arr = item?.ingredients.toLowerCase().split('\n').map(ing => ing.trim())
+    const arr = item?.ingredients.toLowerCase().replaceAll('#', '').split('\n').map(ing => ing.trim())
     if (arr.length === 1 && arr[0].includes(',')) {
     return getReplacedArrayFromString(arr[0], ',', ',', '').join(', ')
     //  return arr[0].split(',').map(ing => ing.trim().replace(',', '')).filter(ing => ing.length).join(', ')
@@ -31,52 +37,54 @@ const ingredients = computed(() => {
     }
 })
 
-const instructions = computed(() => {
-  return item.instructions.split('\n')[0].trim()
-})
 </script>
 
 <template>
   <RouterLink :to="`/recipes/${item.id}`">
-    <div class="heading">
-      <h3 class="title">{{ item.title }}</h3>
-      <CommonFavoriteBtn :recipe="item" />
+    <div class="card__heading">
+      <div class="heading">
+        <h3 class="title">{{ item.title }}</h3>
+        <CommonFavoriteBtn :recipe="item" />
+      </div>
+      <CommonCardCategory :recipe="item" />
     </div>
-    <CommonCardCategory :recipe="item" />
     <div class="card__content">
       <dl class="content__list">
         <div class="content__item">
           <dt class="content__term">Ингредиенты</dt>
           <dd class="content__details">{{ ingredients }}</dd>
         </div>
-        <div class="content__item">
-          <dt class="content__term">Приготовление</dt>
-          <dd class="content__details content__details--truncated">{{ instructions }}</dd>
-        </div>
-        <div
-          v-if="linksCount"
-          class="content__links"
-        >
-          <dt><IconLink /></dt> 
-          <dd>{{ linksCount }}</dd>
-        </div>
-        <div
-          v-if="item.file"
-          class="content__links"
-        >
-          <dt><IconFile /></dt>
+        <div class="content__links">
+          <div
+            v-if="linksCount"
+            class="content__link"
+          >
+            <dt><IconLink /></dt> 
+            <dd>{{ linksCount }}</dd>
+          </div>
+          <div
+            v-if="item.file"
+            class="content__link"
+          >
+            <dt><IconFile /></dt>
+          </div>
         </div>
       </dl>
     </div>
   </RouterLink>
-
 </template>
 
 <style scoped>
+.card__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .heading {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
 }
 
 .heading > button {
@@ -121,12 +129,17 @@ const instructions = computed(() => {
 }
 
 .content__links {
+  display: flex;
+  gap: 2rem;
+}
+
+.content__link {
   color: var(--color-muted-foreground);
   display: flex;
   gap: .5rem;
 }
 
-.content__links svg {
+.content__link svg {
   width: 1rem;
   height: 1rem;
 }
