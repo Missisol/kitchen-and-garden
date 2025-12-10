@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useCategoriesStore } from '@/stores/categories'
@@ -12,12 +13,13 @@ const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
 
 const recipesStore = useRecipesStore()
-const { category_params } = storeToRefs(recipesStore)
+const { category_params, showFavoritesOnly, ingredientsSearch, titleSearch } = storeToRefs(recipesStore)
 const { getRecipes } = recipesStore
 
 const emit = defineEmits(['getRecipesByCategory'])
-
 const isOpen = defineModel()
+
+const isFiltered = computed(() => category_params.value.id !== '' || showFavoritesOnly.value || titleSearch.value || ingredientsSearch.value)
 </script>
 
 <template>
@@ -25,7 +27,7 @@ const isOpen = defineModel()
     <h2 class="categories__title">Категории</h2>
     <ul class="categories__list">
       <li
-        :class="category_params.id === '' ? 'category--active' : ''"
+        :class="isFiltered ? '' : 'category--active'"
         class="category"
         @click="emit('getRecipesByCategory')"
       ><CategoryButton>Все</CategoryButton></li>
