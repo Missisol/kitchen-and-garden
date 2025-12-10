@@ -11,6 +11,7 @@ import RecipeSearch from '@/components/recipes/RecipeSearch.vue'
 import CommonButton from '@/components/common/CommonButton.vue'
 import IconPlus from '@/components/icons/IconPlus.vue'
 import IconStar from '@/components/icons/IconStar.vue'
+import TransitionDropdown from '@/components/transition/TransitionDropdown.vue'
 
 const router = useRouter()
 
@@ -28,6 +29,7 @@ const { totalPages,  currentPage } = storeToRefs(recipesStore)
 
 const titleSearch = ref('')
 const filteredRecipes = ref([])
+const isOpen = defineModel()
 
 const getRecipesByCategory = async (category={id: '', name: ''}) => {
   titleSearch.value = ''
@@ -130,24 +132,30 @@ onBeforeUnmount(() => {
           </CommonButton>
         </div>
       </div>
-      <div class="search">
-        <RecipeSearch
-          :focusAction="clearSearch"
-          :keyupAction="searchRecipesByTitle"
-          :clearFunction="clearSearchByTitle"
-          :searchFunction="searchRecipesByTitle"
-          labelTitle="Поиск по названию"
-          v-model="titleSearch"
-        />
-        <RecipeSearch
-          :focusAction="clearSearchByTitle"
-          :keyupAction="searchRecipes"
-          :clearFunction="clearSearch"
-          :searchFunction="searchRecipes"
-          labelTitle="Поиск по ингредиентам"
-          v-model="ingredientsSearch"
-        />
-      </div>
+      <TransitionDropdown v-model="isOpen">
+        <template #button>Поиск рецептов</template>
+        <div 
+          v-if="isOpen" 
+          class="search"
+        >
+          <RecipeSearch
+            :focusAction="clearSearch"
+            :keyupAction="searchRecipesByTitle"
+            :clearFunction="clearSearchByTitle"
+            :searchFunction="searchRecipesByTitle"
+            labelTitle="Поиск по названию"
+            v-model="titleSearch"
+          />
+          <RecipeSearch
+            :focusAction="clearSearchByTitle"
+            :keyupAction="searchRecipes"
+            :clearFunction="clearSearch"
+            :searchFunction="searchRecipes"
+            labelTitle="Поиск по ингредиентам"
+            v-model="ingredientsSearch"
+          />
+        </div>
+      </TransitionDropdown>
       <RecipesList 
         :filteredRecipes="filteredRecipes"
         :titleSearch="titleSearch"
@@ -167,18 +175,20 @@ onBeforeUnmount(() => {
 
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .search {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  margin-block-end: 1rem;
 
   @media (width < 768px) {
     grid-template-columns: auto;

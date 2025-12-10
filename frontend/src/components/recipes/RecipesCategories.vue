@@ -1,13 +1,12 @@
 <script setup>
-import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-
-import CategoryCreate from '@/components/category/CategoryCreate.vue'
-import CategoryManage from '@/components/category/CategoryManage.vue'
 
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
-import CategoryButton from '../category/CategoryButton.vue'
+import CategoryCreate from '@/components/category/CategoryCreate.vue'
+import CategoryManage from '@/components/category/CategoryManage.vue'
+import CategoryButton from '@/components/category/CategoryButton.vue'
+import TransitionDropdown from '@/components/transition/TransitionDropdown.vue'
 
 const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
@@ -18,7 +17,7 @@ const { getRecipes } = recipesStore
 
 const emit = defineEmits(['getRecipesByCategory'])
 
-const isOpen = ref(false)
+const isOpen = defineModel()
 </script>
 
 <template>
@@ -40,26 +39,17 @@ const isOpen = ref(false)
         <CategoryButton>{{ category?.name ||'Без категории' }}</CategoryButton>
       </li>
     </ul>
-    <div class="categories__action-box">
-      <button 
-        :class="[isOpen ? 'open' : '', 'categories__button']" 
-        @click="isOpen = !isOpen"
+    <TransitionDropdown v-model="isOpen">
+      <template #button>Управление категориями</template>
+      <div 
+        v-if="isOpen"
+        class="categories__action"
       >
-        Управление категориями
-      </button>
-      <Transition name="cat">
-        <div 
-          v-if="isOpen"
-          name="cat" 
-          class="categories__action"
-        >
-          <CategoryCreate />
-          <CategoryManage @getRecipes="getRecipes" />
-        </div>
-      </Transition>
-    </div>
+        <CategoryCreate />
+        <CategoryManage @getRecipes="getRecipes" />
+      </div>
+    </TransitionDropdown>
   </section>
-
 </template>
 
 <style scoped>
@@ -78,7 +68,6 @@ const isOpen = ref(false)
 
 .categories__list {
   display: flex;
-  /* justify-content: center; */
   gap: .5rem;
   flex-direction: row;
   flex-wrap: wrap;
@@ -113,24 +102,14 @@ const isOpen = ref(false)
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
-  margin-block-end: 2rem;
+  margin-block-end: 1rem;
 
   @media (width < 768px) {
     grid-template-columns: auto;
-    margin-block-end: 1rem;
   }
 }
 
 .category {
   cursor: pointer;
-}
-
-.cat-enter-active, .cat-leave-active {
-  transition: height .2s ease, opacity .2s ease;
-}
-
-.cat-enter-from, .cat-leave-to {
-  height: 0;
-  opacity: 0;
 }
 </style>
