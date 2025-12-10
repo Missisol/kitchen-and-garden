@@ -76,6 +76,7 @@ def manage_category(id):
 def get_recipes():
     category_id = request.args.get('category_id', type=int)
     search_query = request.args.get('search', '', type=str).lower()
+    title_search_query = request.args.get('title_search', '', type=str).lower()
     favorite = request.args.get('favorite', type=str)
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['RECIPES_PER_PAGE']
@@ -87,6 +88,9 @@ def get_recipes():
 
         if search_query:
             query = query.filter(Recipe.ingredients.collate("NOCASE").like(f'%{search_query}%'))
+
+        if title_search_query:
+            query = query.filter(Recipe.title.collate("NOCASE").like(f'%{title_search_query}%'))
 
         # Filter by favorite status
         if favorite is not None:

@@ -23,11 +23,10 @@ const categoriesStore = useCategoriesStore()
 const { getCategories } = categoriesStore
 
 const recipesStore = useRecipesStore()
-const { category_params, ingredientsSearch, recipes, showFavoritesOnly } = storeToRefs(recipesStore)
-const { getRecipes, getFavoriteRecipes, clearCategoryParams } = recipesStore
+const { category_params, ingredientsSearch, titleSearch, recipes, showFavoritesOnly } = storeToRefs(recipesStore)
+const { getRecipes, getFavoriteRecipes, clearCategoryParams, clearFavoritesOnly } = recipesStore
 const { totalPages,  currentPage } = storeToRefs(recipesStore)
 
-const titleSearch = ref('')
 const filteredRecipes = ref([])
 const isOpen = defineModel()
 
@@ -35,11 +34,8 @@ const getRecipesByCategory = async (category={id: '', name: ''}) => {
   titleSearch.value = ''
   ingredientsSearch.value = ''
   category_params.value = category?.id ? {id: category.id, name: category.name} : { id: '', name: '' }
+  clearFavoritesOnly()
   await getRecipes(category.id)
-}
-
-const getRecipesByTitle = () => {
-  filteredRecipes.value = titleSearch.value ? recipes.value.filter(item => item.title.toLowerCase().includes(titleSearch.value.toLowerCase())) : recipes.value
 }
 
 const clearSearch = () => {
@@ -56,16 +52,19 @@ const clearSearchByTitle = () => {
   }
 }
 
-const searchRecipes = () => {
+const searchRecipesByIngredients = () => {
+  if (!ingredientsSearch.value.length) return
   clearCategoryParams()
+  clearFavoritesOnly()
   getRecipes()
 }
 
 const searchRecipesByTitle = async() => {
   if (!titleSearch.value.length) return
   clearCategoryParams()
+  clearFavoritesOnly()
   await getRecipes()
-  getRecipesByTitle()
+  // getRecipesByTitle()
 }
 
 const getFavoriteRecipesList = async () => {
@@ -148,9 +147,9 @@ onBeforeUnmount(() => {
           />
           <RecipeSearch
             :focusAction="clearSearchByTitle"
-            :keyupAction="searchRecipes"
+            :keyupAction="searchRecipesByIngredients"
             :clearFunction="clearSearch"
-            :searchFunction="searchRecipes"
+            :searchFunction="searchRecipesByIngredients"
             labelTitle="Поиск по ингредиентам"
             v-model="ingredientsSearch"
           />

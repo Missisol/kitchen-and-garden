@@ -11,6 +11,7 @@ export const useRecipesStore = defineStore('recipes', () => {
   const recipe = ref({})
   const filePath = ref('')
   const ingredientsSearch = ref('')
+  const titleSearch = ref('')
   const showFavoritesOnly = ref(false)
   const totalPages = ref(1)
   const totalItems = ref(0)
@@ -24,6 +25,9 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
     if (ingredientsSearch.value) {
       params.append('search', ingredientsSearch.value)
+    }
+    if (titleSearch.value) {
+      params.append('title_search', titleSearch.value)
     }
     if (favorite !== null) {
       params.append('favorite', favorite.toString())
@@ -212,12 +216,17 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
+  function clearFavoritesOnly() {
+    showFavoritesOnly.value = false
+  }
+
   return {
     category_params,
     recipes,
     recipe,
     filePath,
     ingredientsSearch,
+    titleSearch,
     showFavoritesOnly,
     totalPages,
     totalItems,
@@ -234,5 +243,6 @@ export const useRecipesStore = defineStore('recipes', () => {
     toggleFavorite,
     uploadFile,
     clearCategoryParams,
+    clearFavoritesOnly,
   }
 })
