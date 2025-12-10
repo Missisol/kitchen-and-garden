@@ -51,7 +51,7 @@ const emit = defineEmits(['buttonAction'])
   padding-inline: var(--btn-padding-inline, 1rem);
 }
 
-@media (hover:hover) and (pointer: fine) {
+@media (hover: hover) and (pointer: fine) {
   .common-button:not(:disabled):hover {
     --cbtn-fallback: var(--cbtn-background, var(--color-primary));
 

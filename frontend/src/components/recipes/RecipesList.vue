@@ -102,7 +102,7 @@ function selectPage(page) {
   transition: var(--transition-smooth);
 }
 
-@media (hover:hover) {
+@media (hover: hover) and (pointer: fine) {
   .card:hover {
     box-shadow: var(--shadow-glow);
     border: 1px solid hsl(from var(--color-primary) h s l / 0.5);
@@ -151,7 +151,7 @@ function selectPage(page) {
   transition: var(--transition-smooth);
 }
 
-@media (hover:hover) {
+@media (hover: hover) and (pointer: fine) {
   .pagination-btn:not(:disabled):hover,
   .pagination-page-btn:not(:disabled):hover {
     --cbtn-fallback: var(--cbtn-background, var(--color-primary));

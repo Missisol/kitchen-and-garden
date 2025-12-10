@@ -379,7 +379,7 @@ li +li:has(h3.recipe__subtitle) {
   word-break: break-all;
 }
 
-@media (hover:hover) {
+@media (hover: hover) and (pointer: fine) {
   .recipe__link:hover {
     text-decoration: underline;
   }

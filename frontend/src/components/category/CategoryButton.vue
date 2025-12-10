@@ -30,7 +30,7 @@
   font-weight: 500;
 }
 
-@media (hover:hover) {
+@media (hover: hover) and (pointer: fine) {
   .button:hover {
     color: var(--color-accent-foreground);
     background: var(--color-accent);

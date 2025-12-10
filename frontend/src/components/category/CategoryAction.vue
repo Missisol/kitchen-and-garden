@@ -81,7 +81,7 @@ const emit = defineEmits(['submitAction'])
   cursor: pointer;
 }
 
-@media (hover:hover) {
+@media (hover: hover) and (pointer: fine) {
   .form__button:hover {
     background: hsl(from var(--btn-color) h s l / 0.9);
   }
