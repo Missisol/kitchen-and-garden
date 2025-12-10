@@ -41,6 +41,12 @@ if (!categories.value.length) {
 async function getFormBody() {
   console.log('data', data.value)
 
+  data.value.title = data.value.title.toLowerCase()
+
+    if (data.value.ingredients) {
+    data.value.ingredients = data.value.ingredients.toLowerCase()
+  }
+
   if (fileModel.value.file) {
     const formData = new FormData()
     formData.append('file', fileModel.value.file)
@@ -53,7 +59,7 @@ async function getFormBody() {
       body.value[key] = key === 'ingredients' ? value.toLowerCase() : value
     }
   }
-  console.log('body', body.value)
+  // console.log('body', body.value)
   update(id, body.value)
 }
 

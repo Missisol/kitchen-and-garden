@@ -65,9 +65,9 @@ const instructions = computed(() => {
   return []
 })
 
-const comments = computed(() => {
-  return recipe.value?.comment ? getArrayFromString(recipe.value.comment, '\n')  : ''
-})
+const comments = computed(() => recipe.value?.comment ? getArrayFromString(recipe.value.comment, '\n')  : '')
+
+const title = computed(() => recipe.value?.title ? recipe.value.title.substring(0, 1).toUpperCase() + recipe.value?.title.substring(1) : '')
 
 async function deleteRecipe(id) {
   await deleteRecipeById(id)
@@ -116,7 +116,7 @@ onBeforeUnmount(() => {
     >
       <div class="recipe__heading">
         <div class="recipe__title-box">
-          <h1 class="recipe__title">{{ recipe.title }}</h1>
+          <h1 class="recipe__title">{{ title }}</h1>
           <CommonCardCategory :recipe="recipe" />
         </div>
         <CommonFavoriteBtn :recipe="recipe" />

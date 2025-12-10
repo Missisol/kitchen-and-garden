@@ -37,13 +37,16 @@ const ingredients = computed(() => {
     }
 })
 
+const title = computed(() => {
+  return item?.title ? item.title.substring(0, 1).toUpperCase() + item.title.substring(1) : ''
+})
 </script>
 
 <template>
   <RouterLink :to="`/recipes/${item.id}`">
     <div class="card__heading">
       <div class="heading">
-        <h3 class="title">{{ item.title }}</h3>
+        <h3 class="title">{{ title }}</h3>
         <CommonFavoriteBtn :recipe="item" />
       </div>
       <CommonCardCategory :recipe="item" />

@@ -30,11 +30,13 @@ if (!categories.value.length) {
 }
 
 async function getFormBody() {
-  console.log('data', data.value)
+  // console.log('data', data.value)
 
   if (!data.value.title) {
     return
   }
+
+  data.value.title = data.value.title.toLowerCase()
 
   if (data.value.ingredients) {
     data.value.ingredients = data.value.ingredients.toLowerCase()
@@ -46,7 +48,7 @@ async function getFormBody() {
     const result = await uploadFile(formData)
     data.value.file = result.filename  // Сохраняем только имя файла
   }
-  console.log('data', data.value)
+  // console.log('data', data.value)
   create()
 }
 
