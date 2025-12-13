@@ -23,7 +23,7 @@ const iconComponent = {
 watch(
   () => route.name,
   () => {
-    const currentLogo = logoData.find(item => item.routeName === route.name)
+    const currentLogo = logoData.find(item => item.routeName.includes(route.name))
     logoText.value = currentLogo ? currentLogo.text : 'Кухня&Сад'
   }
 )
