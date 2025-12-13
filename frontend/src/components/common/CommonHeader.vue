@@ -2,21 +2,16 @@
 import { ref, watch, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { mainMenu } from '@/utils/mainMenu'
 import IconSun from '../icons/IconSun.vue'
 import IconMoon from '../icons/IconMoon.vue'
 import IconSystem from '../icons/IconSystem.vue'
 import IconLogo from '../icons/IconLogo.vue'
+import { mainMenu, themes, logoData } from '@/utils/commonData'
 
 const route = useRoute()
 const logoText = ref('')
 const isMenuOpen = ref(false)
 const theme = ref('light dark')
-const themes = [
-  {name: 'Светлая', value: 'light'},
-  {name: 'Темная', value: 'dark'},
-  {name: 'Авто', value: 'light dark'}
-]
 const switcherRef = useTemplateRef('switcher')
 
 const iconComponent = {
@@ -25,17 +20,13 @@ const iconComponent = {
   'light dark': IconSystem,
 }
 
-watch(() => route.name, () => {
-  if (route.name === 'home') {
-    logoText.value = 'Кухня и сад'
+watch(
+  () => route.name,
+  () => {
+    const currentLogo = logoData.find(item => item.routeName === route.name)
+    logoText.value = currentLogo ? currentLogo.text : 'Кухня&Сад'
   }
-  if (route.name === 'recipes') {
-    logoText.value = 'Кухня'
-  }
-  if (route.name === 'garden') {
-    logoText.value = 'Сад'
-  }
-})
+)
 
 function applyTheme(value) {
   const colorScheme = document.querySelector('meta[name="color-scheme"]')
@@ -91,7 +82,7 @@ onBeforeUnmount(() => {
           <div class="logo">
             <IconLogo />
           </div>
-          <span class="logo__text">Кухня&Сад</span>
+          <span class="logo__text">{{ logoText }}</span>
         </RouterLink>
         <div class="header__right">
           <nav class="nav">
