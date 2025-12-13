@@ -117,6 +117,7 @@ function selectPage(page) {
   flex-direction: column;
   gap: 1rem;
   padding: 1.5rem;
+  height: 100%;
 }
 
 .pagination-controls {

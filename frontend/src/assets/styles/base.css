@@ -203,3 +203,7 @@ body {
   --cbtn-hover: hsl(from var(--color-destructive) h s l / 0.9);
   --text-hover: var(--color-foreground);
 }
+
+a.router__link {
+    -webkit-tap-highlight-color: transparent;
+}

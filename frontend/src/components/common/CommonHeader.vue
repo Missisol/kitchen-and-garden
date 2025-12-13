@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
       <div class="header__container">
         <RouterLink
           to="/"
-          class="logo__container"
+          class="logo__container router__link"
         >
           <div class="logo">
             <IconLogo />
@@ -99,7 +99,7 @@ onBeforeUnmount(() => {
               v-for="item in mainMenu"
               :key="item.name"
               :to="item.path"
-              :class="route.name"
+              :class="[route.name, 'router__link']"
             >{{ item.name }}</RouterLink>
           </nav>
           <div
@@ -167,8 +167,10 @@ onBeforeUnmount(() => {
   text-decoration: none;
 }
 
-.logo__container:hover .logo {
-  transform: scaleX(1.1) scaleY(1.1)
+@media (hover: hover) and (pointer: fine) {
+  .logo__container:hover .logo {
+    transform: scaleX(1.1) scaleY(1.1)
+  }
 }
 
 .logo {
@@ -228,9 +230,11 @@ onBeforeUnmount(() => {
     transition: var(--transition-smooth);
   }
 
-  & a:hover {
-    color: car(--color-foreground);
-    background: var(--color-muted);
+  @media (hover: hover) and (pointer: fine) {
+    & a:hover {
+      color: var(--color-foreground);
+      background: var(--color-muted);
+    }
   }
 
   & a.router-link-exact-active:first-child {

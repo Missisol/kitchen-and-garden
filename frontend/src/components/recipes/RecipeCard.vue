@@ -43,7 +43,10 @@ const title = computed(() => {
 </script>
 
 <template>
-  <RouterLink :to="`/recipes/${item.id}`">
+  <RouterLink 
+    :to="`/recipes/${item.id}`"
+    class="card__link router__link"
+  >
     <div class="card__heading">
       <div class="heading">
         <h3 class="title">{{ title }}</h3>
@@ -94,8 +97,10 @@ const title = computed(() => {
   flex-shrink: 0;
 }
 
-.card:hover .title {
-  color: var(--color-primary);
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .title {
+    color: var(--color-primary);
+  }
 }
 
 .title {

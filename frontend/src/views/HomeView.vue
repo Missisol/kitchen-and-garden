@@ -6,7 +6,10 @@ import IconSprout from '@/components/icons/IconSprout.vue'
 
 <template>
   <div class="hero__wrapper">
-    <RouterLink to="/recipes">
+    <RouterLink
+      to="/recipes"
+      class="router__link"
+    >
       <CommonHero>
         <template #icon>
           <IconChefhat />
@@ -15,7 +18,10 @@ import IconSprout from '@/components/icons/IconSprout.vue'
         <template #text>Управляйте своими рецептами</template>
       </CommonHero>
     </RouterLink>
-    <RouterLink to="/garden">
+    <RouterLink
+      to="/garden"
+      class="router__link"
+    >
       <CommonHero>
         <template #icon>
           <IconSprout />
