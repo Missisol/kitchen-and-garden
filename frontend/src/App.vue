@@ -7,11 +7,11 @@ import CommonHeader from '@/components/common/CommonHeader.vue'
   <div class="container">
     <CommonHeader />
     <main class="main">
-      <RouterView v-slot="{ Component }">
-        <transition name="slide">
+      <transition>
+        <RouterView v-slot="{ Component }">
           <component :is="Component" />
-        </transition>
-      </RouterView>
+        </RouterView>
+      </transition>
     </main>
     <!-- <CommonFooter /> -->
   </div>
@@ -26,16 +26,13 @@ import CommonHeader from '@/components/common/CommonHeader.vue'
   }
 }
 
-.slide-enter-active {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.slide-leave-active {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.slide-enter-from,
-.slide-leave-to {
+.v-enter-from,
+.v-leave-to {
   opacity: 0;
 }
 </style>
