@@ -7,11 +7,14 @@ import CommonHeader from '@/components/common/CommonHeader.vue'
   <div class="container">
     <CommonHeader />
     <main class="main">
-      <transition>
-        <RouterView v-slot="{ Component }">
-          <component :is="Component" />
-        </RouterView>
-      </transition>
+      <RouterView v-slot="{ Component, route }">
+        <transition>
+          <component 
+            :is="Component"
+            :key="route.path"
+          />
+        </transition>
+      </RouterView>
     </main>
     <!-- <CommonFooter /> -->
   </div>
@@ -26,10 +29,13 @@ import CommonHeader from '@/components/common/CommonHeader.vue'
   }
 }
 
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.v-enter-active {
+  transition: opacity .4s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* .v-leave-active {
+  transition: opacity 0.1s ;
+} */
 
 .v-enter-from,
 .v-leave-to {
