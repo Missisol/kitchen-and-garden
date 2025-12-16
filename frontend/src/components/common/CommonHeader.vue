@@ -25,7 +25,10 @@ watch(
   () => {
     const currentLogo = logoData.find(item => item.routeName.includes(route.name))
     logoText.value = currentLogo ? currentLogo.text : 'Кухня&Сад'
-  }
+  },
+  {
+    immediate: true,
+  },
 )
 
 function applyTheme(value) {
