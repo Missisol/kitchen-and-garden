@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
+import { ref, onMounted, onBeforeUnmount, useTemplateRef, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import IconSun from '../icons/IconSun.vue'
@@ -20,16 +20,10 @@ const iconComponent = {
   'light dark': IconSystem,
 }
 
-watch(
-  () => route.name,
-  () => {
-    const currentLogo = logoData.find(item => item.routeName.includes(route.name))
-    logoText.value = currentLogo ? currentLogo.text : 'Кухня&Сад'
-  },
-  {
-    immediate: true,
-  },
-)
+watchEffect(() => {
+  const currentLogo = logoData.find(item => item.routeName.includes(route.name))
+  logoText.value = currentLogo ? currentLogo.text : 'Кухня&Сад'
+})
 
 function applyTheme(value) {
   const colorScheme = document.querySelector('meta[name="color-scheme"]')
