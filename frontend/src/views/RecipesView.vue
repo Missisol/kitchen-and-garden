@@ -86,7 +86,7 @@ const handlePageChange = async (page) => {
 }
 
 getCategories()
-getRecipes()
+getRecipes(category_params.value.id, showFavoritesOnly.value, currentPage.value)
 
 watch(recipes, () => {
   filteredRecipes.value = recipes.value
@@ -95,7 +95,7 @@ watch(recipes, () => {
 onBeforeUnmount(() => {
   ingredientsSearch.value = ''
   titleSearch.value = ''
-  clearCategoryParams()
+  // clearCategoryParams()
 })
 </script>
 

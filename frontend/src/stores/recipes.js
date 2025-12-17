@@ -18,7 +18,7 @@ export const useRecipesStore = defineStore('recipes', () => {
   const currentPage = ref(1)
   const perPage = ref(9) // default
 
-  async function getRecipes(category_id = '', favorite = null, page = 1) {
+  async function getRecipes(category_id = '', favorite = false, page = 1) {
     const params = new URLSearchParams()
     if (category_id) {
       params.append('category_id', category_id)
@@ -29,7 +29,7 @@ export const useRecipesStore = defineStore('recipes', () => {
     if (titleSearch.value) {
       params.append('title_search', titleSearch.value)
     }
-    if (favorite !== null) {
+    if (favorite) {
       params.append('favorite', favorite.toString())
     }
     if (page) {

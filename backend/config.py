@@ -8,4 +8,4 @@ class Config(object):
   SQLALCHEMY_TRACK_MODIFICATIONS = False
   UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or '/app/static/uploads'
   ALLOWED_EXTENSIONS = {'doc', 'docx', 'pdf', 'png', 'jpg', 'jpeg'}
-  RECIPES_PER_PAGE = 9
+  RECIPES_PER_PAGE = 6
