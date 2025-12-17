@@ -44,7 +44,7 @@ const model = defineModel()
       >
       <div
         class="search__close"
-        @click="clearFunction" 
+        @click="clearFunction"
       ><img
         src="@/assets/icons/close.svg"
         alt="Close"

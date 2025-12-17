@@ -5,7 +5,7 @@ import IconLink from '../icons/IconLink.vue'
 import IconFile from '../icons/IconFile.vue'
 import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
 import CommonCardCategory from '../common/CommonCardCategory.vue'
-import { getReplacedArrayFromString } from '@/utils/recipesHelpers'
+import { getReplacedArrayFromString,truncateText } from '@/utils/recipesHelpers'
 
 const { item } = defineProps({
   item: {
@@ -29,12 +29,13 @@ const linksCount = computed(() => {
 
 const ingredients = computed(() => {
     const arr = item?.ingredients.toLowerCase().replaceAll('#', '').split('\n').map(ing => ing.trim())
+    let result
     if (arr.length === 1 && arr[0].includes(',')) {
-    return getReplacedArrayFromString(arr[0], ',', ',', '').join(', ')
-    //  return arr[0].split(',').map(ing => ing.trim().replace(',', '')).filter(ing => ing.length).join(', ')
+    result = getReplacedArrayFromString(arr[0], ',', ',', '').join(', ')
     } else  {
-      return arr.map(ing => ing.replace(',', '')).filter(ing => ing.length).join(', ')
+      result = arr.map(ing => ing.replace(',', '')).filter(ing => ing.length).join(', ')
     }
+    return truncateText(result)
 })
 
 const title = computed(() => {
@@ -55,27 +56,23 @@ const title = computed(() => {
       <CommonCardCategory :recipe="item" />
     </div>
     <div class="card__content">
-      <dl class="content__list">
-        <div class="content__item">
-          <dt class="content__term">Ингредиенты</dt>
-          <dd class="content__details">{{ ingredients }}</dd>
-        </div>
-        <div class="content__links">
-          <div
-            v-if="linksCount"
-            class="content__link"
-          >
-            <dt><IconLink /></dt> 
-            <dd>{{ linksCount }}</dd>
-          </div>
-          <div
-            v-if="item.file"
-            class="content__link"
-          >
-            <dt><IconFile /></dt>
-          </div>
-        </div>
-      </dl>
+      <h4 class="content__term">Ингредиенты</h4>
+      <p class="content__details">{{ ingredients }}</p>
+    </div>
+    <div class="card__bottom">
+      <div
+        v-if="linksCount"
+        class="bottom__link"
+      >
+        <IconLink />
+        <span>{{ linksCount }}</span>
+      </div>
+      <div
+        v-if="item.file"
+        class="bottom__link"
+      >
+        <IconFile />
+      </div>
     </div>
   </RouterLink>
 </template>
@@ -119,46 +116,43 @@ const title = computed(() => {
 .card__content {
   font-size: 0.875rem;
   line-height: 1.25rem;
-}
-
-.content__list {
   display: flex;
   flex-direction: column;
-  gap: .75rem;
 }
 
-.card__content dt {
+.content__term {
   color: var(--color-muted-foreground);
   margin-block-end: .25rem;
+  font-weight: normal;
 }
 
 .content__term::after {
   content: ':';
 }
 
-.content__links {
+.content__details {
+  position: relative;
+}
+
+.card__bottom {
   display: flex;
   gap: 2rem;
 }
 
-.content__link {
+.bottom__link {
   color: var(--color-muted-foreground);
   display: flex;
+  align-items: end;
   gap: .5rem;
 }
 
-.content__link svg {
+.bottom__link span {
+  line-height: 1rem;
+}
+
+.bottom__link svg {
   width: 1rem;
   height: 1rem;
 }
 
-.content__details--truncated {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  @media (width < 768px) {
-    white-space: normal;
-  }
-}
 </style>

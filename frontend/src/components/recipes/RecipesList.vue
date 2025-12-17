@@ -100,7 +100,6 @@ function selectPage(page) {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   transition: var(--transition-smooth);
-  height: 100%;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -113,11 +112,15 @@ function selectPage(page) {
 .card a {
   color: inherit;
   text-decoration: none;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 2fr 2.5fr .5fr;
   gap: 1rem;
   padding: 1.5rem;
   height: 100%;
+
+    @media (width < 768px) {
+      grid-template-rows: auto;
+    }
 }
 
 .pagination-controls {
