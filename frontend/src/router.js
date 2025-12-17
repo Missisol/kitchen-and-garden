@@ -1,39 +1,32 @@
-import HomeView from '@/views/HomeView.vue'
-import RecipesView from '@/views/RecipesView.vue'
-import RecipeView from '@/views/RecipeView.vue'
-import RecipeCreateView from '@/views/RecipeCreateView.vue'
-import RecipeUpdateView from '@/views/RecipeUpdateView.vue'
-import GardenView from '@/views/GardenView.vue'
-
 export const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView,
+    component: () => import('@/views/HomeView.vue'),
   },
   {
     path: '/recipes',
     name: 'recipes',
-    component: RecipesView,
+    component: () => import('@/views/RecipesView.vue'),
   },
   {
     path: '/recipes/create',
     name: 'recipe-create',
-    component: RecipeCreateView,
+    component: () => import('@/views/RecipeCreateView.vue'),
   },
   {
     path: '/recipes/:id/edit',
     name: 'recipe-update',
-    component: RecipeUpdateView,
+    component: () => import('@/views/RecipeUpdateView.vue'),
   },
   {
     path: '/recipes/:id',
     name: 'recipe',
-    component: RecipeView,
+    component: () => import('@/views/RecipeView.vue'),
   },
   {
     path: '/garden',
     name: 'garden',
-    component: GardenView,
+    component: () => import('@/views/GardenView.vue'),
   },
 ]
