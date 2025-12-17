@@ -75,6 +75,7 @@ onBeforeUnmount(() => {
         <RouterLink
           to="/"
           class="logo__container router__link"
+          aria-label="Logo"
         >
           <div class="logo">
             <IconLogo />
