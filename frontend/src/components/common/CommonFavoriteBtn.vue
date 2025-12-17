@@ -18,6 +18,7 @@ const { toggleFavorite } = recipesStore
   <button
     type="button"
     class="favorite-btn"
+    aria-label="Favorite"
     :class="{ favorite: recipe.favorite }"
     @click.prevent.stop="toggleFavorite(recipe)"
   >
@@ -32,6 +33,7 @@ const { toggleFavorite } = recipesStore
   border: none;
   cursor: pointer;
   transition: var(--transition-smooth);
+  padding: 2px;
 }
 
 .favorite-btn svg {

@@ -97,6 +97,7 @@ onBeforeUnmount(() => {
             <button
               class="header__theme"
               @click="toggleMenu"
+              :aria-label="theme"
               aria-haspopup="menu"
               :aria-expanded="isMenuOpen"
             >
