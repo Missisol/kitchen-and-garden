@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import { useRecipesStore } from '@/stores/recipes'
-import type { Recipe } from '@/types/recipe'
 import RecipeCard from './RecipeCard.vue'
-
-const recipesStore = useRecipesStore()
-const { toggleFavorite } = recipesStore
-
+import type { Recipe } from '@/types/recipe'
 
 const { filteredRecipes, currentPage, totalPages } = defineProps<{
   filteredRecipes: Recipe[]
@@ -36,7 +31,6 @@ function selectPage(page: number) {
       >
         <RecipeCard
           :item="item"
-          :toggleFavorite="toggleFavorite"
         />
       </li>
     </ul>
