@@ -10,7 +10,7 @@ async function getCategories() {
   categories.value = await res.json()
 }
 
-async function createCategory(category) {
+async function createCategory(category: string) {
   try {
     const res = await fetch(`${apiUrls.categories}`, {
       method: 'POST',
@@ -25,7 +25,7 @@ async function createCategory(category) {
   }
 }
 
-async function manageCategory(id, data) {
+async function manageCategory(id: number, data: { name?: string, action?: string }) {
   try {
     const res = await fetch(`${apiUrls.categories}/${id}`, {
       method: 'PATCH',
@@ -44,11 +44,11 @@ async function manageCategory(id, data) {
   }
 }
 
-async function deleteCategoryById(id) {
+async function deleteCategoryById(id: number) {
   return await manageCategory(id, { action: 'delete' })
 }
 
-async function updateCategoryById(id, name) {
+async function updateCategoryById(id: number, name: string) {
   return await manageCategory(id, { name })
 }
 

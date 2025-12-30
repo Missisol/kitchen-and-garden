@@ -1,25 +1,16 @@
-<script setup>
-const { buttonType, disabled, className = ''  } = defineProps({
-  buttonType: {
-    type: String,
-    default: 'button'
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  },
-  className: {
-    type: String,
-    default: ''
-  }
-})
+<script setup lang="ts">
+const { buttonType, disabled, className = ''  } = defineProps<{
+  buttonType?: 'button' | 'submit' | 'reset',
+  disabled?: boolean,
+  className?: string,
+}>()
 
 const emit = defineEmits(['buttonAction'])
 </script>
 
 <template>
   <button
-    :type="buttonType"
+    :type="buttonType || 'button'"
     :disabled="disabled"
     @click="emit('buttonAction')" 
     class="common-button"
