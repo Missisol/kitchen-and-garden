@@ -1,18 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 
 import IconLink from '../icons/IconLink.vue'
 import IconFile from '../icons/IconFile.vue'
 import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
 import CommonCardCategory from '../common/CommonCardCategory.vue'
-import { getReplacedArrayFromString,truncateText } from '@/utils/recipesHelpers'
+import { getReplacedArrayFromString, truncateText } from '@/utils/recipesHelpers'
+import type { Recipe } from '@/types/recipe'
 
-const { item } = defineProps({
-  item: {
-    type: Object,
-    required: true
-  },
-})
+const { item } = defineProps<{
+  item: Recipe
+}>()
 
 const linksCount = computed(() => {
   if (item.links) {
@@ -28,14 +26,20 @@ const linksCount = computed(() => {
 })
 
 const ingredients = computed(() => {
-    const arr = item?.ingredients.toLowerCase().replaceAll('#', '').split('\n').map(ing => ing.trim())
-    let result
-    if (arr.length === 1 && arr[0].includes(',')) {
-    result = getReplacedArrayFromString(arr[0], ',', ',', '').join(', ')
-    } else  {
-      result = arr.map(ing => ing.replace(',', '')).filter(ing => ing.length).join(', ')
-    }
-    return truncateText(result)
+  if (!item?.ingredients) return ''
+  const ingredientsString: string = item.ingredients.toLowerCase().replace(/#/g, '')
+  const arr: string[] = ingredientsString.split('\n').map((ing: string) => ing.trim())
+  let result: string
+  const firstItem = arr[0]
+  if (arr.length === 1 && firstItem && firstItem.includes(',')) {
+    const replaced: string[] = getReplacedArrayFromString(firstItem, ',', ',', '') as string[]
+    result = replaced.join(', ')
+  } else {
+    const mapped: string[] = arr.map((ing: string) => ing.replace(',', ''))
+    const filtered: string[] = mapped.filter((ing: string) => ing.length)
+    result = filtered.join(', ')
+  }
+  return truncateText(result)
 })
 
 const title = computed(() => {

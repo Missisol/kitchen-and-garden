@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { apiUrls } from '@/utils/apiUrls'
+import type { Category } from '@/types/category'
 
 export const useCategoriesStore = defineStore('categories', () => {
-const categories = ref([])
+const categories = ref<Category[]>([])
 
 async function getCategories() {
   const res = await fetch(`${apiUrls.categories}`)
   categories.value = await res.json()
 }
 
-async function createCategory(category: string) {
+async function createCategory(category: Category) {
   try {
     const res = await fetch(`${apiUrls.categories}`, {
       method: 'POST',

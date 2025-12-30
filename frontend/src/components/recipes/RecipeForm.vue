@@ -8,6 +8,8 @@ import IconSave from '../icons/IconSave.vue'
 import IconDelete from '../icons/IconDelete.vue'
 
 import type { Category } from '@/types/category'
+import type { Recipe } from '@/types/recipe'
+
 
 const router = useRouter()
 const id = router.currentRoute.value.params.id
@@ -20,21 +22,11 @@ const emit = defineEmits<{
   (e: 'sendForm'): void
 }>()
 
-interface RecipeModel {
-  title: string
-  category_id?: number
-  ingredients?: string
-  instructions?: string
-  links?: string
-  comment?: string
-  file?: File | null
-}
-
 interface FileModel {
   file?: File | null
 }
 
-const model = defineModel<RecipeModel>('model', { required: true })
+const model = defineModel<Partial<Recipe>>('model', { required: true })
 const fileModel = defineModel<FileModel>('fileModel', { default: () => ({ file: null }) })
 
 const hintText = 'Для создания заголовков используйте символ # в начале строки (например: # Для теста)'
