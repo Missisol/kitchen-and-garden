@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
@@ -16,14 +16,22 @@ const { getCategories } = categoriesStore
 const recipesStore = useRecipesStore()
 const { createRecipe, uploadFile } = recipesStore
 
-const data = ref({
+const data = ref<{
+  title: string,
+  ingredients: string,
+  instructions: string,
+  links: string,
+  comment: string,
+  file?: string | null,
+}>({
   title: '',
   ingredients: '',
   instructions: '',
   links: '',
   comment: '',
+  file: null,
 })
-const fileModel = ref({})
+const fileModel = ref({ file: null })
 
 if (!categories.value.length) {
   getCategories()
