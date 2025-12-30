@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import CommonHeader from '@/components/common/CommonHeader.vue'
 // import CommonFooter from '@/components/common/CommonFooter.vue'
 </script>
