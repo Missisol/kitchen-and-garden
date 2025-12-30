@@ -1,25 +1,19 @@
-<script setup>
-const { title, message, confirmText, cancelText } = defineProps({
-  title: {
-    type: String,
-    default: 'Подтверждение'
-  },
-  message: {
-    type: String,
-    required: true
-  },
-  confirmText: {
-    type: String,
-    default: 'Подтвердить'
-  },
-  cancelText: {
-    type: String,
-    default: 'Отмена'
-  }
+<script setup lang="ts">
+withDefaults(defineProps<{
+  title?: string
+  message: string
+  confirmText?: string
+  cancelText?: string
+}>(), {
+  title: 'Подтверждение',
+  confirmText: 'Подтвердить',
+  cancelText: 'Отмена'
 })
 
-const emit = defineEmits(['confirm'])
-const isOpen = defineModel()
+const emit = defineEmits<{
+  confirm: []
+}>()
+const isOpen = defineModel<boolean>()
 
 function handleConfirm() {
   emit('confirm')
@@ -30,7 +24,7 @@ function handleCancel() {
   isOpen.value = false
 }
 
-function handleBackdropClick(e) {
+function handleBackdropClick(e: Event): void {
   if (e.target === e.currentTarget) {
     handleCancel()
   }

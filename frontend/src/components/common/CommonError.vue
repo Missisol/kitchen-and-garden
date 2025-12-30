@@ -1,7 +1,7 @@
-<script setup>
-const { error } = defineProps({
-  error: String
-})
+<script setup lang="ts">
+const { error } = defineProps<{
+  error?: string
+}>()
 </script>
 
 <template>
