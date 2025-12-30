@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import CommonButton from '@/components/common/CommonButton.vue'
 import IconArrowLeft from '@/components/icons/IconArrowLeft.vue'
 
@@ -9,7 +9,9 @@ const { text } = defineProps({
   }
 })
 
-const emit = defineEmits(['action'])
+const emit = defineEmits<{
+  (e: 'action'): void
+}>()
 </script>
 
 <template>

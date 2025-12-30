@@ -1,4 +1,7 @@
-export const mainMenu = [
+
+import type { MainMenu, Theme, LogoDataItem } from '@/types/common'
+
+export const mainMenu: MainMenu[] = [
   {
     name: 'Рецепты',
     path: '/recipes',
@@ -9,13 +12,13 @@ export const mainMenu = [
   },
 ]
 
-export const themes = [
+export const themes: Theme[] = [
   {name: 'Светлая', value: 'light'},
   {name: 'Темная', value: 'dark'},
   {name: 'Авто', value: 'light dark'}
 ]
 
-export const logoData = [
+export const logoData: LogoDataItem[] = [
   {
     routeName: 'home',
     text: 'Кухня и сад',
