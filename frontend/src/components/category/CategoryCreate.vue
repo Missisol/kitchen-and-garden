@@ -1,22 +1,26 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
 import { useCategoriesStore } from '@/stores/categories'
 import CategoryAction from './CategoryAction.vue'
-import IconPlus from '../icons/IconPlus.vue';
+import IconPlus from '../icons/IconPlus.vue'
 
 const categoriesStore = useCategoriesStore()
 const { getCategories, createCategory } = categoriesStore
 
-const params = ref({})
+interface CategoryParams {
+  name?: string
+}
 
-async function saveCategory(e) {
+const params = ref<CategoryParams>({})
+
+async function saveCategory(e: SubmitEvent) {
   e.preventDefault()
 
   if (!params.value.name) {
     return
   }
-  const res = await createCategory(params.value)
+  const res = await createCategory(params.value.name)
   if (res?.id) {
     params.value = {}
     getCategories()
