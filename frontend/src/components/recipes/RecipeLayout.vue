@@ -2,12 +2,9 @@
 import CommonButton from '@/components/common/CommonButton.vue'
 import IconArrowLeft from '@/components/icons/IconArrowLeft.vue'
 
-const { text } = defineProps({
-  text: {
-    type: String,
-    required: true,
-  }
-})
+const { text } = defineProps<{
+  text: string
+}>()
 
 const emit = defineEmits<{
   (e: 'action'): void

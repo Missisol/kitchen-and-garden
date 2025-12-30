@@ -6,7 +6,7 @@ export interface Recipe {
   links?: string
   comment?: string
   category_id?: number | string
-  file?: string
+  file?: string | null
   favorite?: boolean
   error?: unknown
 }

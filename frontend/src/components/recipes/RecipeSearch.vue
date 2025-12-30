@@ -1,28 +1,13 @@
-<script setup>
-const { focusAction, keyupAction, clearFunction, searchFunction, labelTitle } = defineProps({
-  focusAction: {
-    type: Function,
-    default: () => {}
-  },
-  keyupAction: {
-    type: Function,
-    default: () => {}
-  },
-  clearFunction: {
-    type: Function,
-    default: () => {}
-  },
-  searchFunction: {
-    type: Function,
-    default: () => {}
-  },
-  labelTitle: {
-    type: String,
-    default: ''
-  },
-})
+<script setup lang="ts">
+const { focusAction, keyupAction, clearFunction, searchFunction, labelTitle } = defineProps<{
+  focusAction?: () => void
+  keyupAction?: () => void
+  clearFunction?: () => void
+  searchFunction?: () => void
+  labelTitle?: string
+}>()
 
-const model = defineModel()
+const model = defineModel<string>()
 </script>
 
 <template>

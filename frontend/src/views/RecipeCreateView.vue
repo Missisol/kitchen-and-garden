@@ -5,9 +5,13 @@ import { useRouter } from 'vue-router'
 
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
-
+import type { Recipe } from '@/types/recipe'
 import RecipeLayout from '@/components/recipes/RecipeLayout.vue'
 import RecipeForm from '@/components/recipes/RecipeForm.vue'
+
+interface FileModel {
+  file?: File | null
+}
 
 const router = useRouter()
 const categoriesStore = useCategoriesStore()
@@ -16,35 +20,28 @@ const { getCategories } = categoriesStore
 const recipesStore = useRecipesStore()
 const { createRecipe, uploadFile } = recipesStore
 
-const data = ref<{
-  title: string,
-  ingredients: string,
-  instructions: string,
-  links: string,
-  comment: string,
-  file?: string | null,
-}>({
+const data = ref<Partial<Recipe>>({
   title: '',
   ingredients: '',
   instructions: '',
   links: '',
   comment: '',
-  file: null,
+  // file: null,
 })
-const fileModel = ref({ file: null })
+const fileModel = ref<FileModel>({ file: null })
 
 if (!categories.value.length) {
   getCategories()
 }
 
-async function getFormBody() {
+async function getFormBody(): Promise<Partial<Recipe> | undefined> {
   if (!data.value.title) {
-    return
+    return {}
   }
 
   data.value.title = data.value.title.toLowerCase()
 
-  if (data.value?.ingredients) {
+  if (data.value.ingredients) {
     data.value.ingredients = data.value.ingredients.toLowerCase()
   }
 
@@ -52,16 +49,18 @@ async function getFormBody() {
     const formData = new FormData()
     formData.append('file', fileModel.value.file)
     const result = await uploadFile(formData)
-    data.value.file = result.filename  // Сохраняем только имя файла
+    if (result?.filename) {
+      data.value.file = result.filename
+    }
   }
 }
 
 async function create() {
   await getFormBody()
-
+  
   try {
-  const result = await createRecipe(data.value)
-    if (result.id) {
+    const result = await createRecipe(data.value)
+    if (result?.id) {
       router.push({ path: '/recipes' })
     }
   } catch (error) {
