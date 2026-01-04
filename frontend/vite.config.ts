@@ -8,7 +8,18 @@ import { VitePWA } from 'vite-plugin-pwa'
 function faviconPlugin() {
   return {
     name: 'favicon-plugin',
-    transformIndexHtml(html, { mode }) {
+    transformIndexHtml(
+      html: string,
+      ctx: {
+        path: string
+        filename: string
+        mode: string
+        server?: unknown
+        bundle?: unknown
+        chunk?: unknown
+      }
+    ) {
+      const { mode } = ctx
       // eslint-disable-next-line no-undef
       const env = loadEnv(mode, process.cwd(), '')
       const faviconPath = env.VITE_APP_FAVICON_PATH || '/favicon.svg'
@@ -26,7 +37,6 @@ function faviconPlugin() {
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  // eslint-disable-next-line no-undef
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
@@ -96,12 +106,7 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
-    resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url))
-      },
-    },
-      build: {
+    build: {
       outDir: 'dist',
       assetsDir: 'assets',
       sourcemap: false,
@@ -111,6 +116,11 @@ export default defineConfig(({ mode }) => {
           drop_console: true,
           drop_debugger: true,
         },
+      },
+    },
+        resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
       },
     },
     define: {
