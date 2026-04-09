@@ -8,7 +8,7 @@ import CategoryCreate from '@/components/category/CategoryCreate.vue'
 import CategoryManage from '@/components/category/CategoryManage.vue'
 import CategoryButton from '@/components/category/CategoryButton.vue'
 import TransitionDropdown from '@/components/transition/TransitionDropdown.vue'
-import type { Category } from '@/types/category'
+import type { Category } from '@/@types/category'
 
 const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)

@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
 import CategoryAction from './CategoryAction.vue'
 import IconPlus from '../icons/IconPlus.vue'
-import type { Category } from '@/types/category'
+import type { Category } from '@/@types/category'
 
 const categoriesStore = useCategoriesStore()
 const { getCategories, createCategory } = categoriesStore

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import type { Category } from '@/types/category'
+import type { Category } from '@/@types/category'
 
 import { useCategoriesStore } from '@/stores/categories'
 import CategorySelect from './CategorySelect.vue'

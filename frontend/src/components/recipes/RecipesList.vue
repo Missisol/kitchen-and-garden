@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import RecipeCard from './RecipeCard.vue'
-import type { Recipe } from '@/types/recipe'
+import type { Recipe } from '@/@types/recipe'
 
 const { filteredRecipes, currentPage, totalPages } = defineProps<{
   filteredRecipes: Recipe[]
