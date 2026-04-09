@@ -7,8 +7,8 @@ import CommonButton from '../common/CommonButton.vue'
 import IconSave from '../icons/IconSave.vue'
 import IconDelete from '../icons/IconDelete.vue'
 
-import type { Category } from '@/types/category'
-import type { Recipe } from '@/types/recipe'
+import type { Category } from '@/@types/category'
+import type { Recipe } from '@/@types/recipe'
 
 
 const router = useRouter()

@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router'
 
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
-import type { Recipe } from '@/types/recipe'
+import type { Recipe } from '@/@types/recipe'
 import RecipeLayout from '@/components/recipes/RecipeLayout.vue'
 import RecipeForm from '@/components/recipes/RecipeForm.vue'
 

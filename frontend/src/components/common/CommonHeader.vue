@@ -8,7 +8,7 @@ import IconMoon from '../icons/IconMoon.vue'
 import IconSystem from '../icons/IconSystem.vue'
 import IconLogo from '../icons/IconLogo.vue'
 import { mainMenu, themes, logoData, } from '@/utils/commonData'
-import type { ThemeValue, LogoDataItem } from '@/types/common'
+import type { ThemeValue, LogoDataItem } from '@/@types/common'
 
 const route = useRoute()
 const logoText = ref<string>('')
