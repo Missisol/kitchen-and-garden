@@ -1,5 +1,5 @@
 
-import type { MainMenu, Theme, LogoDataItem } from '@/types/common'
+import type { MainMenu, Theme, LogoDataItem } from '@/@types/common'
 
 export const mainMenu: MainMenu[] = [
   {

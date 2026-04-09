@@ -36,6 +36,7 @@ function faviconPlugin() {
 }
 
 // https://vite.dev/config/
+// @ts-ignore
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 

@@ -6,7 +6,7 @@ import IconFile from '../icons/IconFile.vue'
 import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
 import CommonCardCategory from '../common/CommonCardCategory.vue'
 import { getReplacedArrayFromString, truncateText } from '@/utils/recipesHelpers'
-import type { Recipe } from '@/types/recipe'
+import type { Recipe } from '@/@types/recipe'
 
 const { item } = defineProps<{
   item: Recipe

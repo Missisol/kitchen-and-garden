@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import IconStar from '../icons/IconStar.vue'
 import { useRecipesStore } from '@/stores/recipes'
-import type { Recipe } from '@/types/recipe'
+import type { Recipe } from '@/@types/recipe'
 
 const { recipe } = defineProps<{
   recipe: Recipe

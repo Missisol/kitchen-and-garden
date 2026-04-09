@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Recipe } from '@/types/recipe'
+import type { Recipe } from '@/@types/recipe'
 
 defineProps<{
   recipe: Recipe & { category_name?: string }
