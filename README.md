@@ -33,7 +33,7 @@
 
 ### Запуск через Docker
 ```bash
-docker compose up --build
+docker compose --env-file .env --env-file .env.prod up --build
 ```
 
 Приложение будет доступно:
@@ -62,7 +62,13 @@ npm run dev
 
 ### Запуск через Docker
 ```bash
-docker compose -f compose.dev.yaml up --watch
+docker compose -f compose.dev.yaml --env-file .env.dev up --watch
 ```
+или 
+
+```bash
+docker compose -f compose.dev.yaml --env-file .env.prod up --watch
+```
+
 
 Подробные инструкции по работе с Docker смотрите в [DOCKER.md](DOCKER.md).
