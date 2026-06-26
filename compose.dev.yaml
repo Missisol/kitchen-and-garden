@@ -6,7 +6,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
     container_name: backend-dev
-    env_file: .env.local
     ports:
       - "5002:5002"
     volumes:
@@ -20,6 +19,7 @@ services:
       - SECRET_KEY=${SECRET_KEY:-you-will-never-guess}
       - DATABASE_URL=${DATABASE_URL}
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
+      - DB_PATH:${DB_PATH}
     restart: unless-stopped
     networks:
       - recipe-network
@@ -36,7 +36,6 @@ services:
       dockerfile: Dockerfile.dev
     container_name: frontend-dev
     command: npm run dev
-    env_file: .env.local
     develop:
       watch:
       - action: sync
@@ -51,10 +50,11 @@ services:
       - "5173:5173"
     volumes:
       - ./frontend:/app
-      - /app/node_modules
+      # - /app/node_modules
       - ${UPLOAD_FOLDER}:${UPLOAD_FOLDER}
     environment:
       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+      - VITE_APP_FAVICON_PATH=${VITE_APP_FAVICON_PATH}
     depends_on:
       - backend
     restart: unless-stopped

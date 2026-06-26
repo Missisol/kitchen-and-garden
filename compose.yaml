@@ -40,6 +40,8 @@ services:
       - ./frontend:/app
       - /app/node_modules
       - ${UPLOAD_FOLDER}:${UPLOAD_FOLDER}
+    environment:
+      - VITE_APP_FAVICON_PATH=${VITE_APP_FAVICON_PATH}
     depends_on:
       - backend
     restart: unless-stopped
