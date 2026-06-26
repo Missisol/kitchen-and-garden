@@ -116,7 +116,7 @@ onBeforeUnmount(() => {
     >
       <div class="recipe__heading">
         <div class="recipe__title-box">
-          <h1 class="recipe__title">{{ title }}</h1>
+          <h2 class="recipe__title">{{ title }}</h2>
           <CommonCardCategory :recipe="recipe" />
         </div>
         <CommonFavoriteBtn :recipe="recipe" />
