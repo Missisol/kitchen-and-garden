@@ -25,22 +25,6 @@
 - PWA-плагин
 - Vue Router
 
-## Быстрый старт
-
-### Требования
-- Docker и Docker Compose
-- Node.js 20+ (для разработки фронтенда)
-
-### Запуск через Docker
-```bash
-docker compose up --build
-```
-
-Приложение будет доступно:
-- Frontend: http://localhost:8080
-- Backend API: http://localhost:5002
-
-Подробные инструкции по работе с Docker смотрите в [DOCKER.md](DOCKER.md).
 
 ## Разработка
 
@@ -64,5 +48,27 @@ npm run dev
 ```bash
 docker compose -f compose.dev.yaml up --watch
 ```
+
+### Запуск скриптом
+```
+./dev.sh
+```
+
+
+## Прод
+
+### Запуск через Docker
+```bash
+docker compose up --build
+```
+### Запуск скриптом
+```
+./boot.sh
+```
+
+
+Приложение будет доступно:
+- Frontend:  на порту 8080
+- Backend API: на порту 5002
 
 Подробные инструкции по работе с Docker смотрите в [DOCKER.md](DOCKER.md).
