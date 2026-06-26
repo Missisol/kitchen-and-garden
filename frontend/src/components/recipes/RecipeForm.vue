@@ -126,7 +126,7 @@ function cancelEditing() {
           name="file" 
           id="file"
           class="file-input"
-          accept=".doc, .docx, .pdf, .png, .jpg, .jpeg"
+          accept=".doc, .docx, .pdf, .png, .jpg, .jpeg, video/*, audio/*"
           @change="handleFileChange"
         >
         <CommonButton
