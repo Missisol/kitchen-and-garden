@@ -31,6 +31,9 @@ def create_app(config_class=Config):
   from app.recipes import bp as recipes_bp
   app.register_blueprint(recipes_bp)
 
+  from app.garden import bp as garden_bp
+  app.register_blueprint(garden_bp)
+
   return app
 
 
