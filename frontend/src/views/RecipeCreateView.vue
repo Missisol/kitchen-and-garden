@@ -22,6 +22,7 @@ const { createRecipe, uploadFile } = recipesStore
 
 const data = ref<Partial<Recipe>>({
   title: '',
+  title_search: '',
   ingredients: '',
   instructions: '',
   links: '',
@@ -39,7 +40,7 @@ async function getFormBody(): Promise<Partial<Recipe> | undefined> {
     return {}
   }
 
-  data.value.title = data.value.title.toLowerCase()
+  data.value.title_search = data.value.title.toLowerCase()
 
   if (data.value.ingredients) {
     data.value.ingredients = data.value.ingredients.toLowerCase()

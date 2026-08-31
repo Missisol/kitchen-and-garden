@@ -24,6 +24,7 @@ class Recipe(db.Model):
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     title: so.Mapped[str] = so.mapped_column(String(100), index=True, unique=True)
+    title_search: so.Mapped[Optional[str]] = so.mapped_column(String(100), index=True, default='')
     ingredients: so.Mapped[str] = so.mapped_column(Text, index=True)
     instructions: so.Mapped[str] = so.mapped_column(Text)
     links: so.Mapped[Optional[str]] = so.mapped_column(Text)
