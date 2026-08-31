@@ -67,6 +67,8 @@ export function parseIngredients(ingredientsString: string): ParsedIngredientSec
   } else if (ingredientsString.includes(',') || ingredientsString.includes('\n')) {
     const symbol = ingredientsString.includes(',') ? ',' : '\n'
     items = getReplacedArrayFromString(ingredientsString, symbol, /^[\D\S]/g, (l: string) => l.toUpperCase())
+  } else if (ingredientsString.trim()) {
+    items = [ingredientsString.trim().replace(/^[\D\S]/g, (l: string) => l.toUpperCase())]
   }
   return [{
     heading: null,
