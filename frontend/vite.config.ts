@@ -39,11 +39,12 @@ function faviconPlugin() {
 // @ts-ignore
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
+  const isDev = mode === 'development'
 
   return {
     plugins: [
       vue(),
-      vueDevTools(),
+      ...(isDev ? [vueDevTools()] : []),
       faviconPlugin(),
       VitePWA({
         registerType: 'autoUpdate',
