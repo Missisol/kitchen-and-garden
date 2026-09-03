@@ -70,5 +70,15 @@ docker compose -f compose.dev.yaml --env-file .env.dev up --watch
 docker compose -f compose.dev.yaml --env-file .env.prod up --watch
 ```
 
+### Пересобрать контейнер 
+```bash
+docker compose --env-file .env.prod up -d --build
+```
+
+### Пересобрать контейнер фронтенда
+```bash
+docker compose --env-file .env.prod up -d --build frontend
+```
 
 Подробные инструкции по работе с Docker смотрите в [DOCKER.md](DOCKER.md).
+
