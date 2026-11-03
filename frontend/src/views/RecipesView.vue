@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
   font-size: 1.5rem;
   line-height: 2rem;
   font-weight: 700;
-  color: var(--color-heading);
+  color: var(--color-foreground);
 }
 
 .common-button--dark-active  svg {

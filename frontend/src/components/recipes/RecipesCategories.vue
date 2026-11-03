@@ -68,7 +68,7 @@ const isFiltered = computed(() => category_params.value.id !== '' || showFavorit
   font-size: 1.5rem;
   line-height: 2rem;
   font-weight: 700;
-  color: var(--color-heading);
+  color: var(--color-foreground);
 }
 
 .categories__list {

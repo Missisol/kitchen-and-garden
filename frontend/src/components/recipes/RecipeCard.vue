@@ -108,7 +108,7 @@ const title = computed(() => {
   font-size: 1.25rem;
   line-height: 1.75rem;
   font-weight: 600;
-  color: var(--color-heading);
+  color: var(--color-foreground);
   transition: var(--transition-smooth);
 }
 
