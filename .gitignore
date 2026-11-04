@@ -1,9 +1,7 @@
-.cursor
-.roo
-.superdesign
-.windsurfrules
-CLAUDE.md
 .vscode
 
 .env
 .env.*
+
+node_modules
+coverage/

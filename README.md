@@ -88,3 +88,12 @@ docker compose --env-file .env.prod up -d --build frontend
 ## Запуск приложения в prod режиме
 `./boot/sh`
 
+### Пересоздать контейнер с удалением томов
+```bash
+docker compose -f compose.dev.yaml --env-file .env.dev down --volumes && ./dev.sh
+```
+
+### Пересоздание фронтенда
+```bash
+docker compose -f compose.dev.yaml --env-file .env.dev up -d --force-recreate frontend
+```

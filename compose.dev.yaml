@@ -39,17 +39,23 @@ services:
       watch:
       - action: sync
         path: ./frontend
-        target: /src/frontend
+        target: /app
         initial_sync: true
         ignore:
           - node_modules/
+          # Dependencies are handled by the rebuild rule below
+          - package.json
+          - package-lock.json
+      # Rebuild the image so npm ci runs again after dependency changes
       - action: rebuild
-        path: package.json
+        path: ./frontend/package.json
+      - action: rebuild
+        path: ./frontend/package-lock.json
     ports:
       - "5173:5173"
     volumes:
       - ./frontend:/app
-      # - /app/node_modules
+      - /app/node_modules
       - ${UPLOAD_FOLDER}:${UPLOAD_FOLDER}
     environment:
       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
