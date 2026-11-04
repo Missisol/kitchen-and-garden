@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 </script>
 
 <template>
@@ -30,9 +30,11 @@
   font-weight: 500;
 }
 
-.button:hover {
-  color: var(--color-accent-foreground);
-  background: var(--color-accent);
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    color: var(--color-accent-foreground);
+    background: var(--color-accent);
+  }
 }
 
 .category--active>.button {

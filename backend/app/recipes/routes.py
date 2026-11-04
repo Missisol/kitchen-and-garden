@@ -7,7 +7,7 @@ from app.models import Category, Recipe
 from app.utils.secure_filename import secure_filename
 from app.recipes import bp
 
-fields = ['title', 'ingredients', 'instructions', 'links', 'comment', 'category_id', 'file']
+fields = ['title', 'title_search', 'ingredients', 'instructions', 'links', 'comment', 'category_id', 'file']
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -16,11 +16,20 @@ def allowed_file(filename):
 
 @bp.route('/categories', methods=['GET'])
 def get_categories():
-    categories = Category.query.all()
-    return jsonify([{
-        'id': c.id,
-        'name': c.name,
-    } for c in categories])
+    """Get all recipe categories sorted alphabetically
+    
+    Returns:
+        JSON response with list of categories or error message
+    """
+    try:
+        categories = Category.query.order_by(Category.name.asc()).all()
+        return jsonify([{
+            'id': c.id,
+            'name': c.name,
+        } for c in categories]), 200
+    except Exception as e:
+        current_app.logger.error(f'Error fetching categories: {str(e)}')
+        return jsonify({'error': 'Internal server error'}), 500
 
 
 @bp.route('/categories', methods=['POST'])
@@ -35,28 +44,39 @@ def create_category():
     return jsonify({'id': category.id}), 201
 
 
-@bp.route('/categories', methods=['DELETE'])
-def delete_category():
-    data = request.get_json(silent=True)
-    # или
-    # data = request.json
-
-    if 'id' not in data:
-        return jsonify({'error': 'Missing id parameter'}), 400
-
+@bp.route('/categories/<int:id>', methods=['PATCH'])
+def manage_category(id):
+    """Update or delete a category based on the request body
+    
+    - If 'name' is provided: updates the category name
+    - If 'action' is 'delete': deletes the category
+    """
     try:
-        category = Category.query.get_or_404(data['id'])
-        db.session.delete(category)
-        db.session.commit()
-        return '', 204
+        category = Category.query.get_or_404(id)
+        data = request.json
+        
+        # Check if this is a delete operation
+        if data.get('action') == 'delete':
+            db.session.delete(category)
+            db.session.commit()
+            return '', 204
+        
+        # Otherwise, update the category name
+        if 'name' in data:
+            category.name = data['name']
+            db.session.commit()
+            return jsonify({'id': category.id, 'name': category.name}), 200
+        
+        return jsonify({'error': 'Missing name or action parameter'}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-# TODO добавить пагинацию 
+    
 @bp.route('/recipes', methods=['GET'])
 def get_recipes():
     category_id = request.args.get('category_id', type=int)
     search_query = request.args.get('search', '', type=str).lower()
+    title_search_query = request.args.get('title_search', '', type=str).lower()
     favorite = request.args.get('favorite', type=str)
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['RECIPES_PER_PAGE']
@@ -68,6 +88,9 @@ def get_recipes():
 
         if search_query:
             query = query.filter(Recipe.ingredients.collate("NOCASE").like(f'%{search_query}%'))
+
+        if title_search_query:
+            query = query.filter(Recipe.title_search.like(f'%{title_search_query}%'))
 
         # Filter by favorite status
         if favorite is not None:
@@ -85,6 +108,7 @@ def get_recipes():
             'recipes': [{
                 'id': r.id,
                 'title': r.title,
+                'title_search': r.title_search,
                 'ingredients': r.ingredients,
                 'instructions': r.instructions,
                 'category_id': r.category_id,
@@ -114,6 +138,7 @@ def get_recipe(id):
         return jsonify({
             'id': recipe.id,
             'title': recipe.title,
+            'title_search': recipe.title_search,
             'ingredients': recipe.ingredients,
             'instructions': recipe.instructions,
             'category_id': recipe.category_id,

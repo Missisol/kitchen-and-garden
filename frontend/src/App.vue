@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import CommonHeader from '@/components/common/CommonHeader.vue'
 // import CommonFooter from '@/components/common/CommonFooter.vue'
 </script>
@@ -7,9 +7,12 @@ import CommonHeader from '@/components/common/CommonHeader.vue'
   <div class="container">
     <CommonHeader />
     <main class="main">
-      <RouterView v-slot="{ Component }">
-        <transition name="slide">
-          <component :is="Component" />
+      <RouterView v-slot="{ Component, route }">
+        <transition>
+          <component 
+            :is="Component"
+            :key="route.path"
+          />
         </transition>
       </RouterView>
     </main>
@@ -20,18 +23,22 @@ import CommonHeader from '@/components/common/CommonHeader.vue'
 <style scoped>
 .main {
   padding-block: 2rem;
+
+  @media (width < 768px) {
+    padding-block: 1rem;
+  }
 }
 
-.slide-enter-active {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+.v-enter-active {
+  transition: opacity .4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.slide-leave-active {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
+/* .v-leave-active {
+  transition: opacity 0.1s ;
+} */
 
-.slide-enter-from,
-.slide-leave-to {
+.v-enter-from,
+.v-leave-to {
   opacity: 0;
 }
 </style>

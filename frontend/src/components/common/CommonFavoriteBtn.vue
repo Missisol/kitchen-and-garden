@@ -1,13 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import IconStar from '../icons/IconStar.vue'
 import { useRecipesStore } from '@/stores/recipes'
+import type { Recipe } from '@/@types/recipe'
 
-const { recipe } = defineProps({
-  recipe: {
-    type: Object,
-    required: true
-  }
-})
+const { recipe } = defineProps<{
+  recipe: Recipe
+}>()
 
 const recipesStore =  useRecipesStore()
 const { toggleFavorite } = recipesStore
@@ -18,12 +16,12 @@ const { toggleFavorite } = recipesStore
   <button
     type="button"
     class="favorite-btn"
+    aria-label="Favorite"
     :class="{ favorite: recipe.favorite }"
     @click.prevent.stop="toggleFavorite(recipe)"
   >
     <IconStar />
   </button>
-
 </template>
 
 <style scoped>
@@ -32,6 +30,7 @@ const { toggleFavorite } = recipesStore
   border: none;
   cursor: pointer;
   transition: var(--transition-smooth);
+  padding: 2px;
 }
 
 .favorite-btn svg {
@@ -44,7 +43,9 @@ const { toggleFavorite } = recipesStore
 fill: var(--color-primary);
 }
 
-.favorite-btn:hover {
-  transform: scale(1.1)
+@media (hover: hover) and (pointer: fine) {
+  .favorite-btn:hover {
+    transform: scale(1.1)
+  }
 }
 </style>

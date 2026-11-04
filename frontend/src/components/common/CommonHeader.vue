@@ -1,65 +1,70 @@
-<script setup>
-import { ref, watch, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, useTemplateRef, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { mainMenu } from '@/utils/mainMenu'
 import IconSun from '../icons/IconSun.vue'
 import IconMoon from '../icons/IconMoon.vue'
 import IconSystem from '../icons/IconSystem.vue'
 import IconLogo from '../icons/IconLogo.vue'
+import { mainMenu, themes, logoData, } from '@/utils/commonData'
+import type { ThemeValue, LogoDataItem } from '@/@types/common'
 
 const route = useRoute()
-const logoText = ref('')
-const isMenuOpen = ref(false)
-const theme = ref('light dark')
-const themes = [
-  {name: 'Светлая', value: 'light'},
-  {name: 'Темная', value: 'dark'},
-  {name: 'Авто', value: 'light dark'}
-]
-const switcherRef = useTemplateRef('switcher')
+const logoText = ref<string>('')
+const isMenuOpen = ref<boolean>(false)
+const theme = ref<ThemeValue>('light dark')
+const switcherRef = useTemplateRef<HTMLElement>('switcher')
 
-const iconComponent = {
+const iconComponent: Record<ThemeValue, Component> = {
   light: IconSun,
   dark: IconMoon,
   'light dark': IconSystem,
 }
 
-watch(() => route.name, () => {
-  if (route.name === 'home') {
-    logoText.value = 'Кухня и сад'
+watchEffect(() => {
+  const routeName = route.name
+  if (!routeName) {
+    logoText.value = 'Кухня&Сад'
+    return
   }
-  if (route.name === 'recipes') {
-    logoText.value = 'Кухня'
-  }
-  if (route.name === 'garden') {
-    logoText.value = 'Сад'
-  }
+  
+  const routeNameStr = typeof routeName === 'string' ? routeName : routeName.toString()
+  const currentLogo = logoData.find((item: LogoDataItem) => {
+    if (Array.isArray(item.routeName)) {
+      return item.routeName.includes(routeNameStr)
+    }
+    return item.routeName === routeNameStr
+  })
+  logoText.value = currentLogo ? currentLogo.text : 'Кухня&Сад'
 })
 
-function applyTheme(value) {
-  const colorScheme = document.querySelector('meta[name="color-scheme"]')
-  colorScheme.content = value
+function applyTheme(value: ThemeValue): void {
+  const colorScheme = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]')
+  if (colorScheme) {
+    colorScheme.content = value
+  }
 }
 
-function setTheme(value) {
+function setTheme(value: ThemeValue): void {
   theme.value = value
   localStorage.setItem('theme', value)
   applyTheme(value)
   isMenuOpen.value = false
 }
 
-function toggleMenu() {
+function toggleMenu(): void {
   isMenuOpen.value = !isMenuOpen.value
 }
 
-  function onClickOutside(e) {
-    const el = switcherRef.value
-    if (!el) return
-    if (isMenuOpen.value && !el.contains(e.target)) {
-      isMenuOpen.value = false
-    }
+function onClickOutside(e: Event): void {
+  const el = switcherRef.value
+  if (!el) return
+  const target = e.target as Node | null
+  if (isMenuOpen.value && target && !el.contains(target)) {
+    isMenuOpen.value = false
   }
+}
 
 onMounted(() => {
   const saved = localStorage.getItem('theme')
@@ -67,7 +72,7 @@ onMounted(() => {
     localStorage.setItem('theme', 'light dark')
     theme.value = 'light dark'
   } else {
-    theme.value = saved
+    theme.value = saved as ThemeValue
   }
 
   applyTheme(theme.value)
@@ -86,12 +91,13 @@ onBeforeUnmount(() => {
       <div class="header__container">
         <RouterLink
           to="/"
-          class="logo__container"
+          class="logo__container router__link"
+          aria-label="Logo"
         >
           <div class="logo">
             <IconLogo />
           </div>
-          <span class="logo__text">Кухня&Сад</span>
+          <span class="logo__text">{{ logoText }}</span>
         </RouterLink>
         <div class="header__right">
           <nav class="nav">
@@ -99,7 +105,7 @@ onBeforeUnmount(() => {
               v-for="item in mainMenu"
               :key="item.name"
               :to="item.path"
-              :class="route.name"
+              :class="[route.name, 'router__link']"
             >{{ item.name }}</RouterLink>
           </nav>
           <div
@@ -109,6 +115,7 @@ onBeforeUnmount(() => {
             <button
               class="header__theme"
               @click="toggleMenu"
+              :aria-label="theme"
               aria-haspopup="menu"
               :aria-expanded="isMenuOpen"
             >
@@ -122,7 +129,7 @@ onBeforeUnmount(() => {
               >
                 <button
                   v-for="item in themes"
-                  :key="item"
+                  :key="item.name"
                   class="theme-menu__item"
                   :class="{ active: theme === item.value }"
                   @click="setTheme(item.value)"
@@ -167,8 +174,10 @@ onBeforeUnmount(() => {
   text-decoration: none;
 }
 
-.logo__container:hover .logo {
-  transform: scaleX(1.1) scaleY(1.1)
+@media (hover: hover) and (pointer: fine) {
+  .logo__container:hover .logo {
+    transform: scaleX(1.1) scaleY(1.1)
+  }
 }
 
 .logo {
@@ -228,9 +237,11 @@ onBeforeUnmount(() => {
     transition: var(--transition-smooth);
   }
 
-  & a:hover {
-    color: car(--color-foreground);
-    background: var(--color-muted);
+  @media (hover: hover) and (pointer: fine) {
+    & a:hover {
+      color: var(--color-foreground);
+      background: var(--color-muted);
+    }
   }
 
   & a.router-link-exact-active:first-child {

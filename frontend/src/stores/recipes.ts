@@ -1,23 +1,26 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { apiUrls } from '@/utils/apiUrls'
+import type { Recipe, RecipeResponse } from '@/@types/recipe'
+import type { Category } from '@/@types/category'
 
 export const useRecipesStore = defineStore('recipes', () => {
-  const category_params = ref({
+  const category_params = ref<Category>({
     id: '',
     name: '',
   })
-  const recipes = ref([])
-  const recipe = ref({})
+  const recipes = ref<Recipe[]>([])
+  const recipe = ref<Recipe | Record<string, never>>({})
   const filePath = ref('')
   const ingredientsSearch = ref('')
+  const titleSearch = ref('')
   const showFavoritesOnly = ref(false)
   const totalPages = ref(1)
   const totalItems = ref(0)
   const currentPage = ref(1)
   const perPage = ref(9) // default
 
-  async function getRecipes(category_id = '', favorite = null, page = 1) {
+  async function getRecipes(category_id = '', favorite = false, page = 1) {
     const params = new URLSearchParams()
     if (category_id) {
       params.append('category_id', category_id)
@@ -25,25 +28,34 @@ export const useRecipesStore = defineStore('recipes', () => {
     if (ingredientsSearch.value) {
       params.append('search', ingredientsSearch.value)
     }
-    if (favorite !== null) {
+    if (titleSearch.value) {
+      params.append('title_search', titleSearch.value)
+    }
+    if (favorite) {
       params.append('favorite', favorite.toString())
     }
     if (page) {
-      params.append('page', page)
+      params.append('page', page.toString())
     }
     try {
       const res = await fetch(`${apiUrls.recipes}?${params.toString()}`)
-      const result = await res.json()
-      if (result.recipes && Array.isArray(result.recipes)) {
+      const result: RecipeResponse | Recipe[] = await res.json()
+      if (Array.isArray(result)) {
+        recipes.value = result
+        totalPages.value = 1
+        totalItems.value = result.length
+        currentPage.value = 1
+        perPage.value = 9
+      } else if (result.recipes && Array.isArray(result.recipes)) {
         recipes.value = result.recipes
         totalPages.value = result.total_pages || 1
         totalItems.value = result.total_items || result.recipes.length
         currentPage.value = result.page || 1
         perPage.value = result.per_page || 9
       } else {
-        recipes.value = result
+        recipes.value = []
         totalPages.value = 1
-        totalItems.value = Array.isArray(result) ? result.length : 0
+        totalItems.value = 0
         currentPage.value = 1
         perPage.value = 9
       }
@@ -56,7 +68,7 @@ export const useRecipesStore = defineStore('recipes', () => {
     await getRecipes('', true)
   }
 
-  async function getRecipeById(id) {
+  async function getRecipeById(id: number | string) {
     recipe.value = {}
     filePath.value = ''
     try {
@@ -66,10 +78,11 @@ export const useRecipesStore = defineStore('recipes', () => {
           'Content-Type': 'application/json'
         },
       })
-      recipe.value = await res.json()
-      console.log('recipe', recipe.value)
+      const data: Recipe = await res.json()
+      recipe.value = data
+      // console.log('recipe', recipe.value)
 
-      if (recipe.value.file) {
+      if (data.file) {
         // try {
         //   const res = await fetch(`${apiUrls.filePath}/${recipe.value.file}`)
         //   console.log({res})
@@ -79,7 +92,7 @@ export const useRecipesStore = defineStore('recipes', () => {
         //   console.log('error', error)
         // }
 
-        filePath.value = `${apiUrls.filePath}/${recipe.value.file}`
+        filePath.value = `${apiUrls.filePath}/${data.file}`
       }
       return recipe.value
     } catch (error) {
@@ -87,7 +100,7 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
-  async function deleteRecipeById(id) {
+  async function deleteRecipeById(id: number) {
     try {
       await fetch(`${apiUrls.recipe}/${id}`, {
         method: 'DELETE',
@@ -100,7 +113,7 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
-  async function createRecipe(body) {
+  async function createRecipe(body: Partial<Recipe>) {
     try {
       const res = await fetch(`${apiUrls.recipe}`, {
         method: 'POST',
@@ -109,13 +122,13 @@ export const useRecipesStore = defineStore('recipes', () => {
         },
         body: JSON.stringify(body)
       })
-      return await res.json()
+      return await res.json() as Recipe
     } catch (error) {
       console.log('error', error)
     }
   }
 
-  async function updateRecipe(id, body) {
+  async function updateRecipe(id: number | string, body: Partial<Recipe>) {
     try {
       const res = await fetch(`${apiUrls.recipe}/${id}`, {
         method: 'PUT',
@@ -124,13 +137,13 @@ export const useRecipesStore = defineStore('recipes', () => {
         },
         body: JSON.stringify(body)
       })
-      return await res.json()
+      return await res.json() as Recipe
     } catch (error) {
       console.log('error', error)
     }
   }
 
-  async function addToFavorites(id) {
+  async function addToFavorites(id: number | string) {
     try {
       const res = await fetch(`${apiUrls.recipe}/${id}/favorite`, {
         method: 'POST',
@@ -138,15 +151,15 @@ export const useRecipesStore = defineStore('recipes', () => {
           'Content-Type': 'application/json'
         },
       })
-      const data = await res.json()
+      const data = await res.json() as { favorite: boolean }
       // update current recipe
-      if (recipe.value && recipe.value.id === id) {
+      if (recipe.value && 'id' in recipe.value && recipe.value.id === id) {
         recipe.value.favorite = data.favorite
       }
       // update list item if present
       const index = recipes.value.findIndex(r => r.id === id)
       if (index !== -1) {
-        recipes.value[index] = { ...recipes.value[index], favorite: data.favorite }
+        recipes.value[index] = { ...recipes.value[index], favorite: data.favorite } as Recipe
       }
       return data
     } catch (error) {
@@ -154,7 +167,7 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
-  async function removeFromFavorites(id) {
+  async function removeFromFavorites(id: number | string) {
     try {
       const res = await fetch(`${apiUrls.recipe}/${id}/favorite`, {
         method: 'DELETE',
@@ -162,15 +175,15 @@ export const useRecipesStore = defineStore('recipes', () => {
           'Content-Type': 'application/json'
         },
       })
-      const data = await res.json()
+      const data = await res.json() as { favorite: boolean }
       // update current recipe
-      if (recipe.value && recipe.value.id === id) {
+      if (recipe.value && 'id' in recipe.value && recipe.value.id === id) {
         recipe.value.favorite = data.favorite
       }
       // update list item if present
       const index = recipes.value.findIndex(r => r.id === id)
       if (index !== -1) {
-        recipes.value[index] = { ...recipes.value[index], favorite: data.favorite }
+        recipes.value[index] = { ...recipes.value[index], favorite: data.favorite } as Recipe
       }
       return data
     } catch (error) {
@@ -178,7 +191,7 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
-  async function toggleFavorite(item) {
+  async function toggleFavorite(item: Recipe) {
     try {
       if (item.favorite) {
         await removeFromFavorites(item.id)
@@ -193,13 +206,13 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
-  async function uploadFile(formData) {
+  async function uploadFile(formData: FormData) {
     try {
       const res = await fetch(`${apiUrls.recipeFile}`, {
         method: 'POST',
         body: formData
       })
-      return await res.json()
+      return await res.json() as { filename: string }
     } catch (error) {
       console.log('error', error)
     }
@@ -212,12 +225,17 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
+  function clearFavoritesOnly() {
+    showFavoritesOnly.value = false
+  }
+
   return {
     category_params,
     recipes,
     recipe,
     filePath,
     ingredientsSearch,
+    titleSearch,
     showFavoritesOnly,
     totalPages,
     totalItems,
@@ -234,5 +252,6 @@ export const useRecipesStore = defineStore('recipes', () => {
     toggleFavorite,
     uploadFile,
     clearCategoryParams,
+    clearFavoritesOnly,
   }
 })

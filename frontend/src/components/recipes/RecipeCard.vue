@@ -1,93 +1,114 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 
 import IconLink from '../icons/IconLink.vue'
 import IconFile from '../icons/IconFile.vue'
 import CommonFavoriteBtn from '@/components/common/CommonFavoriteBtn.vue'
 import CommonCardCategory from '../common/CommonCardCategory.vue'
-import { getReplacedArrayFromString } from '@/utils/recipesHelpers'
+import { getReplacedArrayFromString, truncateText } from '@/utils/recipesHelpers'
+import type { Recipe } from '@/@types/recipe'
 
-const { item } = defineProps({
-  item: {
-    type: Object,
-    required: true
-  },
-})
+const { item } = defineProps<{
+  item: Recipe
+}>()
 
 const linksCount = computed(() => {
   if (item.links) {
-    return item.links.split(',').length
+    if (item.links.includes('\n')) {
+      return item.links.split('\n').length
+    }
+    if (item.links.includes(',')) {
+      return item.links.split(',').length
+    }
+    return 1
   }
   return 0
 })
 
 const ingredients = computed(() => {
-    const arr = item?.ingredients.toLowerCase().split('\n').map(ing => ing.trim())
-    if (arr.length === 1 && arr[0].includes(',')) {
-    return getReplacedArrayFromString(arr[0], ',', ',', '').join(', ')
-    //  return arr[0].split(',').map(ing => ing.trim().replace(',', '')).filter(ing => ing.length).join(', ')
-    } else  {
-      return arr.map(ing => ing.replace(',', '')).filter(ing => ing.length).join(', ')
-    }
+  if (!item?.ingredients) return ''
+  const ingredientsString: string = item.ingredients.toLowerCase().replace(/#/g, '')
+  const arr: string[] = ingredientsString.split('\n').map((ing: string) => ing.trim())
+  let result: string
+  const firstItem = arr[0]
+  if (arr.length === 1 && firstItem && firstItem.includes(',')) {
+    const replaced: string[] = getReplacedArrayFromString(firstItem, ',', ',', '') as string[]
+    result = replaced.join(', ')
+  } else {
+    const mapped: string[] = arr.map((ing: string) => ing.replace(',', ''))
+    const filtered: string[] = mapped.filter((ing: string) => ing.length)
+    result = filtered.join(', ')
+  }
+  return truncateText(result)
 })
 
-const instructions = computed(() => {
-  return item.instructions.split('\n')[0].trim()
+const title = computed(() => {
+  return item?.title ? item.title.substring(0, 1).toUpperCase() + item.title.substring(1) : ''
 })
 </script>
 
 <template>
-  <RouterLink :to="`/recipes/${item.id}`">
-    <div class="heading">
-      <h3 class="title">{{ item.title }}</h3>
-      <CommonFavoriteBtn :recipe="item" />
+  <RouterLink 
+    :to="`/recipes/${item.id}`"
+    class="card__link router__link"
+  >
+    <div class="card__heading">
+      <div class="heading">
+        <h3 class="title">{{ title }}</h3>
+        <CommonFavoriteBtn :recipe="item" />
+      </div>
+      <CommonCardCategory :recipe="item" />
     </div>
-    <CommonCardCategory :recipe="item" />
     <div class="card__content">
-      <dl class="content__list">
-        <div class="content__item">
-          <dt class="content__term">Ингредиенты</dt>
-          <dd class="content__details">{{ ingredients }}</dd>
-        </div>
-        <div class="content__item">
-          <dt class="content__term">Приготовление</dt>
-          <dd class="content__details content__details--truncated">{{ instructions }}</dd>
-        </div>
-        <div
-          v-if="linksCount"
-          class="content__links"
-        >
-          <dt><IconLink /></dt> 
-          <dd>{{ linksCount }}</dd>
-        </div>
-        <div
-          v-if="item.file"
-          class="content__links"
-        >
-          <dt><IconFile /></dt>
-        </div>
-      </dl>
+      <h4 class="content__term">Ингредиенты</h4>
+      <p class="content__details">{{ ingredients }}</p>
+    </div>
+    <div class="card__bottom">
+      <div
+        v-if="linksCount"
+        class="bottom__link"
+      >
+        <IconLink />
+        <span>{{ linksCount }}</span>
+      </div>
+      <div
+        v-if="item.file"
+        class="bottom__link"
+      >
+        <IconFile />
+      </div>
     </div>
   </RouterLink>
-
 </template>
 
 <style scoped>
+.card__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .heading {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
 }
 
-.card:hover .title {
-  color: var(--color-primary);
+.heading > button {
+  flex-shrink: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .title {
+    color: var(--color-primary);
+  }
 }
 
 .title {
   font-size: 1.25rem;
   line-height: 1.75rem;
   font-weight: 600;
-  color: var(--color-heading);
+  color: var(--color-foreground);
   transition: var(--transition-smooth);
 }
 
@@ -99,41 +120,43 @@ const instructions = computed(() => {
 .card__content {
   font-size: 0.875rem;
   line-height: 1.25rem;
-}
-
-.content__list {
   display: flex;
   flex-direction: column;
-  gap: .75rem;
 }
 
-.card__content dt {
+.content__term {
   color: var(--color-muted-foreground);
   margin-block-end: .25rem;
+  font-weight: normal;
 }
 
 .content__term::after {
   content: ':';
 }
 
-.content__links {
+.content__details {
+  position: relative;
+}
+
+.card__bottom {
+  display: flex;
+  gap: 2rem;
+}
+
+.bottom__link {
   color: var(--color-muted-foreground);
   display: flex;
+  align-items: end;
   gap: .5rem;
 }
 
-.content__links svg {
+.bottom__link span {
+  line-height: 1rem;
+}
+
+.bottom__link svg {
   width: 1rem;
   height: 1rem;
 }
 
-.content__details--truncated {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  @media (width < 768px) {
-    white-space: normal;
-  }
-}
 </style>

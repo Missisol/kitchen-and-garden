@@ -1,20 +1,15 @@
-<script setup>
-const { title, idName } = defineProps({
-  title: {
-    type: String,
-    default: ' ',
-  },
-  idName: {
-    type: String,
-    default: 'cat',
-  },
-  buttonTitle: {
-    type: String,
-    default: ' ',
-  }
-})
+<script setup lang="ts">
+interface Props {
+  title?: string
+  idName?: string
+  buttonTitle?: string
+}
 
-const emit = defineEmits(['submitAction'])
+const { title, idName } = defineProps<Props>()
+
+const emit = defineEmits<{
+  submitAction: [event: SubmitEvent]
+}>()
 </script>
 
 <template>
@@ -81,13 +76,15 @@ const emit = defineEmits(['submitAction'])
   cursor: pointer;
 }
 
-.form__button:hover {
-  background: hsl(from var(--btn-color) h s l / 0.9);
+@media (hover: hover) and (pointer: fine) {
+  .form__button:hover {
+    background: hsl(from var(--btn-color) h s l / 0.9);
+  }
 }
 </style>
 
 <style>
-.form__action>.input {
+.form__action .input {
   flex-grow: 1;
   font-size: 0.875rem;
   line-height: 1.25rem;

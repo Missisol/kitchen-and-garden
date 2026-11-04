@@ -15,7 +15,7 @@ import IconFile from '@/components/icons/IconFile.vue'
 import IconEdit from '@/components/icons/IconEdit.vue'
 import IconDelete from '@/components/icons/IconDelete.vue'
 
-import { getArrayFromString, getReplacedArrayFromString } from '@/utils/recipesHelpers'
+import { getArrayFromString, parseIngredientsWithHeadings, parseIngredients } from '@/utils/recipesHelpers'
 
 const router = useRouter()
 const route = useRoute()
@@ -38,31 +38,36 @@ const links = computed(() => {
     if (recipe.value.links.includes(',')) {
       return getArrayFromString(recipe.value.links, ',') 
     }
+    return [recipe.value.links]
   }
   return []
 })
 
 const ingredients = computed(() => {
   if (recipe.value?.ingredients) {
-      if (recipe.value?.ingredients.includes('\n') && recipe.value.ingredients.includes(',')) {
-    return getReplacedArrayFromString(recipe.value.ingredients, '\n', /^[\D\S]/g, l => l.toUpperCase())
-      .map(ing => ing.replace(',', ''))
+    // Check if ingredients contain headings (lines starting with "#")
+    if (recipe.value.ingredients.includes('#')) {
+      return parseIngredientsWithHeadings(recipe.value.ingredients)
     }
-    if (recipe.value?.ingredients.includes(',') || recipe.value?.ingredients.includes('\n')) {
-      const symbol = recipe.value.ingredients.includes(',') ? ',' : '\n'
-      return getReplacedArrayFromString(recipe.value.ingredients, symbol, /^[\D\S]/g, l => l.toUpperCase())
-    }
+    // Fallback to original logic for backward compatibility
+    return parseIngredients(recipe.value.ingredients)
   }
   return []
 })
 
 const instructions = computed(() => {
-    return recipe.value?.instructions ? getArrayFromString(recipe.value.instructions, '\n') : []
+  if (recipe.value?.instructions) {
+    const result = []
+    const arr = getArrayFromString(recipe.value.instructions, '\n')
+    arr.map(item =>  item.includes('#') ? result.push({ heading: item.replace(/^#/g, ''), text: null}) : result.push({ heading: null, text: item}) )
+    return result
+  }
+  return []
 })
 
-const comments = computed(() => {
-  return recipe.value?.comment ? getArrayFromString(recipe.value.comment, '\n')  : ''
-})
+const comments = computed(() => recipe.value?.comment ? getArrayFromString(recipe.value.comment, '\n')  : '')
+
+const title = computed(() => recipe.value?.title ? recipe.value.title.substring(0, 1).toUpperCase() + recipe.value?.title.substring(1) : '')
 
 async function deleteRecipe(id) {
   await deleteRecipeById(id)
@@ -111,28 +116,48 @@ onBeforeUnmount(() => {
     >
       <div class="recipe__heading">
         <div class="recipe__title-box">
-          <h1 class="recipe__title">{{ recipe.title }}</h1>
+          <h2 class="recipe__title">{{ title }}</h2>
           <CommonCardCategory :recipe="recipe" />
         </div>
         <CommonFavoriteBtn :recipe="recipe" />
       </div>
       <div class="recipe__partition">
         <h2>Ингредиенты</h2>
-        <ul>
-          <li
-            v-for="ing in ingredients"
-            :key="ing"
-            class="li--circle"
-          >{{ ing }}</li>
-        </ul>
+        <template v-if="ingredients.length > 0">
+          <template
+            v-for="(section, sectionIndex) in ingredients"
+            :key="sectionIndex"
+          >
+            <h3
+              v-if="section.heading"
+              class="recipe__subtitle"
+            >{{ section.heading }}</h3>
+            <ul
+              v-if="section.items && section.items.length > 0"
+              class="recipe__ingredients-list"
+            >
+              <li
+                v-for="(item, itemIndex) in section.items"
+                :key="itemIndex"
+                class="li--circle"
+              >{{ item }}</li>
+            </ul>
+          </template>
+        </template>
       </div>
       <div class="recipe__partition">
         <h2>Приготовление</h2>
         <ul>
           <li
-            v-for="instr in instructions"
-            :key="instr"
-          >{{ instr }}</li>
+            v-for="{ heading, text} in instructions"
+            :key="heading || text"
+          >
+            <h3
+              v-if="heading"
+              class="recipe__subtitle"
+            >{{ heading }}</h3>
+            <p v-if="text">{{ text }}</p>
+          </li>
         </ul>
       </div>
       <div
@@ -271,6 +296,11 @@ onBeforeUnmount(() => {
   color: transparent;
   background-clip: text;
   background-image: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+
+  @media (width < 768px) {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
 }
 
 .recipe__partition > h2 {
@@ -281,48 +311,78 @@ onBeforeUnmount(() => {
   margin-block-end: 0.75rem;
 }
 
-.recipe__partition ul {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+.recipe__subtitle {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  text-decoration: underline;
+  margin-block-start: 1rem;
+  margin-block-end: 0.5rem;
+}
+
+.recipe__subtitle:first-of-type {
+  margin-block-start: 0;
+}
+
+li +li:has(h3.recipe__subtitle) {
+  margin-block-start: 1rem;
+}
+
+.recipe__ingredients-list {
+  margin-block-end: 0.5rem;
 }
 
 .li--circle {
-  position: relative;
-  padding-left: 1rem;
+  list-style: initial;
+  margin-inline-start: 1rem;
 }
 
-.li--circle::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background-color: var(--color-primary);
-  border-radius: 50%;
-  position: absolute;
-  left: 0;
-  top: 0.5em;
+@supports not selector(::marker) {
+  .li--circle {
+    display: flex;
+    align-items: center;
+  }
+
+  .li--circle::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    margin-inline-end: 1rem;
+  }
 }
+
+ @supports selector(::marker) {
+  .li--circle::marker {
+    color: var(--color-primary);
+  }
+ }
 
 .recipe__links {
   display: flex;
   gap: 0.5rem;
-  align-items: center;
+  align-items: baseline;
 }
 
 .recipe__links svg {
   width: 1rem;
   height: 1rem;
   color: var(--color-primary);
+  flex-shrink: 0;
 }
 
 .recipe__link {
   color: var(--color-primary);
   text-decoration: none;
+  word-break: break-all;
 }
 
-.recipe__link:hover {
-  text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+  .recipe__link:hover {
+    text-decoration: underline;
+  }
 }
 
 .recipe__comment-title {

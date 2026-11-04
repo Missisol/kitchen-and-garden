@@ -1,17 +1,29 @@
-<script setup>
-import CommonHero from '@/components/common/CommonHero.vue'
-import IconSprout from '@/components/icons/IconSprout.vue'
+<script setup lang="ts">
 </script>
 
 <template>
   <div class="parent">
-    <CommonHero>
-      <template #icon>
-        <IconSprout />
-      </template>
-      <template #title>Сад</template>
-      <template #text>Управляйте своим садом</template>
-    </CommonHero>
+    <section class="hero">
+      <h1>Дневник</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Дата</th>
+            <th>теги</th>
+            <th>Описание</th>
+            <th>Ссылки</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Дата</td>
+            <td>Теги</td>
+            <td>Описание</td>
+            <th>Ссылки</th>
+          </tr>
+        </tbody>
+      </table>
+    </section>
   </div>
 </template>
 
@@ -19,12 +31,20 @@ import IconSprout from '@/components/icons/IconSprout.vue'
 .parent {
   --gradient: var(--gradient-secondary);
   --dim: left;
+  }
 
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-areas: "hero"
-                        "filter" 
-                        "content";
-  gap: 2rem;
-}
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem 1rem;
+    text-align: left;
+    border: 1px solid var(--color-border);
+  }
+
+
 </style>

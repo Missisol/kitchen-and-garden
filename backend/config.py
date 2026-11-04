@@ -7,5 +7,5 @@ class Config(object):
     'sqlite:///' + os.path.join(basedir, 'app.db')
   SQLALCHEMY_TRACK_MODIFICATIONS = False
   UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or '/app/static/uploads'
-  ALLOWED_EXTENSIONS = {'doc', 'docx', 'pdf', 'png', 'jpg', 'jpeg'}
-  RECIPES_PER_PAGE = 9
+  ALLOWED_EXTENSIONS = {'doc', 'docx', 'pdf', 'png', 'jpg', 'jpeg', 'mp4', 'mp3'}
+  RECIPES_PER_PAGE = 6

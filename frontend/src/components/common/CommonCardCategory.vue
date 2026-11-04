@@ -1,11 +1,9 @@
-<script setup>
-const { recipe } = defineProps({
-  recipe: {
-    type: Object,
-    required: true,
-    default: () => ({}),
-  }
-})
+<script setup lang="ts">
+import type { Recipe } from '@/@types/recipe'
+
+defineProps<{
+  recipe: Recipe & { category_name?: string }
+}>()
 </script>
 
 <template>

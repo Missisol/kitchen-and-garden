@@ -1,42 +1,66 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import CategorySelect from '../category/CategorySelect.vue'
 import CommonButton from '../common/CommonButton.vue'
 import IconSave from '../icons/IconSave.vue'
 import IconDelete from '../icons/IconDelete.vue'
 
-const { categories } = defineProps({
-  categories: {
-    type: Array,
-    default: () => [],
-  },
-})
+import type { Category } from '@/@types/category'
+import type { Recipe } from '@/@types/recipe'
 
-const emit = defineEmits(['getFormBody'])
 
-const model = defineModel('model')
-const fileModel = defineModel('fileModel')
+const router = useRouter()
+const id = router.currentRoute.value.params.id
+
+const { categories } = defineProps<{
+  categories: Category[]
+}>()
+
+const emit = defineEmits<{
+  (e: 'sendForm'): void
+}>()
+
+interface FileModel {
+  file?: File | null
+}
+
+const model = defineModel<Partial<Recipe>>('model', { required: true })
+const fileModel = defineModel<FileModel>('fileModel', { default: () => ({ file: null }) })
+
+const hintText = 'Для создания заголовков используйте символ # в начале строки (например: # Для теста)'
 
 const isDisabled = computed(() => {
   return model.value?.file || fileModel.value?.file?.name
 })
 
-function handleFileChange(event) {
-  fileModel.value.file = event.target.files[0]
+function handleFileChange(event: Event) {
+  const target = event.target as HTMLInputElement
+  if (target.files?.[0] && fileModel.value) {
+    fileModel.value.file = target.files[0]
+  }
 }
 
 function deleteFile() {
-  if (model.value.file) {
-  model.value.file = null
+  if (model.value?.file) {
+    model.value.file = null
   }
-  if (fileModel.value.file) {
+  if (fileModel.value?.file) {
     fileModel.value.file = null
   }
 }
 
 function sendForm() {
-  emit('getFormBody')
+  emit('sendForm')
+}
+
+function cancelEditing() {
+  if (router.currentRoute.value.path.includes('create')) {
+    router.push({ path: '/recipes' })
+  } else {
+    router.push({ path: `/recipes/${id}` })
+  }
 }
 </script>
 
@@ -62,32 +86,25 @@ function sendForm() {
         idName="category"
         v-model:model="model.category_id"
       />
-      <!-- <select
-        v-model="model.category_id"
-        id="category"
-      >
-        <option 
-          v-for="category in categories" 
-          :key="category.id" 
-          :value="category.id"
-        >{{ category?.name || 'Без категории' }}</option>
-      </select> -->
     </label>
     <label
       for="ingredients"
       class="label"
     >Ингредиенты
+      <span class="label__hint">{{ hintText }}</span>
       <textarea 
         v-model="model.ingredients" 
         id="ingredients" 
         type="text"
         rows="4"
+        wrap="hard"
       ></textarea>
     </label>
     <label
       for="instructions"
       class="label"
     >Приготовление
+      <span class="label__hint">{{ hintText }}</span>
       <textarea 
         v-model="model.instructions" 
         id="instructions" 
@@ -120,7 +137,7 @@ function sendForm() {
           name="file" 
           id="file"
           class="file-input"
-          accept=".doc, .docx, .pdf, .png, .jpg, .jpeg"
+          accept=".doc, .docx, .pdf, .png, .jpg, .jpeg, video/*, audio/*"
           @change="handleFileChange"
         >
         <CommonButton
@@ -143,10 +160,17 @@ function sendForm() {
         rows="6"
       ></textarea>
     </label>
-    <CommonButton @buttonAction="sendForm">
-      <template #icon><IconSave /></template>
-      <template #text>Сохранить изменения</template>
-    </CommonButton>
+    <div class="button-wrapper">
+      <CommonButton @buttonAction="sendForm">
+        <template #icon><IconSave /></template>
+        <template #text>Сохранить изменения</template>
+      </CommonButton>
+      <div class="common-button--dark">
+        <CommonButton @buttonAction="cancelEditing">
+          <template #text>Отмена</template>
+        </CommonButton>
+      </div>
+    </div>
   </form>
 </template>
 
@@ -175,6 +199,20 @@ function sendForm() {
   border: 1px solid var(--color-input);
   border-radius: calc(var(--radius) - 2px);
   padding: 0.5rem 0.75rem;
+}
+
+.label textarea {
+  resize: vertical;
+  /* min-height: 100px; */
+  field-sizing: content;
+}
+
+.label__hint {
+  font-size: .75rem;
+  line-height: 1rem;
+  color: var(--color-muted-foreground);
+  font-style: italic;
+  margin-top: -0.25rem;
 }
 
 .file-wrapper {
@@ -208,9 +246,11 @@ function sendForm() {
   color: var(--color-muted-foreground);
 }
 
-.file-label:not(.file-label--inactive):hover {
-  background: hsl(from var(--color-primary) h s l / 0.9);
-  color: var(--color-primary-foreground);
+@media (hover: hover) and (pointer: fine) {
+  .file-label:not(.file-label--inactive):hover {
+    background: hsl(from var(--color-primary) h s l / 0.9);
+    color: var(--color-primary-foreground);
+  }
 }
 
 .file-wrapper .common-button {
@@ -225,6 +265,7 @@ function sendForm() {
 
 .button-wrapper {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 

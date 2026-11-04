@@ -9,10 +9,9 @@ import RecipesList from '@/components/recipes/RecipesList.vue'
 import RecipesCategories from '@/components/recipes/RecipesCategories.vue'
 import RecipeSearch from '@/components/recipes/RecipeSearch.vue'
 import CommonButton from '@/components/common/CommonButton.vue'
-import IconChefhat from '@/components/icons/IconChefhat.vue'
-import CommonHero from '@/components/common/CommonHero.vue'
 import IconPlus from '@/components/icons/IconPlus.vue'
 import IconStar from '@/components/icons/IconStar.vue'
+import TransitionDropdown from '@/components/transition/TransitionDropdown.vue'
 
 const router = useRouter()
 
@@ -24,22 +23,19 @@ const categoriesStore = useCategoriesStore()
 const { getCategories } = categoriesStore
 
 const recipesStore = useRecipesStore()
-const { category_params, ingredientsSearch, recipes, showFavoritesOnly } = storeToRefs(recipesStore)
-const { getRecipes, getFavoriteRecipes, clearCategoryParams } = recipesStore
+const { category_params, ingredientsSearch, titleSearch, recipes, showFavoritesOnly } = storeToRefs(recipesStore)
+const { getRecipes, getFavoriteRecipes, clearCategoryParams, clearFavoritesOnly } = recipesStore
 const { totalPages,  currentPage } = storeToRefs(recipesStore)
 
-const titleSearch = ref('')
 const filteredRecipes = ref([])
+const isOpen = defineModel()
 
 const getRecipesByCategory = async (category={id: '', name: ''}) => {
   titleSearch.value = ''
   ingredientsSearch.value = ''
   category_params.value = category?.id ? {id: category.id, name: category.name} : { id: '', name: '' }
+  clearFavoritesOnly()
   await getRecipes(category.id)
-}
-
-const getRecipesByTitle = () => {
-  filteredRecipes.value = titleSearch.value ? recipes.value.filter(item => item.title.toLowerCase().includes(titleSearch.value.toLowerCase())) : recipes.value
 }
 
 const clearSearch = () => {
@@ -56,16 +52,19 @@ const clearSearchByTitle = () => {
   }
 }
 
-const searchRecipes = () => {
+const searchRecipesByIngredients = () => {
+  if (!ingredientsSearch.value.length) return
   clearCategoryParams()
+  clearFavoritesOnly()
   getRecipes()
 }
 
 const searchRecipesByTitle = async() => {
   if (!titleSearch.value.length) return
   clearCategoryParams()
+  clearFavoritesOnly()
   await getRecipes()
-  getRecipesByTitle()
+  // getRecipesByTitle()
 }
 
 const getFavoriteRecipesList = async () => {
@@ -87,7 +86,7 @@ const handlePageChange = async (page) => {
 }
 
 getCategories()
-getRecipes()
+getRecipes(category_params.value.id, showFavoritesOnly.value, currentPage.value)
 
 watch(recipes, () => {
   filteredRecipes.value = recipes.value
@@ -96,19 +95,12 @@ watch(recipes, () => {
 onBeforeUnmount(() => {
   ingredientsSearch.value = ''
   titleSearch.value = ''
-  clearCategoryParams()
+  // clearCategoryParams()
 })
 </script>
 
 <template>
   <div class="parent">
-    <CommonHero>
-      <template #icon>
-        <IconChefhat />
-      </template>
-      <template #title>Рецепты</template>
-      <template #text>Управляйте своими рецептами</template>
-    </CommonHero>
     <RecipesCategories
       @getRecipesByCategory="getRecipesByCategory"
     />
@@ -139,24 +131,30 @@ onBeforeUnmount(() => {
           </CommonButton>
         </div>
       </div>
-      <div class="search">
-        <RecipeSearch
-          :focusAction="clearSearch"
-          :keyupAction="searchRecipesByTitle"
-          :clearFunction="clearSearchByTitle"
-          :searchFunction="searchRecipesByTitle"
-          labelTitle="Поиск по названию"
-          v-model="titleSearch"
-        />
-        <RecipeSearch
-          :focusAction="clearSearchByTitle"
-          :keyupAction="searchRecipes"
-          :clearFunction="clearSearch"
-          :searchFunction="searchRecipes"
-          labelTitle="Поиск по ингредиентам"
-          v-model="ingredientsSearch"
-        />
-      </div>
+      <TransitionDropdown v-model="isOpen">
+        <template #button>Поиск рецептов</template>
+        <div 
+          v-if="isOpen" 
+          class="search"
+        >
+          <RecipeSearch
+            :focusAction="clearSearch"
+            :keyupAction="searchRecipesByTitle"
+            :clearFunction="clearSearchByTitle"
+            :searchFunction="searchRecipesByTitle"
+            labelTitle="Поиск по названию"
+            v-model="titleSearch"
+          />
+          <RecipeSearch
+            :focusAction="clearSearchByTitle"
+            :keyupAction="searchRecipesByIngredients"
+            :clearFunction="clearSearch"
+            :searchFunction="searchRecipesByIngredients"
+            labelTitle="Поиск по ингредиентам"
+            v-model="ingredientsSearch"
+          />
+        </div>
+      </TransitionDropdown>
       <RecipesList 
         :filteredRecipes="filteredRecipes"
         :titleSearch="titleSearch"
@@ -170,26 +168,26 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* TODO мобильная версия */
 .parent {
   --gradient: var(--gradient-primary);
   --dim: right;
 
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .search {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  margin-block-end: 1rem;
 
   @media (width < 768px) {
     grid-template-columns: auto;
@@ -213,7 +211,7 @@ onBeforeUnmount(() => {
   font-size: 1.5rem;
   line-height: 2rem;
   font-weight: 700;
-  color: var(--color-heading);
+  color: var(--color-foreground);
 }
 
 .common-button--dark-active  svg {

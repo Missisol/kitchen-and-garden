@@ -3,11 +3,12 @@ import globals from 'globals'
 import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
 import stylistic from '@stylistic/eslint-plugin'
+import tseslint from 'typescript-eslint'
 
 export default defineConfig([
   {
     name: 'app/files-to-lint',
-    files: ['**/*.{js,mjs,jsx,vue}'],
+    files: ['**/*.{js,ts,mjs,vue}'],
   },
 
   globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
@@ -17,12 +18,16 @@ export default defineConfig([
       globals: {
         ...globals.browser,
       },
+      parserOptions: {
+        parser: tseslint.parser,
+      },
     },
   },
 
   js.configs.recommended,
+  ...tseslint.configs.recommended,
   ...pluginVue.configs['flat/essential'],
-    {
+  {
     plugins: {
       '@stylistic': stylistic,
     },

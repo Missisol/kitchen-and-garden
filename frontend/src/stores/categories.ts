@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { apiUrls } from '@/utils/apiUrls'
+import type { Category } from '@/@types/category'
 
 export const useCategoriesStore = defineStore('categories', () => {
-const categories = ref([])
+const categories = ref<Category[]>([])
 
 async function getCategories() {
   const res = await fetch(`${apiUrls.categories}`)
   categories.value = await res.json()
 }
 
-async function createCategory(category) {
+async function createCategory(category: Category) {
   try {
     const res = await fetch(`${apiUrls.categories}`, {
       method: 'POST',
@@ -25,25 +26,39 @@ async function createCategory(category) {
   }
 }
 
-async function deleteCategoryById(id) {
+async function manageCategory(id: number, data: { name?: string, action?: string }) {
   try {
-    const res =await fetch(`${apiUrls.categories}`, {
-      method: 'DELETE',
+    const res = await fetch(`${apiUrls.categories}/${id}`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ id })
+      body: JSON.stringify(data)
     })
-    return res.status
+    
+    if (res.status === 204) {
+      return res.status
+    }
+    return await res.json()
   } catch (error) {
     console.log('error', error)
   }
+}
+
+async function deleteCategoryById(id: number) {
+  return await manageCategory(id, { action: 'delete' })
+}
+
+async function updateCategoryById(id: number, name: string) {
+  return await manageCategory(id, { name })
 }
 
   return {
     categories,
     getCategories,
     createCategory,
+    manageCategory,
     deleteCategoryById,
+    updateCategoryById,
   }
 })

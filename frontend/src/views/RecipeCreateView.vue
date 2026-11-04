@@ -1,13 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
 import { useCategoriesStore } from '@/stores/categories'
 import { useRecipesStore } from '@/stores/recipes'
-
+import type { Recipe } from '@/@types/recipe'
 import RecipeLayout from '@/components/recipes/RecipeLayout.vue'
 import RecipeForm from '@/components/recipes/RecipeForm.vue'
+
+interface FileModel {
+  file?: File | null
+}
 
 const router = useRouter()
 const categoriesStore = useCategoriesStore()
@@ -16,25 +20,27 @@ const { getCategories } = categoriesStore
 const recipesStore = useRecipesStore()
 const { createRecipe, uploadFile } = recipesStore
 
-const data = ref({
+const data = ref<Partial<Recipe>>({
   title: '',
+  title_search: '',
   ingredients: '',
   instructions: '',
   links: '',
   comment: '',
+  // file: null,
 })
-const fileModel = ref({})
+const fileModel = ref<FileModel>({ file: null })
 
 if (!categories.value.length) {
   getCategories()
 }
 
-async function getFormBody() {
-  console.log('data', data.value)
-
+async function getFormBody(): Promise<Partial<Recipe> | undefined> {
   if (!data.value.title) {
-    return
+    return {}
   }
+
+  data.value.title_search = data.value.title.toLowerCase()
 
   if (data.value.ingredients) {
     data.value.ingredients = data.value.ingredients.toLowerCase()
@@ -44,16 +50,22 @@ async function getFormBody() {
     const formData = new FormData()
     formData.append('file', fileModel.value.file)
     const result = await uploadFile(formData)
-    data.value.file = result.filename  // Сохраняем только имя файла
+    if (result?.filename) {
+      data.value.file = result.filename
+    }
   }
-  console.log('data', data.value)
-  create()
 }
 
 async function create() {
-  const result = await createRecipe(data.value)
-    if (result.id) {
-    router.push({ path: '/recipes' })
+  await getFormBody()
+  
+  try {
+    const result = await createRecipe(data.value)
+    if (result?.id) {
+      router.push({ path: '/recipes' })
+    }
+  } catch (error) {
+    console.log('error', error)
   }
 }
 </script>
@@ -68,7 +80,7 @@ async function create() {
         v-model:model="data"
         v-model:fileModel="fileModel"
         :categories="categories"
-        @getFormBody="getFormBody"
+        @sendForm="create"
       />
     </template>
   </RecipeLayout>
