@@ -19,15 +19,15 @@ import IconSprout from '@/components/icons/IconSprout.vue'
       </CommonHero>
     </RouterLink>
     <RouterLink
-      to="/garden"
+      to="/reserves"
       class="router__link"
     >
       <CommonHero>
         <template #icon>
           <IconSprout />
         </template>
-        <template #title>Сад</template>
-        <template #text>Управляйте своим садом</template>
+        <template #title>Запасы</template>
+        <template #text>Управляйте своими запасами</template>
       </CommonHero>
     </RouterLink>
   </div>

@@ -25,7 +25,7 @@ const iconComponent: Record<ThemeValue, Component> = {
 watchEffect(() => {
   const routeName = route.name
   if (!routeName) {
-    logoText.value = 'Кухня&Сад'
+    logoText.value = 'Кухня&Запасы'
     return
   }
   
@@ -36,7 +36,7 @@ watchEffect(() => {
     }
     return item.routeName === routeNameStr
   })
-  logoText.value = currentLogo ? currentLogo.text : 'Кухня&Сад'
+  logoText.value = currentLogo ? currentLogo.text : 'Кухня&Запасы'
 })
 
 function applyTheme(value: ThemeValue): void {

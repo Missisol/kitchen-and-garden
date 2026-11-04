@@ -64,6 +64,8 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
+  // TODO Исправить получение избранных рецептов - при переходе на 2-ую страницу избранных
+  // фильтр сбрасывается и выводятся все рецепты, но кнопка "Избранное" остается активной
   async function getFavoriteRecipes() {
     await getRecipes('', true)
   }

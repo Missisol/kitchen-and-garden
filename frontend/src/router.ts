@@ -25,8 +25,8 @@ export const routes = [
     component: () => import('@/views/RecipeView.vue'),
   },
   {
-    path: '/garden',
-    name: 'garden',
-    component: () => import('@/views/GardenView.vue'),
+    path: '/reserves',
+    name: 'reserves',
+    component: () => import('@/views/ReservesView.vue'),
   },
 ]

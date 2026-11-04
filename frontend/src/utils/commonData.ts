@@ -7,8 +7,8 @@ export const mainMenu: MainMenu[] = [
     path: '/recipes',
   },
   {
-    name: 'Сад',
-    path: '/garden',
+    name: 'Запасы',
+    path: '/reserves',
   },
 ]
 
@@ -21,14 +21,14 @@ export const themes: Theme[] = [
 export const logoData: LogoDataItem[] = [
   {
     routeName: 'home',
-    text: 'Кухня и сад',
+    text: 'Кухня и запасы',
   },
   {
     routeName: 'recipes',
     text: 'Кухня',
   },
   {
-    routeName: 'garden',
-    text: 'Сад',
+    routeName: 'reserves',
+    text: 'Запасы',
   },
 ]
