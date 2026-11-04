@@ -1,6 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import type { Category } from '@/@types/category'
 
 import { useCategoriesStore } from '@/stores/categories'
 import CategorySelect from './CategorySelect.vue'
@@ -13,16 +14,19 @@ const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
 const { getCategories, updateCategoryById, deleteCategoryById } = categoriesStore
 
-const emit = defineEmits(['getRecipes'])
+const emit = defineEmits<{
+  getRecipes: []
+}>()
 
-const categoryId = ref('')
+const categoryId = ref<string | number>('')
 const categoryName = ref('')
 const showDeleteDialog = ref(false)
 
 // Computed property to get the selected category name for the warning message
 const selectedCategoryName = computed(() => {
   if (categoryId.value) {
-    const selectedCategory = categories.value.find(cat => cat.id === categoryId.value)
+    const categoryList = categories.value as Category[]
+    const selectedCategory = categoryList.find((cat: Category) => cat.id === Number(categoryId.value))
     return selectedCategory?.name || ''
   }
   return ''
@@ -36,7 +40,8 @@ const deleteMessage = computed(() => {
 // Watch for category selection to populate the name field
 watch(categoryId, (newId) => {
   if (newId) {
-    const selectedCategory = categories.value.find(cat => cat.id === newId)
+    const categoryList = categories.value as Category[]
+    const selectedCategory = categoryList.find((cat: Category) => cat.id === Number(newId))
     categoryName.value = selectedCategory?.name || ''
   } else {
     categoryName.value = ''
@@ -51,7 +56,7 @@ async function updateCategory() {
     return
   }
 
-  const res = await updateCategoryById(categoryId.value, categoryName.value)
+  const res = await updateCategoryById(Number(categoryId.value), categoryName.value)
   if (res?.id) {
     categoryId.value = ''
     categoryName.value = ''
@@ -70,7 +75,7 @@ async function confirmDelete() {
   if (!categoryId.value) {
     return
   }
-  const res = await deleteCategoryById(categoryId.value)
+  const res = await deleteCategoryById(Number(categoryId.value))
   if (res === 204) {
     categoryId.value = ''
     categoryName.value = ''

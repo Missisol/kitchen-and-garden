@@ -7,7 +7,7 @@ from app.models import Category, Recipe
 from app.utils.secure_filename import secure_filename
 from app.recipes import bp
 
-fields = ['title', 'ingredients', 'instructions', 'links', 'comment', 'category_id', 'file']
+fields = ['title', 'title_search', 'ingredients', 'instructions', 'links', 'comment', 'category_id', 'file']
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -90,7 +90,7 @@ def get_recipes():
             query = query.filter(Recipe.ingredients.collate("NOCASE").like(f'%{search_query}%'))
 
         if title_search_query:
-            query = query.filter(Recipe.title.collate("NOCASE").like(f'%{title_search_query}%'))
+            query = query.filter(Recipe.title_search.like(f'%{title_search_query}%'))
 
         # Filter by favorite status
         if favorite is not None:
@@ -108,6 +108,7 @@ def get_recipes():
             'recipes': [{
                 'id': r.id,
                 'title': r.title,
+                'title_search': r.title_search,
                 'ingredients': r.ingredients,
                 'instructions': r.instructions,
                 'category_id': r.category_id,
@@ -137,6 +138,7 @@ def get_recipe(id):
         return jsonify({
             'id': recipe.id,
             'title': recipe.title,
+            'title_search': recipe.title_search,
             'ingredients': recipe.ingredients,
             'instructions': recipe.instructions,
             'category_id': recipe.category_id,

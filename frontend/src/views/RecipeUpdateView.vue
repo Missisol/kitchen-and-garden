@@ -47,7 +47,14 @@ async function getFormBody() {
 
   for ( const [key, value] of Object.entries(data.value)) {
     if (value !== recipe.value[key]) {
-      body.value[key] = key === 'ingredients' || key === 'title' ? value.toLowerCase() : value
+      if (key === 'title') {
+        body.value[key] = value
+        body.value.title_search = value.toLowerCase()
+      } else if (key === 'ingredients') {
+        body.value[key] = value.toLowerCase()
+      } else {
+        body.value[key] = value
+      }
     }
   }
 }

@@ -1,33 +1,17 @@
-<script setup>
+<script setup lang="ts">
+import type { Category } from '@/@types/category'
 
-const model = defineModel('model')
-const { categories, idName, className,  isDefaultOption, isDisabledCondition } = defineProps({
-  categories: {
-    type: Array,
-    required: true,
-    default: () => [],
-  },
-  idName: {
-    type: String,
-    required: false,
-  },
-  className: {
-    type: String,
-    required: false,
-  },
-  selected: {
-    type: Boolean,
-    default: true,
-  },
-  isDefaultOption: {
-    type: Boolean,
-    default: false,
-  },
-  isDisabledCondition: {
-    type: Boolean,
-    default: false,
-  },
-})
+interface Props {
+  categories: Category[]
+  idName?: string
+  className?: string
+  selected?: boolean
+  isDefaultOption?: boolean
+  isDisabledCondition?: boolean
+}
+
+const model = defineModel<string | number>('model')
+const { categories, idName, className, isDefaultOption, isDisabledCondition } = defineProps<Props>()
 </script>
 
 <template>

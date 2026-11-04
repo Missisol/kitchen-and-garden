@@ -8,7 +8,18 @@ import { VitePWA } from 'vite-plugin-pwa'
 function faviconPlugin() {
   return {
     name: 'favicon-plugin',
-    transformIndexHtml(html, { mode }) {
+    transformIndexHtml(
+      html: string,
+      ctx: {
+        path: string
+        filename: string
+        mode: string
+        server?: unknown
+        bundle?: unknown
+        chunk?: unknown
+      }
+    ) {
+      const { mode } = ctx
       // eslint-disable-next-line no-undef
       const env = loadEnv(mode, process.cwd(), '')
       const faviconPath = env.VITE_APP_FAVICON_PATH || '/favicon.svg'
@@ -25,14 +36,21 @@ function faviconPlugin() {
 }
 
 // https://vite.dev/config/
+// @ts-ignore
 export default defineConfig(({ mode }) => {
-  // eslint-disable-next-line no-undef
   const env = loadEnv(mode, process.cwd(), '')
+  const isDev = mode === 'development'
+
+  // Backend address for the dev-server proxy. Inside the compose network the
+  // service name "backend" resolves; when running `npm run dev` outside Docker
+  // set API_PROXY_TARGET=http://127.0.0.1:5002.
+  const apiProxyTarget =
+    process.env.API_PROXY_TARGET || env.API_PROXY_TARGET || 'http://backend:5002'
 
   return {
     plugins: [
       vue(),
-      vueDevTools(),
+      ...(isDev ? [vueDevTools()] : []),
       faviconPlugin(),
       VitePWA({
         registerType: 'autoUpdate',
@@ -96,12 +114,20 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
-    resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url))
+    server: {
+      port: 5173,
+      proxy: {
+        // Mirrors the nginx `location /api` used in production: the browser only
+        // talks to the dev server, and "/api/..." is forwarded to the backend
+        // root as "/...". No host/IP of the backend has to be known by the client.
+        '/api': {
+          target: apiProxyTarget,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
       },
     },
-      build: {
+    build: {
       outDir: 'dist',
       assetsDir: 'assets',
       sourcemap: false,
@@ -111,6 +137,11 @@ export default defineConfig(({ mode }) => {
           drop_console: true,
           drop_debugger: true,
         },
+      },
+    },
+        resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
       },
     },
     define: {

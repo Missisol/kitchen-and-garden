@@ -1,37 +1,20 @@
-<script setup>
-import { useRecipesStore } from '@/stores/recipes'
+<script setup lang="ts">
 import RecipeCard from './RecipeCard.vue'
+import type { Recipe } from '@/@types/recipe'
 
-const recipesStore = useRecipesStore()
-const { toggleFavorite } = recipesStore
+const { filteredRecipes, currentPage, totalPages } = defineProps<{
+  filteredRecipes: Recipe[]
+  currentPage: number
+  totalPages: number
+  titleSearch?: string
+  ingredientsSearch?: string
+}>()
 
+const emit = defineEmits<{
+  'page-selected': [page: number]
+}>()
 
-const { filteredRecipes, currentPage, totalPages } = defineProps({
-  filteredRecipes: {
-    type: Array,
-    default: () => [],
-  },
-  currentPage: {
-    type: Number,
-    default: 1,
-  },
-  totalPages: {
-    type: Number,
-    default: 1,
-  },
-  titleSearch: {
-    type: String,
-    default: '',
-  },
-  ingredientsSearch: {
-    type: String,
-    default: '',
-  },
-})
-
-const emit = defineEmits(['page-selected'])
-
-function selectPage(page) {
+function selectPage(page: number) {
   if (page !== currentPage && page >= 1 && page <= totalPages) {
     emit('page-selected', page)
   }
@@ -48,7 +31,6 @@ function selectPage(page) {
       >
         <RecipeCard
           :item="item"
-          :toggleFavorite="toggleFavorite"
         />
       </li>
     </ul>

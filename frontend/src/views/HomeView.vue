@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import CommonHero from '@/components/common/CommonHero.vue'
 import IconChefhat from '@/components/icons/IconChefhat.vue'
 import IconSprout from '@/components/icons/IconSprout.vue'

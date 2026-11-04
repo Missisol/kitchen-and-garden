@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
@@ -8,6 +8,7 @@ import CategoryCreate from '@/components/category/CategoryCreate.vue'
 import CategoryManage from '@/components/category/CategoryManage.vue'
 import CategoryButton from '@/components/category/CategoryButton.vue'
 import TransitionDropdown from '@/components/transition/TransitionDropdown.vue'
+import type { Category } from '@/@types/category'
 
 const categoriesStore = useCategoriesStore()
 const { categories } = storeToRefs(categoriesStore)
@@ -16,8 +17,10 @@ const recipesStore = useRecipesStore()
 const { category_params, showFavoritesOnly, ingredientsSearch, titleSearch } = storeToRefs(recipesStore)
 const { getRecipes } = recipesStore
 
-const emit = defineEmits(['getRecipesByCategory'])
-const isOpen = defineModel()
+const emit = defineEmits<{
+  'getRecipesByCategory': [category?: Category]
+}>()
+const isOpen = defineModel<boolean>()
 
 const isFiltered = computed(() => category_params.value.id !== '' || showFavoritesOnly.value || titleSearch.value || ingredientsSearch.value)
 </script>
@@ -65,7 +68,7 @@ const isFiltered = computed(() => category_params.value.id !== '' || showFavorit
   font-size: 1.5rem;
   line-height: 2rem;
   font-weight: 700;
-  color: var(--color-heading);
+  color: var(--color-foreground);
 }
 
 .categories__list {

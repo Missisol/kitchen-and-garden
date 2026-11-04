@@ -1,53 +1,70 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, useTemplateRef, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { useRoute } from 'vue-router'
 
 import IconSun from '../icons/IconSun.vue'
 import IconMoon from '../icons/IconMoon.vue'
 import IconSystem from '../icons/IconSystem.vue'
 import IconLogo from '../icons/IconLogo.vue'
-import { mainMenu, themes, logoData } from '@/utils/commonData'
+import { mainMenu, themes, logoData, } from '@/utils/commonData'
+import type { ThemeValue, LogoDataItem } from '@/@types/common'
 
 const route = useRoute()
-const logoText = ref('')
-const isMenuOpen = ref(false)
-const theme = ref('light dark')
-const switcherRef = useTemplateRef('switcher')
+const logoText = ref<string>('')
+const isMenuOpen = ref<boolean>(false)
+const theme = ref<ThemeValue>('light dark')
+const switcherRef = useTemplateRef<HTMLElement>('switcher')
 
-const iconComponent = {
+const iconComponent: Record<ThemeValue, Component> = {
   light: IconSun,
   dark: IconMoon,
   'light dark': IconSystem,
 }
 
 watchEffect(() => {
-  const currentLogo = logoData.find(item => item.routeName.includes(route.name))
+  const routeName = route.name
+  if (!routeName) {
+    logoText.value = 'Кухня&Сад'
+    return
+  }
+  
+  const routeNameStr = typeof routeName === 'string' ? routeName : routeName.toString()
+  const currentLogo = logoData.find((item: LogoDataItem) => {
+    if (Array.isArray(item.routeName)) {
+      return item.routeName.includes(routeNameStr)
+    }
+    return item.routeName === routeNameStr
+  })
   logoText.value = currentLogo ? currentLogo.text : 'Кухня&Сад'
 })
 
-function applyTheme(value) {
-  const colorScheme = document.querySelector('meta[name="color-scheme"]')
-  colorScheme.content = value
+function applyTheme(value: ThemeValue): void {
+  const colorScheme = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]')
+  if (colorScheme) {
+    colorScheme.content = value
+  }
 }
 
-function setTheme(value) {
+function setTheme(value: ThemeValue): void {
   theme.value = value
   localStorage.setItem('theme', value)
   applyTheme(value)
   isMenuOpen.value = false
 }
 
-function toggleMenu() {
+function toggleMenu(): void {
   isMenuOpen.value = !isMenuOpen.value
 }
 
-  function onClickOutside(e) {
-    const el = switcherRef.value
-    if (!el) return
-    if (isMenuOpen.value && !el.contains(e.target)) {
-      isMenuOpen.value = false
-    }
+function onClickOutside(e: Event): void {
+  const el = switcherRef.value
+  if (!el) return
+  const target = e.target as Node | null
+  if (isMenuOpen.value && target && !el.contains(target)) {
+    isMenuOpen.value = false
   }
+}
 
 onMounted(() => {
   const saved = localStorage.getItem('theme')
@@ -55,7 +72,7 @@ onMounted(() => {
     localStorage.setItem('theme', 'light dark')
     theme.value = 'light dark'
   } else {
-    theme.value = saved
+    theme.value = saved as ThemeValue
   }
 
   applyTheme(theme.value)
@@ -112,7 +129,7 @@ onBeforeUnmount(() => {
               >
                 <button
                   v-for="item in themes"
-                  :key="item"
+                  :key="item.name"
                   class="theme-menu__item"
                   :class="{ active: theme === item.value }"
                   @click="setTheme(item.value)"

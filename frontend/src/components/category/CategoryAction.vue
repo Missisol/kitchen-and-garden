@@ -1,20 +1,15 @@
-<script setup>
-const { title, idName } = defineProps({
-  title: {
-    type: String,
-    default: ' ',
-  },
-  idName: {
-    type: String,
-    default: 'cat',
-  },
-  buttonTitle: {
-    type: String,
-    default: ' ',
-  }
-})
+<script setup lang="ts">
+interface Props {
+  title?: string
+  idName?: string
+  buttonTitle?: string
+}
 
-const emit = defineEmits(['submitAction'])
+const { title, idName } = defineProps<Props>()
+
+const emit = defineEmits<{
+  submitAction: [event: SubmitEvent]
+}>()
 </script>
 
 <template>

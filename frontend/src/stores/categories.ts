@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { apiUrls } from '@/utils/apiUrls'
+import type { Category } from '@/@types/category'
 
 export const useCategoriesStore = defineStore('categories', () => {
-const categories = ref([])
+const categories = ref<Category[]>([])
 
 async function getCategories() {
   const res = await fetch(`${apiUrls.categories}`)
   categories.value = await res.json()
 }
 
-async function createCategory(category) {
+async function createCategory(category: Category) {
   try {
     const res = await fetch(`${apiUrls.categories}`, {
       method: 'POST',
@@ -25,7 +26,7 @@ async function createCategory(category) {
   }
 }
 
-async function manageCategory(id, data) {
+async function manageCategory(id: number, data: { name?: string, action?: string }) {
   try {
     const res = await fetch(`${apiUrls.categories}/${id}`, {
       method: 'PATCH',
@@ -44,11 +45,11 @@ async function manageCategory(id, data) {
   }
 }
 
-async function deleteCategoryById(id) {
+async function deleteCategoryById(id: number) {
   return await manageCategory(id, { action: 'delete' })
 }
 
-async function updateCategoryById(id, name) {
+async function updateCategoryById(id: number, name: string) {
   return await manageCategory(id, { name })
 }
 

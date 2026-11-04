@@ -1,13 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import IconStar from '../icons/IconStar.vue'
 import { useRecipesStore } from '@/stores/recipes'
+import type { Recipe } from '@/@types/recipe'
 
-const { recipe } = defineProps({
-  recipe: {
-    type: Object,
-    required: true
-  }
-})
+const { recipe } = defineProps<{
+  recipe: Recipe
+}>()
 
 const recipesStore =  useRecipesStore()
 const { toggleFavorite } = recipesStore
@@ -24,7 +22,6 @@ const { toggleFavorite } = recipesStore
   >
     <IconStar />
   </button>
-
 </template>
 
 <style scoped>
