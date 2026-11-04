@@ -31,4 +31,8 @@ export const logoData: LogoDataItem[] = [
     routeName: 'reserves',
     text: 'Запасы',
   },
+  {
+    routeName: ['reserve-create', 'reserve-update'],
+    text: 'Запасы',
+  },
 ]

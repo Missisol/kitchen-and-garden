@@ -6,4 +6,8 @@ export const apiUrls = {
   recipe: `${baseURL}/recipe`,
   recipeFile: `${baseURL}/recipe/file`,
   filePath: `${baseURL}/static/uploads`,
+  reserveCategories: `${baseURL}/reserve_categories`,
+  reserveCategory: `${baseURL}/reserve_category`,
+  reserves: `${baseURL}/reserves`,
+  reserve: `${baseURL}/reserve`,
 }

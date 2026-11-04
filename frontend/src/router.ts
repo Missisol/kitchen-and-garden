@@ -29,4 +29,14 @@ export const routes = [
     name: 'reserves',
     component: () => import('@/views/ReservesView.vue'),
   },
+  {
+    path: '/reserves/create',
+    name: 'reserve-create',
+    component: () => import('@/views/ReserveCreateView.vue'),
+  },
+  {
+    path: '/reserves/:id/edit',
+    name: 'reserve-update',
+    component: () => import('@/views/ReserveUpdateView.vue'),
+  },
 ]
