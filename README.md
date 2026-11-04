@@ -82,3 +82,9 @@ docker compose --env-file .env.prod up -d --build frontend
 
 Подробные инструкции по работе с Docker смотрите в [DOCKER.md](DOCKER.md).
 
+## Запуск приложения в dev режиме
+`./dev.sh`
+
+## Запуск приложения в prod режиме
+`./boot/sh`
+

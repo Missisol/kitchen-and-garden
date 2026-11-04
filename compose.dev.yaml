@@ -19,7 +19,6 @@ services:
       - SECRET_KEY=${SECRET_KEY:-you-will-never-guess}
       - DATABASE_URL=${DATABASE_URL}
       - UPLOAD_FOLDER=${UPLOAD_FOLDER}
-      - DB_PATH:${DB_PATH}
     restart: unless-stopped
     networks:
       - recipe-network
@@ -55,6 +54,8 @@ services:
     environment:
       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
       - VITE_APP_FAVICON_PATH=${VITE_APP_FAVICON_PATH}
+      # Target of the Vite dev-server proxy for /api (see frontend/vite.config.ts)
+      - API_PROXY_TARGET=${API_PROXY_TARGET:-http://backend:5002}
     depends_on:
       - backend
     restart: unless-stopped
