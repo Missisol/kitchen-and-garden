@@ -181,7 +181,7 @@ def create_reserve():
         created_at=datetime.now(timezone.utc),
         category_id=category_id if category_id else None,
         kind=data['kind'],
-        description=data['description'],
+        description=data.get('description'),
         quantity=_to_float(data['quantity']),
         unit=data.get('unit'),
         expiry_date=_parse_date(data.get('expiry_date')),
@@ -221,7 +221,7 @@ def update_reserve(id):
 
     reserve.category_id = data.get('category_id') if data.get('category_id') else None
     reserve.kind = data['kind']
-    reserve.description = data['description']
+    reserve.description = data.get('description')
     reserve.quantity = _to_float(data['quantity'])
     reserve.unit = data.get('unit')
     reserve.expiry_date = _parse_date(data.get('expiry_date'))
@@ -310,8 +310,6 @@ def _validate_reserve(data):
         return 'Request body is required'
     if not str(data.get('kind', '')).strip():
         return 'Kind is required'
-    if not str(data.get('description', '')).strip():
-        return 'Description is required'
     quantity = _to_float(data.get('quantity'))
     if quantity is None or quantity <= 0:
         return 'Quantity must be greater than 0'

@@ -9,7 +9,7 @@ export interface Reserve {
   category_id: number | null
   category_name?: string
   kind: string
-  description: string
+  description?: string | null
   quantity: number
   unit?: string | null
   expiry_date?: string | null

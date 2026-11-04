@@ -231,7 +231,7 @@ onBeforeUnmount(() => {
               <td>{{ formatDate(item.created_at.slice(0, 10)) }}</td>
               <td>{{ item.category_name || '—' }}</td>
               <td>{{ item.kind }}</td>
-              <td>{{ item.description }}</td>
+              <td>{{ item.description || '—' }}</td>
               <td>{{ formatQuantity(item) }}</td>
               <td>{{ formatDate(item.expiry_date) }}</td>
               <td>{{ item.location || '—' }}</td>

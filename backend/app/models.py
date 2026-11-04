@@ -39,7 +39,9 @@ class Reserve(db.Model):
     kind: so.Mapped[str] = so.mapped_column(
         String(100), index=True
     )
-    description: so.Mapped[str] = so.mapped_column(Text)
+    description: so.Mapped[Optional[str]] = so.mapped_column(
+        Text, default=None
+    )
     quantity: so.Mapped[float] = so.mapped_column(Float)
     unit: so.Mapped[Optional[str]] = so.mapped_column(
         String(20), default=None

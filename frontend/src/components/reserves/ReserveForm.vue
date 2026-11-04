@@ -35,9 +35,6 @@ const errors = computed(() => {
   if (!model.value.kind?.trim()) {
     result.kind = 'Укажите вид запаса'
   }
-  if (!model.value.description?.trim()) {
-    result.description = 'Укажите описание'
-  }
   if (model.value.quantity == null || model.value.quantity <= 0) {
     result.quantity = 'Количество должно быть больше 0'
   }
@@ -103,10 +100,6 @@ const router = useRouter()
         v-model="model.description"
         rows="3"
       ></textarea>
-      <span
-        v-if="submitted && errors.description"
-        class="label__error"
-      >{{ errors.description }}</span>
     </label>
     <div class="field-row">
       <label
