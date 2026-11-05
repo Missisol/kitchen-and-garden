@@ -24,6 +24,17 @@ export default defineConfig([
     },
   },
 
+  // Тестовые файлы используют глобальные describe/it/expect/vi (vitest globals: true)
+  {
+    name: 'app/tests',
+    files: ['src/**/*.{spec,test}.{ts,tsx}', 'src/test/**/*.ts'],
+    languageOptions: {
+      globals: {
+        ...globals.vitest,
+      },
+    },
+  },
+
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...pluginVue.configs['flat/essential'],
