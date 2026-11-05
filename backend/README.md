@@ -27,5 +27,11 @@ recipe = db.session.scalars(query).all()
 
 c = db.session.get(Category, 3)
 
-
+### Тесты
+```bash
+  cd backend && source .venv/bin/activate
+  pytest                                    # быстрый прогон
+  pytest --cov=app/reserves --cov-report=term-missing  # с покрытием
+  pytest --cov=app/reserves --cov-report=html           # HTML-отчёт в htmlcov/
+```
 
