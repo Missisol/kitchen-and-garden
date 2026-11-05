@@ -20,7 +20,9 @@ export const useRecipesStore = defineStore('recipes', () => {
   const currentPage = ref(1)
   const perPage = ref(9) // default
 
-  async function getRecipes(category_id = '', favorite = false, page = 1) {
+  // Фильтр «избранные» берётся из состояния стора, чтобы он сохранялся
+  // при любом повторном запросе (пагинация, поиск, обновление списка)
+  async function getRecipes(category_id = '', page = 1) {
     const params = new URLSearchParams()
     if (category_id) {
       params.append('category_id', category_id)
@@ -31,8 +33,8 @@ export const useRecipesStore = defineStore('recipes', () => {
     if (titleSearch.value) {
       params.append('title_search', titleSearch.value)
     }
-    if (favorite) {
-      params.append('favorite', favorite.toString())
+    if (showFavoritesOnly.value) {
+      params.append('favorite', 'true')
     }
     if (page) {
       params.append('page', page.toString())
@@ -64,10 +66,9 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
-  // TODO Исправить получение избранных рецептов - при переходе на 2-ую страницу избранных
-  // фильтр сбрасывается и выводятся все рецепты, но кнопка "Избранное" остается активной
   async function getFavoriteRecipes() {
-    await getRecipes('', true)
+    showFavoritesOnly.value = true
+    await getRecipes('', 1)
   }
 
   async function getRecipeById(id: number | string) {

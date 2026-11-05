@@ -72,21 +72,23 @@ const getFavoriteRecipesList = async () => {
   ingredientsSearch.value = ''
   clearCategoryParams()
   
-  if (showFavoritesOnly.value) {
-    await getRecipes()
-  } else {
-    await getFavoriteRecipes()
-  }
-  
+  // сначала переключаем режим, затем загружаем список —
+  // getRecipes сам добавляет favorite=true, пока режим включен
   showFavoritesOnly.value = !showFavoritesOnly.value
+
+  if (showFavoritesOnly.value) {
+    await getFavoriteRecipes()
+  } else {
+    await getRecipes()
+  }
 }
 
 const handlePageChange = async (page) => {
-  await getRecipes(category_params.value.id, null, page)
+  await getRecipes(category_params.value.id, page)
 }
 
 getCategories()
-getRecipes(category_params.value.id, showFavoritesOnly.value, currentPage.value)
+getRecipes(category_params.value.id, currentPage.value)
 
 watch(recipes, () => {
   filteredRecipes.value = recipes.value
