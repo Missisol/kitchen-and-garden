@@ -62,6 +62,7 @@ async function saveCategory(e: SubmitEvent) {
 
 <style scoped>
 .wrapper {
+  --btn-color: var(--color-secondary);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;

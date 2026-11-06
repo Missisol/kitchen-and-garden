@@ -26,7 +26,7 @@ function triggerDropdown() {
 .transition-button {
   background: transparent;
   border: none;
-  color: var(--color-primary);
+  color: var( --dropdown-color, var(--color-primary));
   font-family: inherit;
   display: inline-flex;
   align-items: center;

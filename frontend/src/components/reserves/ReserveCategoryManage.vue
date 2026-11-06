@@ -159,7 +159,6 @@ function clearInput() {
 .form {
   --cbtn-background: var(--color-primary);
   --text-color: var(--color-primary-foreground);
-  --label-color: var(--color-primary);
   --btn-padding: calc(0.75rem - 1px);
   --btn-padding-block: var(--btn-padding);
   --btn-padding-inline: var(--btn-padding);
@@ -237,8 +236,8 @@ function clearInput() {
 }
 
 .form__button--update {
-  --cbtn-background: var(--color-primary);
-  --cbtn-border: var(--color-primary);
+  --cbtn-background: var(--color-secondary);
+  --cbtn-border: var(--color-secondary);
   --text-color: var(--color-primary-foreground);
 }
 </style>

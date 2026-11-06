@@ -36,9 +36,9 @@ const emit = defineEmits<{
 
 <style scoped>
 .form {
-  --btn-color: var(--color-primary);
+  /* --btn-color: var(--color-primary); */
   --icon-color: var(--color-primary-foreground);
-  --label-color: var(--color-primary);
+  /* --label-color: var(--color-primary); */
 
   color: var(--color-card-foreground);
   background: var(--color-gradient-card);

@@ -59,6 +59,8 @@ const isFiltered = computed(() => category_params.value.id !== '' || showFavorit
 
 <style scoped>
 .categories {
+  --label-color: var(--color-primary);
+
   display: flex;
   flex-direction: column;
   gap: 1rem;

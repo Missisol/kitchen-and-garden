@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { onBeforeUnmount, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
@@ -34,11 +34,11 @@ const { getReserves, toggleReserveStatus, deleteReserveById } = reservesStore
 const isOpenCategoryFilter = ref(false)
 const isOpenCategoryManage = ref(false)
 
-const selectedCategoryName = computed(() => {
+/* const selectedCategoryName = computed(() => {
   if (!filters.value.category_id) return ''
   const cat = reserveCategories.value.find(c => c.id === filters.value.category_id)
   return cat?.name || ''
-})
+}) */
 
 // Sorting state
 const activeSortField = ref<ReserveSortField | ''>('')
@@ -112,29 +112,42 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="parent">
-    <section class="controls">
-      <h1>Запасы</h1>
-      <div class="controls__box">
-        <CommonButton @buttonAction="goToCreateReserve">
-          <template #icon><IconPlus /></template>
-          <template #text>Добавить</template>
-        </CommonButton>
-      </div>
-    </section>
 
     <!-- Filters -->
     <section class="filters">
-      <div class="filters__group">
-        <span class="filters__label">Статус:</span>
-        <div
-          v-for="opt in statusOptions"
-          :key="opt.value"
-          class="filter-btn"
-          :class="{ 'filter-btn--active': filters.status === opt.value }"
-          @click="applyStatus(opt.value)"
-        >{{ opt.label }}</div>
+      <h2 class="categories__title">Фильтры</h2>
+      <div class="filter">
+        <h3 class="filters__label">Статус:</h3>
+        <ul class="filters__group">
+          <li
+            v-for="opt in statusOptions"
+            :key="opt.value"
+            class="filter-btn"
+            :class="{ 'filter-btn--active': filters.status === opt.value }"
+            @click="applyStatus(opt.value)"
+          >{{ opt.label }}</li>
+        </ul>
       </div>
-      <div class="filters__group">
+
+      <div class="filter">
+        <h3 class="filters__label">Категория:</h3>
+        <ul class="filters__group">
+          <li
+            class="filter-btn"
+            :class="{ 'filter-btn--active': !filters.category_id }"
+            @click="applyCategory()"
+          >Все</li>
+          <li
+            v-for="cat in reserveCategories"
+            :key="cat.id"
+            class="filter-btn"
+            :class="{ 'filter-btn--active': filters.category_id === cat.id }"
+            @click="applyCategory(cat)"
+          >{{ cat.name }}</li>
+        </ul>
+      </div>
+
+      <!--<div class="filters__group">
         <TransitionDropdown v-model="isOpenCategoryFilter">
           <template #button>
             Категория: <strong>{{ selectedCategoryName || 'Все' }}</strong>
@@ -157,6 +170,29 @@ onBeforeUnmount(() => {
             >{{ cat.name }}</div>
           </div>
         </TransitionDropdown>
+      </div> -->
+    </section>
+
+    <!-- Category management -->
+    <TransitionDropdown v-model="isOpenCategoryManage">
+      <template #button>Управление категориями</template>
+      <div
+        v-if="isOpenCategoryManage"
+        class="category-manage"
+      >
+        <ReserveCategoryCreate />
+        <ReserveCategoryManage />
+      </div>
+    </TransitionDropdown>
+
+
+    <section class="controls">
+      <h2 class="controls__title">Запасы</h2>
+      <div class="controls__box">
+        <CommonButton @buttonAction="goToCreateReserve">
+          <template #icon><IconPlus /></template>
+          <template #text>Добавить запас</template>
+        </CommonButton>
       </div>
     </section>
 
@@ -273,18 +309,6 @@ onBeforeUnmount(() => {
       </div>
     </template>
 
-    <!-- Category management -->
-    <TransitionDropdown v-model="isOpenCategoryManage">
-      <template #button>Управление категориями</template>
-      <div
-        v-if="isOpenCategoryManage"
-        class="category-manage"
-      >
-        <ReserveCategoryCreate />
-        <ReserveCategoryManage />
-      </div>
-    </TransitionDropdown>
-
     <!-- Delete confirmation -->
     <CommonConfirmDialog
       v-model="showDeleteDialog"
@@ -301,6 +325,11 @@ onBeforeUnmount(() => {
 .parent {
   --gradient: var(--gradient-secondary);
   --dim: left;
+  --cbtn-background: var(--color-secondary);
+  --cbtn-border: var(--color-secondary);
+  --dropdown-color: var(--color-secondary);
+  --label-color: var(--color-secondary);
+
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -321,9 +350,15 @@ onBeforeUnmount(() => {
 
 .filters {
   display: flex;
-  gap: 1.5rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
   flex-wrap: wrap;
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .filters__group {
@@ -334,7 +369,6 @@ onBeforeUnmount(() => {
 }
 
 .filters__label {
-  font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-muted-foreground);
 }
@@ -352,8 +386,8 @@ onBeforeUnmount(() => {
 
 .filter-btn--active {
   color: var(--color-primary-foreground);
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--color-secondary);
+  border-color: var(--color-secondary);
 }
 
 .filter-btn:hover:not(.filter-btn--active) {
@@ -407,7 +441,7 @@ onBeforeUnmount(() => {
 .table th {
   background: hsl(from var(--color-muted) h s l / 0.3);
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-secondary);
 }
 
 .sortable {
@@ -425,7 +459,7 @@ onBeforeUnmount(() => {
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 600;
-  background: var(--color-primary);
+  background: var(--color-secondary);
   color: var(--color-primary-foreground);
 }
 
@@ -452,7 +486,7 @@ onBeforeUnmount(() => {
 }
 
 .action-btn:hover {
-  color: var(--color-primary);
+  color: var(--color-secondary);
 }
 
 .action-btn--text {
