@@ -3,7 +3,7 @@ import './assets/styles/main.css'
 import { createApp } from 'vue'
 import { createWebHistory, createRouter } from 'vue-router'
 import { createPinia } from 'pinia'
-import { routes } from './router.js'
+import { routes, setDocumentTitle } from './router'
 import App from './App.vue'
 
 const pinia = createPinia()
@@ -11,6 +11,11 @@ const pinia = createPinia()
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach((_to, _from, next) => {
+  setDocumentTitle(_to.name)
+  next()
 })
 
 createApp(App)

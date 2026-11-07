@@ -40,3 +40,19 @@ export const routes = [
     component: () => import('@/views/ReserveUpdateView.vue'),
   },
 ]
+
+const routeTitles: Record<string, string> = {
+  'home': 'Кухня и запасы',
+  'recipes': 'Рецепты',
+  'recipe-create': 'Создать рецепт',
+  'recipe-update': 'Редактировать рецепт',
+  'recipe': 'Рецепт',
+  'reserves': 'Запасы',
+  'reserve-create': 'Создать запас',
+  'reserve-update': 'Редактировать запас',
+}
+
+export function setDocumentTitle(routeName: string | symbol | null | undefined) {
+  const title = routeName && routeTitles[String(routeName)]
+  document.title = title ? `${title}` : 'Кухня и запасы'
+}
