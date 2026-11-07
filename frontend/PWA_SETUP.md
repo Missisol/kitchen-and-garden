@@ -72,7 +72,7 @@ The PWA manifest and service worker will be automatically generated during the b
 
 The PWA configuration is located in `vite.config.js`. Key settings:
 
-- **App Name**: "Кухня и сад"
+- **App Name**: "Кухня и запасы"
 - **Theme Color**: #15ba67 (green)
 - **Display Mode**: standalone
 - **Icons**: 192x192 and 512x512 PNG files

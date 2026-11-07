@@ -207,3 +207,10 @@ body {
 a.router__link {
     -webkit-tap-highlight-color: transparent;
 }
+
+.section__title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: var(--color-foreground);
+}

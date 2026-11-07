@@ -56,8 +56,8 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         includeAssets: ['favicon.svg', 'favicon-dev.svg', 'robots.txt', 'safari-pinned-tab.svg'],
         manifest: {
-          name: 'Кухня и сад',
-          short_name: 'Кухня и сад',
+          name: 'Кухня и запасы',
+          short_name: 'Кухня и запасы',
           description: 'Приложение для рецептов и садоводства',
           theme_color: '#f38d49',
           background_color: '#0f1115',
