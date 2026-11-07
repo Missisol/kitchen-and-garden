@@ -22,17 +22,19 @@ export const logoData: LogoDataItem[] = [
   {
     routeName: 'home',
     text: 'Кухня и запасы',
+    variant: 'primary',
+    icon: 'IconLogo',
   },
   {
     routeName: 'recipes',
     text: 'Кухня',
+    variant: 'primary',
+    icon: 'IconChefhat',
   },
   {
-    routeName: 'reserves',
+    routeName: ['reserves', 'reserve-create', 'reserve-update'],
     text: 'Запасы',
-  },
-  {
-    routeName: ['reserve-create', 'reserve-update'],
-    text: 'Запасы',
+    variant: 'secondary',
+    icon: 'IconSprout',
   },
 ]

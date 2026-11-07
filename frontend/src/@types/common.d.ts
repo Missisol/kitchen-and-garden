@@ -10,12 +10,12 @@ export interface Theme {
   value: ThemeValue;
 }
 
+export type LogoVariant = 'primary' | 'secondary';
+
 export interface LogoDataItem {
   routeName: string | string[];
   text: string;
+  variant: LogoVariant;
+  icon: string;
 }
-
-// export interface LogoData {
-//   [key: string]: LogoDataItem;
-// }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, useTemplateRef, watchEffect } from 'vue'
+import { ref, onMounted, onBeforeUnmount, useTemplateRef, watchEffect, defineAsyncComponent, shallowRef } from 'vue'
 import type { Component } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -8,13 +8,15 @@ import IconMoon from '../icons/IconMoon.vue'
 import IconSystem from '../icons/IconSystem.vue'
 import IconLogo from '../icons/IconLogo.vue'
 import { mainMenu, themes, logoData, } from '@/utils/commonData'
-import type { ThemeValue, LogoDataItem } from '@/@types/common'
+import type { ThemeValue, LogoDataItem, LogoVariant } from '@/@types/common'
 
 const route = useRoute()
 const logoText = ref<string>('')
 const isMenuOpen = ref<boolean>(false)
 const theme = ref<ThemeValue>('light dark')
 const switcherRef = useTemplateRef<HTMLElement>('switcher')
+const activeColor = ref<LogoVariant>('primary')
+const activeLogoIcon = shallowRef<Component>(IconLogo)
 
 const iconComponent: Record<ThemeValue, Component> = {
   light: IconSun,
@@ -37,6 +39,8 @@ watchEffect(() => {
     return item.routeName === routeNameStr
   })
   logoText.value = currentLogo ? currentLogo.text : 'Кухня&Запасы'
+  activeColor.value = currentLogo ? currentLogo.variant : 'primary'
+  activeLogoIcon.value = currentLogo ? defineAsyncComponent(() => import(`@/components/icons/${currentLogo.icon}.vue`)) : IconLogo
 })
 
 function applyTheme(value: ThemeValue): void {
@@ -94,10 +98,12 @@ onBeforeUnmount(() => {
           class="logo__container router__link"
           aria-label="Logo"
         >
-          <div class="logo">
-            <IconLogo />
+          <div :class="['logo', `logo--${activeColor}`]">
+            <component :is="activeLogoIcon" />
           </div>
-          <span class="logo__text">{{ logoText }}</span>
+          <span 
+            :class="['logo__text', `logo__text--${activeColor}`]"
+          >{{ logoText }}</span>
         </RouterLink>
         <div class="header__right">
           <nav class="nav">
@@ -113,7 +119,7 @@ onBeforeUnmount(() => {
             ref="switcher"
           >
             <button
-              class="header__theme"
+              :class="['header__theme', `header__theme--${activeColor}`]"
               @click="toggleMenu"
               :aria-label="theme"
               aria-haspopup="menu"
@@ -131,7 +137,7 @@ onBeforeUnmount(() => {
                   v-for="item in themes"
                   :key="item.name"
                   class="theme-menu__item"
-                  :class="{ active: theme === item.value }"
+                  :class="[{ active: theme === item.value }, `theme-menu__item--${activeColor}`]"
                   @click="setTheme(item.value)"
                   role="menuitem"
                 >
@@ -190,10 +196,17 @@ onBeforeUnmount(() => {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.75rem;
-  background: var(--gradient-primary);
   transition: var(--transition-smooth);
   box-shadow: var(--shadow-glow);
   color: var(--color-background);
+}
+
+.logo--primary {
+  background: var(--gradient-primary);
+}
+
+.logo--secondary {
+    background: var(--gradient-secondary);
 }
 
 .logo>svg {
@@ -209,11 +222,19 @@ onBeforeUnmount(() => {
   text-wrap: nowrap;
   color: transparent;
   background-clip: text;
-  background-image: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  /* background-image: linear-gradient(to right, var(--color-primary), var(--color-secondary)); */
 
   @media (width < 768px) {
     display: none;
   }
+}
+
+.logo__text--primary {
+  background-image: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+}
+
+.logo__text--secondary {
+  background-image: linear-gradient(to right, var(--color-secondary), var(--color-primary));
 }
 
 .header__right {
@@ -271,8 +292,15 @@ onBeforeUnmount(() => {
 }
 
 .header__theme:hover {
-  background: var(--color-accent);
   color: var(--accent-foreground);
+}
+
+.header__theme--primary:hover {
+  background: var(--color-primary);
+}
+
+.header__theme--secondary:hover {
+  background: var(--color-secondary);
 }
 
 .header__theme>svg {
@@ -312,8 +340,17 @@ onBeforeUnmount(() => {
 
 .theme-menu__item:hover ,
 .theme-menu__item.active {
-  background:var(--color-accent);
+  /* background:var(--color-accent); */
   color: var(--color-accent-foreground);
+}
+
+.theme-menu__item--primary:hover ,
+.theme-menu__item--primary.active {
+  background:var(--color-primary);
+}
+.theme-menu__item--secondary:hover ,
+.theme-menu__item--secondary.active {
+  background:var(--color-secondary);
 }
 
 .theme-menu__item > svg {
