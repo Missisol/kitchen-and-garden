@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
 
     <!-- Filters -->
     <section class="filters">
-      <h2 class="categories__title">Фильтры</h2>
+      <h2 class="section__title">Фильтры</h2>
       <div class="filter">
         <h3 class="filters__label">Статус:</h3>
         <ul class="filters__group">
@@ -146,31 +146,6 @@ onBeforeUnmount(() => {
           >{{ cat.name }}</li>
         </ul>
       </div>
-
-      <!--<div class="filters__group">
-        <TransitionDropdown v-model="isOpenCategoryFilter">
-          <template #button>
-            Категория: <strong>{{ selectedCategoryName || 'Все' }}</strong>
-          </template>
-          <div
-            v-if="isOpenCategoryFilter"
-            class="category-dropdown"
-          >
-            <div
-              class="category-dropdown__item"
-              :class="{ 'category-dropdown__item--active': !filters.category_id }"
-              @click="applyCategory()"
-            >Все</div>
-            <div
-              v-for="cat in reserveCategories"
-              :key="cat.id"
-              class="category-dropdown__item"
-              :class="{ 'category-dropdown__item--active': filters.category_id === cat.id }"
-              @click="applyCategory(cat)"
-            >{{ cat.name }}</div>
-          </div>
-        </TransitionDropdown>
-      </div> -->
     </section>
 
     <!-- Category management -->
@@ -187,7 +162,7 @@ onBeforeUnmount(() => {
 
 
     <section class="controls">
-      <h2 class="controls__title">Запасы</h2>
+      <h2 class="section__title">Запасы</h2>
       <div class="controls__box">
         <CommonButton @buttonAction="goToCreateReserve">
           <template #icon><IconPlus /></template>

@@ -108,7 +108,7 @@ onBeforeUnmount(() => {
     />
     <div class="content">
       <div class="controls">
-        <h2 class="controls__title">Рецепты</h2>
+        <h2 class="section__title">Рецепты</h2>
         <div class="controls__box">
           <div
             class="common-button--dark"
@@ -207,13 +207,6 @@ onBeforeUnmount(() => {
   --padding: 4px 16px;
   display: flex;
   gap: 1rem;
-}
-
-.controls__title {
-  font-size: 1.5rem;
-  line-height: 2rem;
-  font-weight: 700;
-  color: var(--color-foreground);
 }
 
 .common-button--dark-active  svg {

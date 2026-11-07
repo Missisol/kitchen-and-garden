@@ -27,7 +27,7 @@ const isFiltered = computed(() => category_params.value.id !== '' || showFavorit
 
 <template>
   <section class="categories">
-    <h2 class="categories__title">Категории</h2>
+    <h2 class="section__title">Категории</h2>
     <ul class="categories__list">
       <li
         :class="isFiltered ? '' : 'category--active'"
@@ -64,13 +64,6 @@ const isFiltered = computed(() => category_params.value.id !== '' || showFavorit
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.categories__title {
-  font-size: 1.5rem;
-  line-height: 2rem;
-  font-weight: 700;
-  color: var(--color-foreground);
 }
 
 .categories__list {

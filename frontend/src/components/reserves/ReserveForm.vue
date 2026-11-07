@@ -220,7 +220,7 @@ const router = useRouter()
 }
 
 .label {
-  color: var(--color-primary);
+  color: var(--color-secondary);
   font-size: 1rem;
   line-height: 1.5rem;
   font-weight: 600;
@@ -230,7 +230,7 @@ const router = useRouter()
 }
 
 .label__text {
-  color: var(--color-primary);
+  color: var(--color-secondary);
 }
 
 .label input,
@@ -276,10 +276,12 @@ const router = useRouter()
 .checkbox input {
   width: 1rem;
   height: 1rem;
-  accent-color: var(--color-primary);
+  accent-color: var(--color-secondary);
 }
 
 .button-wrapper {
+  --cbtn-background: var(--color-secondary);
+  --cbtn-border: var(--color-secondary);
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;

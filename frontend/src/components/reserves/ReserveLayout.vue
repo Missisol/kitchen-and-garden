@@ -36,7 +36,7 @@ const emit = defineEmits<{
   --cbtn-background: var(--color-background);
   --cbtn-border: var(--color-background);
   --text-color: var(--color-foreground);
-  --cbtn-hover: var(--color-primary);
+  --cbtn-hover: var(--color-secondary);
   --text-hover: var(--color-primary-foreground);
 }
 
