@@ -79,6 +79,8 @@ function clearInput() {
   categoryId.value = ''
   categoryName.value = ''
 }
+
+// TODO SQLite регистрозависимая уникальность — 'Крупа' и 'крупа' создаются обе.
 </script>
 
 <template>
@@ -202,6 +204,7 @@ function clearInput() {
 }
 
 .input {
+  --option-color: var(--color-secondary);
   grid-column: 1 / 3;
   grid-row: 1 / 2;
 }
@@ -242,7 +245,7 @@ function clearInput() {
 }
 </style>
 
-<style>
+<!-- <style>
 .form__action .input {
   flex-grow: 1;
   font-size: 0.875rem;
@@ -272,3 +275,4 @@ function clearInput() {
   outline: none;
 }
 </style>
+ -->

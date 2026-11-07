@@ -180,12 +180,12 @@ onBeforeUnmount(() => {
   text-decoration: none;
 }
 
-@media (hover: hover) and (pointer: fine) {
+/* @media (hover: hover) and (pointer: fine) {
   .logo__container:hover .logo {
     transform: scaleX(1.1) scaleY(1.1)
   }
 }
-
+ */
 .logo {
   display: flex;
   gap: .5rem;

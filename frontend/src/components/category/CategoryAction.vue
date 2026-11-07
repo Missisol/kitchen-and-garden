@@ -82,34 +82,3 @@ const emit = defineEmits<{
   }
 }
 </style>
-
-<style>
-.form__action .input {
-  flex-grow: 1;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: var(--color-foreground);
-  background: hsl(from var(--color-background) h s l / 0.5);
-  border: 1px solid var(--color-input);
-  border-radius: calc(var(--radius) - 2px);
-  padding: 0.5rem .75rem;
-}
-
-.form__action>input::placeholder {
-  color: hsl(from var(--color-foreground) h s l / 0.6);
-}
-
-.form__button>svg {
-  width: 1rem;
-  height: 1rem;
-}
-
-.form__action>.input:focus-visible, 
-.form__action>.input:focus {
-  outline: 2px solid var(--color-ring);
-}
-
-.form__action>.input:focus:not(:focus-visible) {
-  outline: none;
-}
-</style>

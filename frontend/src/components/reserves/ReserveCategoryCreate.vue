@@ -73,4 +73,8 @@ async function saveCategory(e: SubmitEvent) {
   line-height: 1rem;
   color: var(--color-destructive);
 }
+
+.form__action .input {
+  --outline-color: var(--color-secondary);
+}
 </style>

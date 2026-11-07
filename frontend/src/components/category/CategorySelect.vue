@@ -62,6 +62,8 @@ option:disabled {
 }
 
 option {
+  --color-option: var(--option-color, var(--color-primary));
+
   display: flex;
   justify-content: flex-start;
   gap: 1rem;
@@ -94,7 +96,7 @@ option:nth-of-type(odd) {
 
 option:hover:not(:disabled),
 option:focus {
-  background: var(--color-primary);
+  background: var(--color-option);
   color: var(--color-primary-foreground);
   font-weight: 600;
 }
